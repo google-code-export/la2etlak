@@ -1,0 +1,18 @@
+<%= form_for(@user) do |f| %>
+    <%= f.label :email %>
+ <div class="field" align="center">
+    <%= f.text_field :email,:style => "height:40px;" %>
+  </div>
+    <%= f.label :password %>
+ <div class="field" align="center">
+    <%= f.password_field :password,:style => "height:40px;"%>
+  </div>
+ 
+    <%= f.label :password_confirmation %>
+ <div class="field" align="center">
+    <%= f.password_field :password_confirmation,:style => "height:40px;"%>
+  </div>
+  <div class="actions" align="center">
+    <%= f.submit "Register", :style => "width:100px" %>
+  </div>
+<% end %>

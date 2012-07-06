@@ -1,0 +1,21 @@
+<%- flash.each do |key, msg| -%>
+<%if(flash[:notice])%>
+	  <div id="error_explanation">
+		<div class="alert alert-info">
+	     <%= msg %>
+	    </div>
+	</div>
+<%elsif(flash[:success])%>
+	  <div id="error_explanation">
+		<div class="alert alert-success">
+	     <%= msg %>
+	    </div>
+	</div>
+<%elsif(flash[:error])%>
+	  <div id="error_explanation">
+		<div class="alert alert-error">
+	     <%= msg %>
+	    </div>
+	</div>
+<%end%>
+	<%- end -%>

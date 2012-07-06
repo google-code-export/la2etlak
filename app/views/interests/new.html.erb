@@ -1,0 +1,153 @@
+
+ <SCRIPT language="javascript">
+var $j = jQuery.noConflict();
+ $j(document).ready(function(){
+ <%if $errors == true %>
+  $j('#myModal').modal("show");
+
+  <%  end%>
+});
+
+ function callmodal(){
+  $j('#myModal').modal();
+
+ }
+ $j(document).unload(function(){
+  $j('#myModal').modal("hidden");
+  
+});
+</SCRIPT>
+	<div class="container-fluid maindiv">
+	
+	<div class="row-fluid">
+
+	 <div class="admin_main_left_panel">
+		 <div class="well sidebar-nav">
+	      	<ul class="nav nav-list">
+			<li class="nav-header">Directory</li>
+			<li class="divider"></li>		
+			<li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a>
+			<li class="active"><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a>
+			<li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a>
+			<li class="divider"></li>
+			<li><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a>
+			<li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a>
+			</ul>
+			</div>	
+			
+				 		  
+	
+<div>
+<input type="button" class="btn btn-primary" value="Add new interest" onclick="callmodal()" style= "margin:20px";/>	
+
+
+
+
+
+		<!-- sample modal content -->
+	          <div id="myModal" class="modal hide fade">
+	            <div class="modal-header">
+
+	              <button class="close" data-dismiss="modal">&times;</button>
+	              <h3>Create New Interest</h3>
+	            </div>
+	            <div class="modal-body">
+				
+	
+<%= form_for @interest, :html => { :multipart => true } do |f| %>
+ 
+ <%= render 'shared/error_messages' %>
+
+
+
+    <%= f.label :name ,"Name :",  :class => "logs-take-input " %><br />
+    <%= f.text_field :name , :class => "input-xlarge" %>
+   
+
+
+
+    <%= f.label :description,"Description:",  :class => "logs-take-input "  %><br />
+    <%= f.text_area :description , :class => "input-xlarge", :cols => "40", :rows => "6", :placeholder => "add description"%>
+
+
+
+    <! The field of the browse to upload the image from the Admin's Computer >
+           <%= f.label :photo, "Image:",  :class => "logs-take-input " %>
+           <%= f.file_field :photo %><br /><br />
+ 
+
+      
+
+
+<%= f.submit "Submit" , class:"span2 btn-large btn btn-primary"%>
+<% end %>
+	            </div>
+	            <div class="modal-footer">
+	              <a href="#" class="btn" data-dismiss="modal" >Close</a>
+	            
+				
+	            </div>
+	          </div>
+
+</div>
+ </div>
+	
+
+
+<div class="admin_right_panel">
+	<h2 class = "logs-take-input" >
+ 	 <%='Interest list' %></h2>
+	 <ul class="nav nav-list" >
+	  <li class="divider"></li>
+
+	</ul>
+			<%if @interests !=nil%>
+		  		<% @interests.each do |nf| %>
+				<%@interest = nf%>	
+				<div>
+					<span class="pull-left greenbadge " style=" -webkit-transform: rotate(-45deg);	
+							-moz-transform: rotate(-45deg);
+							-ms-transform: rotate(-45deg);
+							-o-transform: rotate(-45deg);
+							transform: rotate(-45deg); 
+							margin-top:40px;">Interest</span>
+					<% if @interest.name.nil? %>
+					<% name = "No Name Available" %>
+					<% else %>
+					<% name = @interest.name  %>
+					<%  end %>
+					<font size="3"><b><%= 
+					link_to(name , {:controller => "interests", :action => "show",:id => @interest.id}) %></b></font>
+					<span class="pull-right bluebadge "><%=time_ago_in_words(@interest.created_at)%></span>
+						<div class="well admin_story_feed "  style=" border-right:5px solid #468847; ">
+							<% if !@interest.photo.file? %>
+				     		<%= image_tag "logo.jpeg"  , style: "float:left; margin-right:20px; width=150x; height:150px;" %>
+				     		<% else %>
+				            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px; height:150px;"/>
+				            <% end %>
+							<div class"control-panel">
+								<% if !(@interest.deleted ) %>
+								<ul class="nav nav-list">
+									<li class="nav-header">Status :</li>
+									<span class="greenbadge">Active</span>
+									<% elsif @interest.deleted %>
+									<ul class="nav nav-list">
+										<li class="nav-header">Status</li>
+										<li><span class="redbadge">Blocked</span></li>
+										<% end %>
+										<li class="nav-header">Date :</li>
+										<li><h3><%= @interest.created_at.to_date %></h3></li>
+										<li class="nav-header">Description :</li>
+										<li><h3><%=
+										if @interest.description !="" then @interest.description  else "No Description" end%></h3></li>
+										<%= link_to "view Statistics", 
+													{:controller => 'statistics', :action => 'interests',:id => @interest.id }, 
+													class: "btn btn-primary"  %>
+							</div>
+					</div>
+				</div>
+				<%end%>
+		<%else%>
+				<h2 class="alert alert-error" align="center">No Interests to Show !!</h2>
+		<%end%>
+</div>

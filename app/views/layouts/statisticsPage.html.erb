@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LA2ETLAK!</title>
+  <!--script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script-->
+
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "jquery.min" %>
+        <%= javascript_include_tag "exporting" %>
+    <%= javascript_include_tag "highcharts" %>
+
+  <%= javascript_include_tag "graph" %>
+
+  <%= csrf_meta_tags %>
+		
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+		
+		</head>
+	<body>
+<!--script src="http://code.highcharts.com/highcharts.js"></script-->
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+<header class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <%= link_to "LA2ETLAK", {controller: 'admins' ,action: 'index'}, id: "logo" %>
+          <nav>
+            <ul class="nav pull-right">
+              <li><%= link_to "Home",    '#' %></li>
+              <li><%= link_to "Statistics", {controller: 'statistics' ,action: 'all_users'} %></li>
+              <li><%= link_to "Log File", {controller: 'logs' ,action: 'index'} %></li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+    <div class="container-fluid">
+      <div class="row-fluid">
+   <div class="span3">
+      <!--Sidebar content-->
+      <div class="well sidebar-nav">
+    <ul class="nav nav-list">
+    
+      <li class="nav-header">
+        Statistics
+      </li>
+      <li>
+       <%= link_to "Users", {controller: 'statistics' ,action: 'all_users'} %>
+      </li>
+       <li>
+       <%= link_to "Interests", {controller: 'statistics' ,action: 'all_interests'} %>
+       </li>
+        <li>
+       <%= link_to "Stories", {controller: 'statistics' ,action: 'all_stories'} %>
+       </li>
+ 
+     </ul>
+    </div>
+    </div>
+    <div class="span9">
+      <%= yield %>
+    </div>
+  </div>
+    </div>
+
+</body>
+</html>
+
+

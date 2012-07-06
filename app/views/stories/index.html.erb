@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+    <div class="container-fluid">
+      <div class="row-fluid">
+		<div class="admin_main_left_panel">
+			<div class="well sidebar-nav">
+	      	<ul class="nav nav-list">
+			<li class="nav-header">Directory</li>
+			<li class="divider"></li>		
+			<li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a>
+			<li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a>
+			<li class="active"><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a>
+			<li class="divider"></li>
+			<li><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a>
+			<li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a>
+			</ul>
+			</div>	
+			
+					
+          <div class="well sidebar-nav">
+            
+
+            <ul class="nav nav-list">
+              <li class="nav-header">Filter by status</li>
+              <li class="divider"></li>	
+            </ul>
+
+            <form action="stories/filter" method="post">
+            	<label class="checkbox" style="background-color:#46a546; cursor:pointer;">
+			    <input type="checkbox" value= "true" <%if( $active)%>  checked <%end%>  name="active" id="active"  > Active
+			  </label>
+
+			  <label class="checkbox" style="background-color:#f89406; cursor:pointer;" >
+			    <input type="checkbox" value= "true" <%if( $flagged )%>  checked <%end%>  name="flagged" id="flagged"> Flagged
+			  </label>
+
+              <label class="checkbox" style="background-color:#9d261d; cursor:pointer;" >
+			    <input type="checkbox" value= "true" <%if( $hidden )%>  checked <%end%>  name="hidden" id="hidden"> Hidden
+			  </label>
+              
+              
+              <input type="submit" name="commit" value="Submit" class="btn btn-primary"/>
+            </form>
+          </div><!--/.well -->
+        </div><!--/span-->
+
+     <div class="admin_right_panel " >
+	 <h2 class = "logs-take-input" >
+ 	  <%='Stories list' %></h2>
+	 <ul class="nav nav-list" >
+	  <li class="divider"></li>
+
+	</ul>
+
+	<div class="admin_feed_padding">
+		<%if @stories != nil%>
+			<% @stories.each do |story| %>
+	    	<div>
+				<span class="pull-left yellowbadge" style=" -webkit-transform: rotate(-45deg);	
+					-moz-transform: rotate(-45deg);
+					-ms-transform: rotate(-45deg);
+					-o-transform: rotate(-45deg);
+					transform: rotate(-45deg); 
+					margin-top:35px;
+					position:relative;"><%=Interest.find(story.interest_id).name%></span>
+				<font size="3"><b>
+				<%= link_to( story.title, {:controller => "stories", :action => "show",:id => story.id}) %></b></font>
+				<span class="pull-right bluebadge"><%=time_ago_in_words(story.created_at)%></span>
+				<%flags = story.flags.count%>
+				<%if story.hidden %>
+				<div class="well admin_story_feed" style=" border-right:5px solid #9d261d; ">
+				
+				<%elsif flags != 0 %>
+				<div class="well admin_story_feed" style=" border-right:5px solid #f89406; ">
+				<%else%>
+				<div class="well admin_story_feed" style=" border-right:5px solid #46a546; ">
+				<%end%>
+					<div class="well control-panel">
+					<%=raw story.content %>
+					</div>
+					<%= link_to("View Statistics", {:controller => 'statistics', :action => 'stories', :id => story.id}, 
+					class: "btn btn-primary") %>  			
+					<table style="float:right">
+						<tr>
+							<td><span class="pull-right greenbadge">Ups(<%=story.liked.length%>)</span></td>
+							<td><span class="pull-right redbadge">Downs(<%=story.disliked.length%>) </span></td>
+						</tr>
+					</table>
+					<%@comments = story.comments%>
+					<h2 class="story-identation story-page-text">Comments</h2>
+					<% if !(@comments.nil? || @comments.empty?) %>
+							<% @comments.each do |comment| %>
+				<div class="well" style="margin-left:7%">
+					<h3><%= User.find(comment.user_id).email %></h3>
+					<div class="comment-component-well">
+						<p><font size="2"><%= comment.content %></p>
+					</div>
+					<span class="pull-right greenbadge">  Ups  (<%=comment.get_num_ups%>)</span>
+					<span class="pull-right redbadge">Downs(<%=comment.get_num_downs%>)</span>
+				</div>
+					<%end%>
+					<%else%>
+					<p><font size="3">No comments</p>
+					<%end%>	
+			</div>
+			<%end%>
+			<%else%>
+				<h2 class="alert alert-error" align="center">No Stories to Show !!</h2>
+			<%end%>
+      </div>
+    </div>

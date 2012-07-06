@@ -1,0 +1,150 @@
+<script type="text/javascript" charset="utf-8">
+    
+  var $j = jQuery.noConflict();
+  $j(document).ready(function() {
+      
+       var arrayNames = [] ;
+       var arrayRanks = <%= Interest.get_top_interests_ranks[0..4]%>;
+        <% Interest.get_top_interests_names[0..4].each do |name|%>
+          arrayNames.push("<%= name %>");
+          
+        <% end %>
+       
+       if (arrayNames.length == 0)
+       {
+        // document.getElementById("noInterest").style.display= "block";  
+         document.getElementById("interest_chart").style.display= "none"; 
+         document.getElementById("genInfo").style.display= "none"; 
+         
+       }
+       else if(arrayRanks[0] == 0)
+       {
+         //document.getElementById("noInterest").style.display= "block";  
+         document.getElementById("interest_chart").style.display= "none"; 
+         document.getElementById("genInfo").style.display= "none";
+         
+       }
+      else
+      { 
+      var title="Top Interests";
+      var container="interest_chart";
+      Pie_chart(arrayNames,arrayRanks,title,container);
+      }
+   });
+</script>
+
+
+<div class="row-fluid">
+<div class="sidebar-nav-fixed">
+    <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+              <li class="nav-header">Directory</li>
+              <li class="divider"></li>   
+              <li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+              <li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a></li>
+              <li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+              <li class="divider"></li>
+              <li class="active"><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+          <li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+        </ul>
+      </div>  
+  </div>
+   
+  <div class="main-user-profile-page">
+    <div class="middle-user-profile-page-panel">
+    <ul class="nav nav-tabs">
+         <!-- Check Whether There Is Any User In The Database Or Not -->
+          <li>
+        <%= link_to "Users", {controller: 'statistics' ,action: 'all_users'} %>
+      </li>
+      <li class="active">
+        <%= link_to "Interests", {controller: 'statistics' ,action: 'all_interests'} %>
+      </li>
+      <li>
+        <%= link_to "Stories", {controller: 'statistics' ,action: 'all_stories'} %>
+      </li>
+    </ul>
+    
+    <%if Interest.get_top_interests_ranks.empty? or Interest.get_top_interests_ranks[0] == 0%> 
+
+     <div class="alert" id="noInterest">
+
+        <h2><strong>Warning!</strong> No interests were created or cannot rank them.</h2>
+      
+     </div>
+    
+    <%end%>
+
+   <div id="interest_chart"></div> </br>
+
+    <div class="general info" id ="genInfo">
+            
+            <!--Here we'll get the general infor of top interests:-->
+            
+            <ul class="nav nav-list" style="width:30%;">
+              <li class="nav-header">
+              Top Ranked 5 Interests : </br>
+              </li>
+              <li class="divider"></li>
+            </ul>
+               
+
+            <% Interest.get_top_interests[0..4].each do |interest|%>
+    
+               <div class="well-interest-component">
+
+                 <a href="/interests/<%= interest.id%>"
+                    style="display:block; float:left; height:100px;">
+
+                 <% if not interest.photo.file? %>
+
+                   <%= image_tag "logo.jpeg", :class=>"img-user-component" %>
+
+                 <% else %>
+
+                   <img src= "<%= interest.photo.url(:small) if interest.photo.file? %>" width="80" style="height:100px"/>
+                  
+                  <% end %> 
+
+                 </a>
+
+                 <div style="padding-left:10px; margin-left:100px;">
+
+                  
+                    <h3>
+                      <%= interest.name  %>
+                    </h3>
+                      <%= link_to "Interest", 
+                  {:controller => 'interests', :action => 'show',:id => interest.id }, 
+                  class: "interest-component-button-absolute btn btn-warning"%>
+
+                      <h5>Rank : <%=interest.get_interest_rank%></h5>
+                      <h5>No Of Stories: <%=interest.stories.count%></h5>
+                      <%= link_to "Statistics", 
+                        {:controller => 'statistics', :action => 'interests',:id => interest.id }, 
+                        class: "interest-component-button-absolute btn btn-primary"%>
+                      <h5>No Of Subscribers: <%=interest.adding_users.count%></h5>
+
+                     <% if !(interest.deleted ) %>
+          
+                      <span class="greenbadge"  style="width:100%" >Active</span>
+
+                     <% elsif interest.deleted %>
+
+                      <span class="redbadge"  style="width:100%">Blocked</span>
+
+                     <% end %>
+                
+
+                </div>
+
+              </div>
+
+            <% end %>
+ 
+      </div>
+
+    </div>
+  </div>
+
+</div>

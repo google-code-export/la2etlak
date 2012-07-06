@@ -1,0 +1,146 @@
+<script>
+var $j = jQuery.noConflict();
+$j(function() {
+  var faye = new Faye.Client('http://localhost:9292/faye');
+  faye.subscribe("/admins/index", function() {
+	$j("#feeds").load(" #feeds");
+  });
+});
+</script>
+<div class="container-fluid maindiv">
+	<div class="row-fluid">
+		<div class="admin_main_left_panel">
+		 	<div class="well sidebar-nav">
+	      		<ul class="nav nav-list">
+					<li class="nav-header">Directory</li>
+					<li class="divider"></li>		
+					<li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+					<li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a></li>
+					<li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+					<li class="divider"></li>
+					<li><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+					<li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+				</ul>
+			</div>	
+				<div class="well sidebar-nav">
+			      	<ul class="nav nav-list">
+						<li class="nav-header"> La2etlak at Glance </li>
+						<li class="divider"></li>	
+						<% if User.get_no_of_users_signed_in_today == 0 %>
+						<li class="yellowbadge" id="no_users_signed_in"><p align="center"><%= User.get_no_of_users_signed_in_today %> sign ins</p> </li>
+						<% else %>
+						<li class="bluebadge" id="users_signed_in"><p align="center"><%= User.get_no_of_users_signed_in_today %> sign ins</p></li>
+						<% end %>
+						</ul>
+				</div>		  
+	 	</div>
+		<div id="feeds" class="admin_right_panel well" style="padding:10px">
+			<h2>Main Feeds</h2>
+			<%if $newsfeed != []%>
+			  		<% $newsfeed.each do |nf| %>
+					<%if (nf.kind_of?(Interest))%>
+					<%@interest = nf%>	
+					<div>
+						<span class="pull-left greenbadge " style=" -webkit-transform: rotate(-45deg);	
+								-moz-transform: rotate(-45deg);
+								-ms-transform: rotate(-45deg);
+								-o-transform: rotate(-45deg);
+								transform: rotate(-45deg); 
+								margin-top:40px;">Interest</span>
+						<% if @interest.name.nil? %>
+						<% name = "No Name Available" %>
+						<% else %>
+						<% name = @interest.name  %>
+						<%  end %>
+							<div class="well admin_story_feed "  style=" border-right:5px solid #468847; ">
+									<font size="5"><b><%= 
+									link_to(name , {:controller => "interests", :action => "show",:id => @interest.id}) %></b></font>
+									<span class="pull-right bluebadge "><%=time_ago_in_words(@interest.created_at)%></span>
+									<div>
+								<% if !@interest.photo.file? %>
+					     		<%= image_tag "logo.jpeg"  , style: "float:left; margin-right:20px; width=150x; height:150px;" %>
+					     		<% else %>
+					            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px; height:150px;"/>
+					            <% end %>
+								<div class"control-panel">
+									<% if (@interest.deleted == nil) %>
+									<ul class="nav nav-list">
+										<li class="nav-header">Status :</li>
+										<span class="greenbadge">Active</span>
+										<% else%>
+										<ul class="nav nav-list">
+											<li class="nav-header">Status</li>
+											<li><span class="redbadge">Blocked</span></li>
+											<% end %>
+											<li class="nav-header">Date :</li>
+											<li><h3><%= @interest.created_at.to_date %></h3></li>
+											<li class="nav-header">Description :</li>
+											<li><h3><%=
+											if @interest.description !="" then @interest.description  else "No Description" end%></h3></li></ul></div>
+											<%= link_to "view Statistics", 
+														{:controller => 'statistics', :action => 'interests',:id => @interest.id }, 
+														class: "btn btn-primary"  %>
+							</div>
+						</div>
+					<%else%>
+					<%story = nf%>
+					<div>
+						<span class="pull-left yellowbadge" style=" -webkit-transform: rotate(-45deg);	
+							-moz-transform: rotate(-45deg);
+							-ms-transform: rotate(-45deg);
+							-o-transform: rotate(-45deg);
+							transform: rotate(-45deg); 
+							margin-top:35px;
+							position:relative;">Story</span>
+						
+						<div class="well admin_story_feed" style=" border-right:5px solid #f89406; ">
+							<font size="5"><b>
+							<%= link_to( story.title, {:controller => "stories", :action => "show",:id => story.id}) %></b></font>
+							<span class="pull-right bluebadge"><%=time_ago_in_words(story.created_at)%></span>
+							<div class="well control-panel">
+								<%if story.content != nil || story.content != ""%>
+									<%=raw story.content %>
+									<%else%>
+										<p><font size="3">No content</p>
+									<%end%>
+									
+							</div>
+							<%= link_to("View Statistics", {:controller => 'statistics', :action => 'stories', :id => story.id}, 
+							class: "btn btn-primary") %>  			
+							<table style="float:right">
+								<tr>
+									<td><span class="pull-right greenbadge">Ups(<%=story.liked.length%>)</span></td>
+									<td><span class="pull-right redbadge">Downs(<%=story.disliked.length%>) </span></td>
+								</tr>
+							</table>
+							<%@comments = story.comments%>
+							<h2 class="story-identation story-page-text">Comments</h2>
+							<% if !(@comments.nil? || @comments.empty?) %>
+									<% @comments.each do |comment| %>
+						<div class="well" style="margin-left:7%">
+							<h3><%= User.find(comment.user_id).email %></h3>
+							<div class="comment-component-well">
+								<p><font size="2"><%= comment.content %></p>
+							</div>
+										<span class="pull-right redbadge">Downs(<%=comment.get_num_downs%>)</span>
+							<span class="pull-right greenbadge">  Ups  (<%=comment.get_num_ups%>)</span>
+				
+						</div>
+							<%end%>
+							<%else%>
+							<p><font size="3">No comments</p>
+							<%end%>	
+					<%end%>
+					</div>
+			<%end%>
+			<%else%>
+					<h2 class="alert alert-error" align="center">No Feeds to Show !!</h2>
+			<%end%>
+		
+		</div>
+	
+			
+	
+	</div>
+
+</div>

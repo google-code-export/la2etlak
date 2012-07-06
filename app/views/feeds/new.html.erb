@@ -1,0 +1,18 @@
+<div>
+<%= form_for (@feed) do |f| %>
+ 
+<%= render 'shared/error_feed' %>
+
+  <div class="field">
+    <%= f.text_field :link %>
+  </div>
+  <div class="field">
+    <%= f.text_field :interest_id %>
+  </div>
+  
+
+  <div class="actions">
+    <%= f.submit "Add RSS feed"  , class:"button round"%>
+  </div>
+<% end %>
+  </div>

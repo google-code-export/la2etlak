@@ -1,0 +1,21 @@
+<table class="pretty">
+  <tr>
+    <th>ID</th>
+    <th>Storyid</th>
+    <th>userid</th>
+  </tr>
+  <% for share in @shares %>
+    <tr>
+      <td><%= share.id %></td>
+      <td><%= share.story_id %></td>
+      <td><%= share.user_id %></td>
+    
+    </tr>
+  <% end %>
+</table>
+<div>
+<%= get_no_of_shares(1) %>
+<% get_who_shared_story(1).map do |i| %>
+ <%= i.user_id %>
+<% end %>
+</div>

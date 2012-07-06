@@ -1,0 +1,11 @@
+<% if @interest.errors.any? %>
+  <div class="alert alert-error">
+
+    <ul>
+    <% @interest.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+
+    <% end %>
+    </ul>
+  </div>
+<% end %>

@@ -1,0 +1,80 @@
+<div class="row-fluid">
+   <div class="span3">
+      <!--Sidebar content-->
+      <div class="well sidebar-nav">
+    <ul class="nav nav-list">
+    
+      <li class="nav-header">
+        Statistics
+      </li>
+      <li class="active">
+       <%= link_to "Users", {controller: 'statistics' ,action: 'all_users'} %>
+      </li>
+       <li>
+       <%= link_to "Interests", {controller: 'statistics' ,action: 'all_interests'} %>
+       </li>
+        <li>
+       <%= link_to "Stories", {controller: 'statistics' ,action: 'all_stories'} %>
+       </li>
+ 
+     </ul>
+    </div>
+    </div>
+    <div class="span9">
+<div class="alert" id="noUser" style="display: none;">
+  
+           <a class="close" data-dismiss="alert">×</a>
+           <h1><strong>Warning!</strong> No Users in our database Yet.</h1>
+     </div>
+
+<div id="ccc"></div>
+<div class="general info">
+            
+            <!--Here we'll get the number of users in the system:-->
+            <h4><div class="alert alert-info">Number of registered users : 
+            <%= User.all_user_registered %>
+            </div></h4>
+            
+          
+          </div>
+          </div>
+          </div>
+		  
+ <table class="table table-striped table-bodered">
+    <tr>
+
+    <th>  </th>
+	<th> Rank </th>
+    <th> Username </th>
+    <th> First Name </th>
+    <th> Last Name </th>
+    <th> Email </th>
+	<th> Points </th>
+  </tr>
+  <tr>
+  <% if @users.nil? == true %>
+  <div style="position: absolute; top: 400px; left: 300px; z-index: 1px; visibility: show;">
+		 <font size="7" face="verdana" color="red" > No Users Registered Yet </font>
+		 <a/>
+	</div>  
+  <% else %>
+	<% i = 1 %>
+	<% for user in @users %>
+		<tr>
+			<td><img style="width:150px; height:150px;" src= <%= user.image %> ></td>
+			<td><%= link_to(i, {:controller => "users", :action => "top_users", :id => user.id} ) %></td>
+			<td><%= user.name %></td>
+			<td><%= user.first_name %></td>
+			<td><%= user.last_name %></td>
+			<td><%= user.email %></td>
+			<td><%= user.get_user_rank %></td>
+		</tr>
+		<% i = i+1 %>
+		<% if i == 6 %>
+			<% break %>
+		<% end %>
+  <% end %>
+ <% end %>
+</table>
+
+

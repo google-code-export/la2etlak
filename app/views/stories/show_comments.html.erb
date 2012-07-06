@@ -1,0 +1,65 @@
+<div style="padding-left:3px;float:left;">
+    <h4> Comments </h4>
+</div>
+<br>
+<br>
+<div>
+
+    
+    <% @comments.each do |comment| %>
+
+    <div class="story-comment-box-mobile" style="float:left; width:95%; clear:both; margin:1px;">
+        <h5 style="padding-left:3%;padding-top:1px;">    <%= User.find(comment.user_id).name %> says:</h5>
+        <div style="clear:both;padding:1px;">
+            <a href="#" style="float:left;padding-right:5px;padding-left:3px;padding-top:10px;" align="top"> <img
+                    src="http://placehold.it/50x50"></a>
+
+            <div style="padding-top:10px;padding-bottom:5px;">
+                <%= comment.content %>
+            </div>
+        </div>
+        <ul class="nav">
+            <li><%= link_to (image_tag ("http://img717.imageshack.us/img717/856/dislikekh.png")) ,{:action=> :down_comment, :user_id => params[:id2], :comment_id => comment.id}, {:style =>'float:right;margin-right:4%;width:30px;height:30px;'} %></a></li>
+            <li>
+                <h8 style="color:#b94a48;float:right;margin-right:1%;padding-top:2px;"> <%= 33%>
+                </h8>
+            </li>
+            <li><%= link_to (image_tag ("http://img210.imageshack.us/img210/5599/likecopy.png")) ,{:action=> :up_comment, :user_id => params[:id2], :comment_id => comment.id}, {:style =>'float:right;margin-right:1%;width:30px;height:30px;'} %></a></li>
+
+
+            <li>
+                <h8 style="color:#468847;float:right;margin-right:1%;"> <%= 55 %>
+                </h8>
+            </li>
+
+        </ul>
+
+
+    </div>
+
+</div>
+<% end %>
+<div>
+    <%= form_for(@comment) do |f| %>
+    <div class="story-comment-box-mobile" style="padding-left:3px; clear:both;width:94.25%;">
+
+
+            <div>
+                Enter a comment:
+            </div>
+  
+
+
+        <%= f.text_area :content, :class => "story-textarea-mobile" %>
+    </div>
+
+    <%= f.hidden_field :user_id, :value => @user_id %>
+    <%= f.hidden_field :story_id, :value => @story.id %>
+
+    <div class="actions" style="padding:20px;float:right;">
+        <%= f.submit "comment" ,:class => "btn btn-large" %>
+        <% end %>
+
+    </div>
+
+</div>

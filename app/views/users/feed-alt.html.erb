@@ -1,0 +1,47 @@
+<!--$$$$$$$$$$$$$$$$$$ Mina Adel $$$$$$$$$$$$$$$$$$$ -->
+<!--This checks whether the list of stories I receive is nil or not -->
+
+<!-- Author: Omar 
+	added warning for user that he didnt select any interest -->
+<% if (@lol.user_interests == []) %>
+  	<%flash[:notice] = " You didn't select any interest ! "%>
+ <%end%>
+
+<% # encoding: utf-8%>
+	<% unless @stories.nil? %>
+	<!-- if not nil -->
+	<% @stories.each do |f| %>
+	<!-- I loop over the list of stories -->
+<div class="story-component-box-mobile">
+	<div class="well" style="border-right:5px solid #f89406;">
+				<% if f.id.nil?%>
+				<% serStory = Marshal::dump(f)%>
+					<h3><%= link_to(f.title, {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory} )%></h3>
+						<table style="float:right">
+							<tr>
+								<td><span class="pull-right bluebadge">Social Network Feed</span></td>
+							</tr>
+						</table>
+					
+				<%else%>
+						<h3><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h3>
+						<table style="float:right">
+							<tr>
+								<td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
+								<td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
+							</tr>
+						</table>
+					<%end%>
+	</div>		
+</div>
+	<%end%>
+	<div class="apple_pagination">
+	<%= will_paginate @stories, :container => false %>
+	</div>
+	<%else%>
+	<!--if nil, an error message of sorts appears -->
+	<div class="story-component-box-mobile">
+		There are no stories in your feed.
+	</div>
+	<%end%>
+<!--$$$$$$$$$$$$$$$$$$ Mina Adel $$$$$$$$$$$$$$$$$$$ -->

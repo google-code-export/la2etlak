@@ -1,0 +1,18 @@
+
+<form action="verifyAccount" method="post">
+	<div align="center">
+		<input class="field" align="center" style="height:40px; width:200px" placeholder="Enter your Verification Code" name="code">
+	</div>
+	<div align="center">
+		<input type="submit" name="commit" value="Verify Account" style="width:120px;height:40px">
+	</div>
+</form>
+
+<p align="center">If you didn't get the Verification E-mail you can resend it</p>
+<div align="center">
+<%= button_to "Resend E-mail", {:controller => 'users', :action => 'resendCode'}, :style => "width:120px;height:40px" %>
+</div>
+</br>
+<div align="center">
+  <p><a href="#" onclick="history.back();"><class: "btn btn-danger">Back</a></p>
+</div>

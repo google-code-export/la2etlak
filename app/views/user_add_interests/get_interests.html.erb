@@ -1,0 +1,20 @@
+    <div id = "wrapper"  style="text-align:center;">
+ 
+       <% if @interests != [] %>
+     <h2>Select an Interest</h2>
+    
+       <% @interests.each do |interest| %>
+	<%=button_to(interest,{:controller => "users", :action => "feed", :id => @user.id , :interest => interest} , {:class => "btn"})%>
+        <%end%>
+    
+	<%else%>
+        <h2> You Don't Have any Interests </h2>
+        <%end%>
+  	<div id ="buttom-buttons" style="width:400px;" >
+	    <%=button_to("Back", {:controller => "users", :action => "feed" , :id => @id } , {:class => "btn"})%>
+	</div>
+	
+ </div>
+
+	
+

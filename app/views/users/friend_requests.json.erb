@@ -1,0 +1,7 @@
+{"Friend_Requests":[
+<% @n = @friends.length %><% @friends.each do |c| %><% @n-=1 %>
+{"id":"<%= c.id %>",
+"name":"<%= if User.find(c.user_id).name.nil? then "name" else User.find(c.user_id).name end%>",
+"email":"<%= if User.find(c.user_id).email.nil? then "email" else User.find(c.user_id).email end%>",
+" if(@n>0)%><% end %>]}
+

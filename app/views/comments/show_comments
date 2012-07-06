@@ -1,0 +1,10 @@
+<table>
+<% @comments.each do |comment| %>
+<tr>
+    <td><%= comment.id %></td>
+    <td><%= comment.content %></td>
+    <td><%= comment.user_id %></td>
+    <td><%= comment.story_id %></td>
+</tr>
+<%end%>
+</table>

@@ -1,0 +1,133 @@
+ <SCRIPT language="javascript">
+ $('#navbar').scrollspy()
+ $('[data-spy="scroll"]').each(function () {
+  var $spy = $(this).scrollspy('refresh')
+});
+ </SCRIPT>
+<div class="container-fluid maindiv">
+  <div class="row-fluid">
+    <div class="admin_main_left_panel">
+      <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+          <li class="nav-header">Directory</li>
+          <li class="divider"></li>   
+          <li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+          <li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a></li>
+          <li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+          <li class="divider"></li>
+          <li><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+          <li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+        </ul>
+      </div>  
+    </div>
+
+    <div class ="admin_right_panel well" style="padding:10px">
+      <div id="navbarExample" class="navbar navbar-static">
+            <div class="navbar-inner">
+              <div class="container" style="width: auto;">
+                
+                <ul class="nav">
+                  <li class=""><a href="#profile_settings">Profile settings</a></li>
+                  <li class=""><a href="#story_settings">Story settings</a></li>
+                  <li class=""><a href="#general_settings">General settings</a></li>
+                  <li class=""><a href="#new_admin">Add a new admin</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div data-spy="scroll" data-target="#navbarExample" data-offset="0" class="pre-scrollable" style = "height:500px">
+            <h2 id="profile_settings">Profile settings</h2>
+
+              <%= form_for @admin2 do |f| %>
+              <p>
+                <%= f.label :first_name %><br />
+                <%= f.text_field :first_name %>
+              </p>
+              <p>
+                <%= f.label :last_name %><br />
+                <%= f.text_field :last_name %>
+              </p>
+              <p>
+                <%= f.label :email %><br />
+                <%= f.text_field :email %>
+              </p>
+              <p>
+                <%= f.label :password %><br />
+                <%= f.password_field :password %>
+              </p>
+              <p>
+                <%= f.label :password_confirmation %><br />
+                <%= f.password_field :password_confirmation %>
+              </p>
+            <div>
+
+              <p><%= f.submit "Update" %></p>
+            </div>
+            <% end %>
+           
+            <h2 id="story_settings">Story settings</h2>
+            <% if Admin_Settings.find_by_key("auto_hiding").value == 0 %>
+            <%= link_to  "Automatic Hiding",{:controller => "admin_settings", :action => "configure_auto_hiding"} ,:class => "btn btn-primary" %>
+            <%else%>
+            <%= link_to  "Manual Hiding",{:controller => "admin_settings", :action => "configure_auto_hiding"} ,:class => "btn btn-primary" %>
+            <%= form_tag("/admin_settings/configure_flags_threshold", :method => "post") %>
+                <label><b>Configure flags threshold: </b></label>
+                <input type="text" class="span3" placeholder= "<%= Admin_Settings.find_by_key("flags_threshold").value %>" name="valuee" ><br/>
+                <button type="submit" class="btn">Submit</button>
+              </form> 
+                <span class="badge badge-info">Active Stories: <%= Story.find_all_by_hidden(false).count%></span>
+                <br/> <br/>
+                <span class="badge badge-error">Hidden Stories: <%=Story.find_all_by_hidden(true).count%> </span>
+            <%end%>
+            <h2 id="general_settings">General Settings</h2>
+
+
+              <%= form_tag("/admin_settings/statistics_time_span", :method => "post") %>
+                   <label>Configure statistics time span</label>
+                <input type="number" class="span3" placeholder= <%= Admin_Settings.find_by_key("statistics_time_span").value %>
+                name="days" disabled="true">
+                <br />
+                <button type="submit" class="btn" disabled="true">Submit</button> 
+              </form>
+
+            <h2 id="new_admin">Add a new admin</h2>
+
+            
+              <%= form_for @admin do |f| %>
+              <% @admin.errors.full_messages.each do |msg| %>
+                  <p><%= msg %></p>
+               <% end %>
+              <p>
+                <%= f.label :first_name %><br />
+                <%= f.text_field :first_name %>
+              </p>
+              <p>
+                <%= f.label :last_name %><br />
+                <%= f.text_field :last_name %>
+              </p>
+              <p>
+                <%= f.label :email %><br />
+                <%= f.text_field :email %>
+              </p>
+              <p>
+                <%= f.label :password %><br />
+                <%= f.password_field :password %>
+              </p>
+              <p>
+                <%= f.label :password_confirmation %><br />
+                <%= f.password_field :password_confirmation %>
+              </p>
+            <div>
+
+              <p><%= f.submit "Add" %></p>
+            </div>
+            <% end %>
+
+            
+          </div>
+
+    </div>
+
+  </div>        
+</div>

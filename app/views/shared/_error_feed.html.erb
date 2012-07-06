@@ -1,0 +1,12 @@
+<% if @feed.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@feed.errors.count, "error") %> 
+        prohibited this RSS Feed from being saved:</h2>
+
+    <ul>
+    <% @feed.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>

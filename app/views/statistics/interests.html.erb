@@ -1,0 +1,147 @@
+<script type="text/javascript" charset="utf-8">
+  //This is a method that will be called on viewing this page it gets the data that will be added to the graph + what's the start
+   //point and also what is the interval between each two points default will be 1 day also it takes the names of the things it
+   //view across time by default for an interest we will view no of users who added this interest, no of articles, no of videos and
+   //no of images and then call method kl that will view the graph with the parameters already stated.
+   
+   //also this method gets the start date of data flow from get_interest_start_date method in interestshelper
+  var $j = jQuery.noConflict();
+  $j(document).ready(function() {
+       //get The interests array of arrays of data
+      data= <%= Interest.get_interest_stat(@id) %>;
+      date= <%= Interest.get_interest_start_date(@id)%>
+      if(date != -1) {
+        //the graphs that we want to show
+        names=["No Of Users","No Of Stories"];
+        //the time interval between one point and another in the graph.
+        pointInterval= <%= 1.day * 1000 %>;
+        // Start point of the graph.
+        pointStart= <%= Interest.get_interest_start_date(@id).days.ago.to_i * 1000 %>;
+        //Label for x-axis
+        xl="Day";
+        //Label for y-axis
+        yl="Number";
+        //Label for whole graph
+        titleOfGraph="Interest Statistics";
+        //call the method that renders the graph with the calculated parameters.
+        document.getElementById("deletedInterest").style.display= "none";
+        Graph(data,names,pointInterval,pointStart,xl,yl,titleOfGraph);  
+      }
+      else{
+        document.getElementById("deletedInterest").style.display= "block";  
+        document.getElementById("ccc").style.display= "none";
+      }
+   });
+</script>
+<div class="row-fluid">
+  <div class="sidebar-nav-fixed">
+    <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+          <li class="nav-header">Directory</li>
+          <li class="divider"></li>   
+          <li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+          <li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a></li>
+          <li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+          <li class="divider"></li>
+          <li class="active"><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+          <li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+        </ul>
+      </div>
+       <!--Here we'll get the number of stories and users in an interest:-->
+      <div style="margin-top: 20px; background-color: #f8f8f8;">
+          <ul class="nav nav-list">
+            <li class="nav-header">
+               Number of Stories : </li>
+               <li class="divider"></li>
+               <li class="nav-header" style="margin-left:20%; margin-right:20%; width: 60%;"> <%= Interest.get_interest_num_stories(@id) %> stories.</li>
+               <li class="divider"></li>
+               <li class="nav-header">
+               Number of Subscribers : </li>
+               <li class="divider"></li>
+               <li class="nav-header" style="margin-left:20%; margin-right:20%; width: 60%;"> <%= Interest.get_total_num_user_added_interest(@id) %> users.</li>
+            
+        </ul>
+    </div>  
+    </div>
+<div class="alert-error" id="deletedInterest" style="display: none;">
+  
+   <h3><strong>Warning!</strong> Interest was deleted a long time ago.</h3>
+
+</div>
+
+<!-- ccc is the id of the div that the graph would render to -->
+ <div class="main-user-profile-page">
+
+      <div class="middle-user-profile-page-panel" >
+
+        <div id="ccc"></div>
+          <div id="adders">
+
+            <%if @interest.get_users_added_interest.empty?%>
+
+               <div class="alert" id="noUsersAdded" >  
+
+                 <h3><strong>Warning!</strong> No User Added This Interest.</h3>
+
+               </div>
+
+            <%else%>
+
+              <ul class="nav nav-list">
+                <li class="nav-header">
+                   Users Who Added This Interest : 
+                </li>
+                <li class="divider"></li>
+              </ul>
+                
+
+              <%@interest.get_users_added_interest.each do |user|%>
+                <div class="well-user-component">
+                  <a href="/users/<%= user.id%>"
+                    style="display:block; float:left; height:100px;">
+                    <% if not user.image? %>
+                       <%= image_tag "logo.jpeg", :class=>"img-user-component" %>
+                    <% else %>
+                       <img src= "<%= user.image %>" width="80" style="height:100px"/>
+                    <% end %> </a>
+                  <div style="padding-left:10px; margin-left:100px;">
+                    <h3>
+                      <% if user.name.nil? %>
+                       <%= user.email.split("@")[0] %>
+                      <% else %>
+                       <%= user.name %>
+                      <% end %>
+                    </h3>
+                    <%= link_to "Profile",
+                    {:controller => 'users', :action => 'show',:id => user.id },
+                     class: "interest-component-button-absolute btn btn-warning"%>
+              
+                    <h5>Email : <%=user.email%></h5>
+                    <h5>Rank : <%= user.get_user_rank %></h5>
+                    <%= link_to "Statistics",
+                    {:controller => 'statistics', :action => 'users',:id => user.id },
+                     class: "interest-component-button-absolute btn btn-primary"%>
+                    <h5>Registration date : <%=time_ago_in_words(user.created_at) +" ago"%></h5>
+              
+                    <% if !(user.deactivated) %>
+          
+                               <span class="greenbadge"  style="width:100%" >Active</span>
+
+                    <% else%>
+
+                               <span class="redbadge"  style="width:100%">Deactivated</span>
+
+                    <% end %>
+                  </div>
+                </div>
+              <%end%>
+
+            <%end%>
+
+          </div>
+
+      </div>
+
+  </div>
+</div>
+

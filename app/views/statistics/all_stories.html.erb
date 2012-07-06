@@ -1,0 +1,178 @@
+<script type="text/javascript" charset="utf-8">
+    
+  var $j = jQuery.noConflict();
+  $j(document).ready(function() {
+      
+       var arrayNames = [] ;
+       var arrayRanks = [] ;
+        <% Story.get_stories_ranking_all_time[0..4].each do |story|%>
+          arrayNames.push("<%= story.title %>");
+          
+        <% end %>
+        <% Story.get_stories_ranking_all_time_rank[0..4].each do |rank|%>
+          arrayRanks.push(<%= rank.to_i %>);
+          
+        <% end %>
+       
+       if (arrayNames.length == 0)
+       { 
+         document.getElementById("ccc").style.display= "none"; 
+         document.getElementById("genInfo").style.display= "none"; 
+         
+       }
+       else if(arrayRanks[0] == 0)
+       {  
+         document.getElementById("ccc").style.display= "none"; 
+         document.getElementById("genInfo").style.display= "none";
+         
+       }
+      else
+      { 
+        var title="Top Stories";
+        var container="graphStories";
+        Pie_chart(arrayNames,arrayRanks,title,container);
+      }
+   });
+</script>
+
+<div class="row-fluid" style="position: absolute; top: 60px; z-index: 1px; visibility: show;">
+</div>
+<div class="sidebar-nav-fixed">
+		<div class="well sidebar-nav">
+	      		<ul class="nav nav-list">
+					<li class="nav-header">Directory</li>
+					<li class="divider"></li>		
+					<li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+					<li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interest</font></a></li>
+					<li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+					<li class="divider"></li>
+					<li class="active"><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+					<li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+				</ul>
+			</div>	
+	</div>
+<div id="center" class="main-user-profile-page">
+	<div class="middle-user-profile-page-panel">
+	<div>
+		
+		<!--Check If The Database Is Empty Or Not-->
+		<ul class="nav nav-tabs">
+	       <!-- Check Whether There Is Any User In The Database Or Not -->
+	        <li>
+				<%= link_to "Users", {controller: 'statistics' ,action: 'all_users'} %>
+			</li>
+			<li>
+				<%= link_to "Interests", {controller: 'statistics' ,action: 'all_interests'} %>
+			</li>
+			<li class="active">
+				<%= link_to "Stories", {controller: 'statistics' ,action: 'all_stories'} %>
+			</li>
+		</ul>
+		<div id="graphStories"></div>
+		<% if @stories.empty? == true %>
+			<div class="alert">  
+				<a class="close" data-dismiss="alert"></a>
+				<h2><strong>Warning!</strong> No Stories In Our Database Yet.</h2>
+			</div>
+		<% else %>
+			<div id ="genInfo" style="padding-top:20px;">
+				<% if Story.get_stories_ranking_all_time.first.get_story_rank_all_time == 0 %>
+					<div class="alert">  
+						<a class="close" data-dismiss="alert"></a>
+						<h2><strong>Warning!</strong> No Stories Ranking </h2>
+					</div>
+				<% else %>
+					<div class="general-info">
+						<div>
+							<ul class="nav nav-list">
+							  <li class="nav-header">
+							  Top 5 Stories All Time :</li>
+							  <li class="divider" style="width: 40%;"></li> 
+								
+							<!--Make A Story Component For Each Of The Top Ranked Five Stories Contiaing Title, Rank, 
+							Shares, Comments, Likes, Dislikes, Interest Tag And A Link To Its Page And Statistics Page -->
+							</ul>	
+						</div>
+					
+					<% Story.get_stories_ranking_all_time[0..4].each do |story|%>
+						<div class="well-story-component">
+							<a href="/stories/<%= story.id%>"
+							 style="display:block; float:left; height:100px;">
+							 <%= image_tag "logo.jpeg", :class=>"img-story-component"%> 
+							</a>
+							<div style="padding-left:10px; margin-left:100px;">
+								<h3>
+									<%= story.title %>
+								</h3>
+								<%= link_to "More Info",
+							    {:controller => 'stories', :action => 'show',:id => story.id },
+							     class: "interest-component-button-absolute btn btn-warning"%>
+								<h5> Rank : <%= story.get_story_rank_all_time %> </h5>
+								<h5> Shares : <%= story.shares.count %> </h5>
+								<%= link_to "Statistics", 
+								{:controller => 'statistics', :action => 'stories',:id => story.id }, 
+								class: "interest-component-button-absolute btn btn-primary"%>
+								<h5> Fetched at : <%=time_ago_in_words(story.created_at) +" ago." %> </h5>
+								 <span class="greenbadge"  style="width:100%" ><%=story.interest.name %></span>
+							</div>
+						</div>
+					<% end %>
+				   </div>
+				   <div class="general-info">
+					<% if @stories2.empty? == true %>
+						<div class="alert">  
+							<a class="close" data-dismiss="alert"></a>
+							<h1><strong>Warning!</strong> No Stories In The Last 30 Days.</h1>
+						</div>
+					<% else %>
+
+							<% if Story.get_stories_ranking_last_30_days.first.get_story_rank_last_30_days == 0 %>
+								<div class="alert">  
+									<a class="close" data-dismiss="alert"></a>
+									<h1><strong>Warning!</strong> No Stories Ranking In The Last 30 Days</h1>
+								</div>
+							<% else %>
+								<div>
+							      <ul class="nav nav-list">
+							        <li class="nav-header">
+							           Top 5 Stories Last 30 Days :</li>
+							        <li class="divider" style="width: 40%;"></li> 
+								
+							<!--Make A Story Component For Each Of The Top Ranked Five Stories Contiaing Title, Rank, 
+							Shares, Comments, Likes, Dislikes, Interest Tag And A Link To Its Page And Statistics Page -->
+							      </ul>	
+						        </div>
+						        <% Story.get_stories_ranking_last_30_days[0..4].each do |story|%>
+						          <div class="well-story-component">
+							       <a href="/stories/<%= story.id%>"
+							         style="display:block; float:left; height:100px;">
+							         <%= image_tag "logo.jpeg", :class=>"img-story-component"%> 
+							       </a>
+							       <div style="padding-left:10px; margin-left:100px;">
+								     <h3>
+									   <%= story.title %>
+								     </h3>
+								     <%= link_to "More Info",
+							            {:controller => 'stories', :action => 'show',:id => story.id },
+							             class: "interest-component-button-absolute btn btn-warning"%>
+								     <h5> Rank : <%= story.get_story_rank_last_30_days %> </h5>
+								      <h5> Shares : <%= story.shares.count %> </h5>
+								      <%= link_to "Statistics", 
+								      {:controller => 'statistics', :action => 'stories',:id => story.id }, 
+								       class: "interest-component-button-absolute btn btn-primary"%>
+								      <h5> Fetched at : <%=time_ago_in_words(story.created_at) +" ago." %> </h5>
+								      <span class="greenbadge"  style="width:100%" ><%=story.interest.name %></span>
+							       </div>
+						         </div>
+									
+						        <% end %>
+						    
+							<% end %>	
+							</div>	
+					<% end %>
+				<% end %>
+			</div>
+		<% end %>
+	</div>
+</div>
+</div>

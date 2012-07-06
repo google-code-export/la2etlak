@@ -1,0 +1,2 @@
+module UserAddInterestsHelper
+end

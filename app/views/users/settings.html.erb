@@ -1,0 +1,26 @@
+<!-- Mina Adel, Yahia El Gamal -->
+<html>
+	<body>
+		<div>
+			<ul class="nav nav-list">
+				<li><h3 style="color:#555;">Settings</h3></li>
+				<li class="divider"></li>
+				
+		<li><%= link_to "Connect social accounts", {:controller => 'users', :action => 'connect_social_accounts'}, class: "btn", style: "margin:2%; height:30px;"%></li>
+			<li>	<%= link_to "Friends", {:controller => 'friendships', :action => 'index'}, class: "btn", style: "margin:2%; height:30px;" %>	</li>
+
+				<li><%= link_to "Main feed", {:controller => 'users', :action => 'feed'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
+				<li><%= link_to "Manage blocked stories", {:controller => "users", :action => "manage_blocked_stories"}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
+				<li><%= link_to "Modify info", {:controller => 'users', :action => 'edit'}, class: "btn", style: "margin:2%; height:30px;" %>	</li>
+				<li><%= link_to "Toggle interests", {:controller => 'users', :action => 'toggle'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
+				<% if !@user.verification_code.verified %>
+				<li><%= link_to "Verify account", {:controller => 'users', :action => 'verifySettings'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
+			<% end %>
+				<div align="center" style="margin-top:25px; margin-bottom:25px;">
+				<li><%= link_to "Logout", logout_path, class: "btn btn-large btn-danger", style: "margin:2%; width:60%;"%>	</li>
+			</ul>
+				</div>
+		</div>
+	<body>
+</html>
+<!-- Mina Adel, Yahia El Gamal -->

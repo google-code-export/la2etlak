@@ -1,0 +1,15 @@
+<!-- Auther: khaled.elbhaey -->
+<div align="center">
+		<div id="disliked">
+ 			<p>
+ 				<b>
+				 	Friends who disliked this story
+				</b> 	
+      		</p>
+			
+			<% @friends.each do |f| %><!-- list of friends who disliked the story -->
+				<%=f%>
+				<br>
+			<%end%>
+		</div>	
+</div>

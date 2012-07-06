@@ -1,0 +1,132 @@
+<html>
+
+<div class="container-fluid maindiv">
+  <div class="row-fluid">
+    <div class="left_panel-interest">
+      <ul class="nav nav-list ">     
+		<li class="nav-header">View Statistics</li>
+        <!-- View interest's Statistics.. -->
+         <li class="divider"></li>
+		<%= link_to("View Statistics", {:controller => 'statistics', :action => 'interests', :id => @interest.id}, class: "btn btn-primary") %></br></br>
+		<li class="nav-header">Add Rss Feed</li>
+        <!-- ADDING RSS FEED .. -->
+         <li class="divider"></li>
+            <form action="feeds/create" method="post">
+              <input  style="width:100%" type="text" name="feed[link]" />
+              <input   style="width:100%" type="hidden" name="feed[interest_id]" value= "<%= @interest.id %>" />
+              <input type="submit" name="commit" value="Submit" class="btn btn-primary"/>
+            </form>
+  
+<!-- Author : jailan , edit interest part .. This is the form that updates the interest -->
+		<li class="divider"></li>
+		<li class="nav-header">Interest Edit</li>
+		<li class="divider"></li>
+		<div id="update">
+  			<%= form_for @interest, :html => { :multipart => true } do |f|  %>
+ 			<%= render 'shared/error_messages' , object: f.object  %>
+      		<%= f.label :name %>
+      		<%= f.text_field :name  ,:style=>"width:100%"%>
+      		<%= f.label :description%>
+      		<%= f.text_field :description ,:style=>"width:100%"%>
+     <!-- The field of the browse to upload the image from the Admin's Computer -->
+           <%= f.label :photo, "Image "%>
+           <%= f.file_field :photo ,:style=>"width:100%"%>
+      	   <%= f.submit "Save Changes", class: "btn btn-primary" %>
+    	   <% end %>
+		</div>
+<!-- this is the div holdeing the state of the interest (blocked/active) also the date it was created -->
+
+ 		<div id="status">	 
+	 		<li class="nav-header">Interest Info</li>
+	    		<div class="story-page-well"><% if !(@interest.deleted ) %>
+					<ul class="nav nav-list"  style="width:100%">
+						<li class="nav-header"  style="width:100%">Status :</li>
+							<span class="greenbadge"  style="width:100%" >Active</span>
+							<% elsif @interest.deleted %>
+					<ul class="nav nav-list"  style="width:100%">
+						<li class="nav-header"  style="width:100%">Status</li>
+						<li  style="width:100%"><span class="redbadge"  style="width:100%">Blocked</span></li>
+						<% end %>
+						<li class="nav-header"  style="width:100%">Date :</li>
+						<li  style="width:100%"><%= @interest.created_at.to_date %></li>			
+				</div>
+
+		</div>
+			<% if !@interest.deleted  %>
+			<li class="divider"></li>
+			<li class="nav-header">Block this Interest </li>
+<!-- the switching button for the Block/unblock interest purpose -->
+		<div id="block">			
+      		<%= link_to  "Block",{:controller => "interests", :action => "toggle",:id => @interest.id} ,:class => "btn btn-danger" %>
+
+		</div>
+			<%else%>
+			<li class="divider"></li>
+		<div id="restore">
+			<li class="nav-header">Restore this Interest </li>
+			<%= link_to  "Restore",{:controller => "interests" ,:action => "toggle" ,:id => @interest.id} ,:class => "btn btn-success" %>
+			<%end%>
+			</ul>
+		</div>
+		<div class="main-right-interest">
+			<div class="middle-interest-panel" >
+				<h1><%= @interest.name %></h1>
+<!-- if the interest's image isn't there  .. the alternative is Nokia Logo image -->
+				<div id="image">
+					<h3><% if @interest.photo.file? %>
+      				<img src= "<%= @interest.photo.url(:small) if @interest.photo.file? %>" width="320" style="height:320px"/>
+      				<% else %>
+     				<%= image_tag "logo.jpeg" , :size => "320x320"%>
+      				<% end %>
+					</h3>
+				</div>
+				<div class="">
+					<ul class="nav nav-list" >
+						<li class="divider"></li>
+					</ul>
+      			<h3 class="interest-page-text">Description:</h3>
+					<div class="interest-page-well">
+         				<%= @interest.description %>
+					</div>
+					<ul class="nav nav-list" >
+						<li class="divider"></li>
+					</ul>
+					<h3 class="interest-page-text">RSS Feeds :</h3>
+					<div class="interest-page-well ">
+						<! .. adding the RSS feeds added to this interest unless the table is empty ..>
+						<table class="table" >
+						<% @feeds.each do |f| %>
+    					<tr >
+      						<td><%= link_to( (f.link.length > 30 ? ('%{sub}...' % {:sub => f.link[0,30]}) : f.link), f.link)	%></td>
+      						<td ><%= link_to("x", f, {:controller => "feeds", :method=>:delete, class: "btn btn-small btn-danger" } ) %></td>
+    					</tr>
+  						<% end %>
+						</table>
+					</div>
+					<ul class="nav nav-list" >
+						<li class="divider"></li>	
+					</ul>	
+				</div>
+			</div>
+			<div class="right-interest-panel interest-page-well" >
+			<h2 class = "logs-take-input" ><%= @stories.empty? ? 'Stories List : There are currently no stories to be viewed.' : 'Stories list' %></h2>
+			<ul class="nav nav-list" >
+				<li class="divider"></li>	
+			</ul>
+			
+			<div class="pre-scrollable">
+				<% @stories.each do |story| %>
+				<div >
+				<h3><%= link_to("View Statistics", {:controller => 'statistics', :action => 'stories', :id => story.id}, class: "story-component-button-absolute btn btn-primary") %></h3>
+				<span class="pull-right bluebadge"><%=time_ago_in_words(story.created_at)%></span>
+				<h3><%= link_to( story.title, {:controller => "stories", :action => "show",:id => story.id}) %></h3>
+					<div class="pre-scrollable">
+						<h6 class ="story-body story-page-well"><%=raw story.content %></h6>
+					</div>
+				</div>
+				<%end%>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

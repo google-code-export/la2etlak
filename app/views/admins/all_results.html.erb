@@ -1,0 +1,165 @@
+<div class="container-fluid maindiv">
+	<div class="row-fluid">
+	
+	
+			<div class="row-fluid">
+		<div class="sidebar-nav-fixed" id="filterPanel">
+	<!--Here I check if there are results for users,stories and/or interests at all and show the checkboxes for the filter accordingly...-->
+						<div class="sidebar-nav-fixed">
+							<div class="well sidebar-nav">
+	      				<ul class="nav nav-list">
+									<li class="nav-header">Directory</li>
+									<li class="divider"></li>		
+									<li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+									<li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interests</font></a></li>
+									<li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+									<li class="divider"></li>
+									<li><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+									<li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+								</ul>
+							</div>
+							<div class="well sidebar-nav" style="margin-top: 20px; background-color: #f8f8f8;">
+								<ul class="nav nav-list">
+					  			<li class="nav-header">Search for: </li>
+					     		<li class="divider"></li>
+					     		 <li><i class="icon-user"></i><font size="4%"><%= link_to "All",
+                    {:controller => 'admins', :action => 'search',:query => params[:autocomplete][:query], :autocomplete => {:query => params[:autocomplete][:query]} }%></font></a></li>
+					     		<li><i class="icon-user"></i><font size="4%"><%= link_to "Users",
+                    {:controller => 'admins', :action => 'all_results',:query => params[:autocomplete][:query], :autocomplete => {:query => params[:autocomplete][:query]}, :type => 1 }%></font></a></li>
+									<li><i class="icon-user"></i><font size="4%"><%= link_to "Interests",
+                    {:controller => 'admins', :action => 'all_results',:query => params[:autocomplete][:query], :autocomplete => {:query => params[:autocomplete][:query]}, :type => 3 }%></font></a></li>
+                  <li><i class="icon-user"></i><font size="4%"><%= link_to "Stories",
+                    {:controller => 'admins', :action => 'all_results',:query => params[:autocomplete][:query], :autocomplete => {:query => params[:autocomplete][:query]}, :type => 2 }%></font></a></li>
+				    		</ul>
+							</div>	
+						</div>
+	  </div>
+	  
+	<!--All the results of the users,stories or interests(according to the type chosen by the admin) will appear in this panel-->
+		<div class="main-user-profile-page">
+			<div class="middle-user-profile-page-panel" id="searchResults">
+				<% if @results[0].class == User %>
+					<h2>All Users Search Results</h2>
+				<% elsif @results[0].class == Story %>
+					<h2>All Stories Search Results</h2>
+				<% elsif @results[0].class == Interest %>
+					<h2>All Interests Search Results</h2>
+				<% end %>
+				<% if @results.length == 0 %>
+					<div class="middle-user-profile-page-panel" id="noSearchQuery">
+            <h2>There are no matching results for this category.</h2>
+        	</div>
+        <% else %>
+					<% @results.each do |result| %>	
+		<!--If the results are users, then I'll show each user in its a component with a maximum of 10 users per page and use the pagination feature to go through all the results..I aslo add a button to view the statistics of each user.-->
+						<% if result.class == User %>
+		      		<div class="well-user-component">
+		                 <a href="/users/<%= result.id%>"
+		                   style="display:block; float:left; height:100px;">
+		                  <% if not result.image? %>
+		                   <%= image_tag "logo.jpeg", :class=>"img-user-component" %>
+		                  <% else %>
+		                   <img src= "<%= result.image %>" width="80" style="height:100px"/>
+		                  <% end %>
+		                 </a>
+		                 <div style="padding-left:10px; margin-left:100px;">
+		                  <h3>
+		                  <% if result.name.nil? %>
+		                    <%= result.email.split("@")[0] %>
+		                  <% else %>
+		                    <%= result.name %>
+		                  <% end %>
+		                 </h3>
+		                 <%= link_to "Profile",
+		                 {:controller => 'users', :action => 'show',:id => result.id },
+		                  class: "interest-component-button-absolute btn btn-warning"%>
+		            
+		                 <h5>Email : <%=result.email%></h5>
+		                 <h5>Rank : <%= result.get_user_rank %></h5>
+		                 <%= link_to "Statistics",
+		                  {:controller => 'statistics', :action => 'users',:id => result.id },
+		                   class: "interest-component-button-absolute btn btn-primary"%>
+		                 <h5>Registration date : <%=time_ago_in_words(result.created_at) + " ago"%></h5>
+		            
+		                 <% if !(result.deactivated) %>
+		        
+		                     <span class="greenbadge"  style="width:100%" >Active</span>
+
+		                 <% else%>
+
+		                     <span class="redbadge"  style="width:100%">Deactivated</span>
+
+		                 <% end %>
+		               </div>
+		              </div>
+						<% end %>
+	
+		<!--If the results are stories, then I'll show each story in its a component with a maximum of 10 stories per page and use the pagination feature to go through all the results..I aslo add a button to view the statistics of each story.-->		
+						<% if result.class == Story %>
+							<div class="well-story-component">
+								<a href="/stories/<%= result.id%>"
+								 style="display:block; float:left; height:100px;">
+								 <%= image_tag "logo.jpeg", :class=>"img-story-component"%> 
+								</a>
+								<div style="padding-left:10px; margin-left:100px;">
+									<h3>
+										<%= result.title %>
+									</h3>
+									<%= link_to "More Info",
+									  {:controller => 'stories', :action => 'show',:id => result.id },
+									   class: "interest-component-button-absolute btn btn-warning"%>
+									<h5> Rank : <%= result.get_story_rank_all_time %> </h5>
+									<h5> Shares : <%= result.shares.count %> </h5>
+									<%= link_to "Statistics", 
+									{:controller => 'statistics', :action => 'stories',:id => result.id }, 
+									class: "interest-component-button-absolute btn btn-primary"%>
+									<h5> Fetched at : <%=time_ago_in_words(result.created_at) +" ago." %> </h5>
+									 <span class="greenbadge"  style="width:100%" >Related Interest: <%=result.interest.name %></span>
+								</div>
+							</div>
+						<% end %>
+	
+		<!--If the results are interests, then I'll show each interest in its a component with a maximum of 10 interests per page and use the pagination feature to go through all the results..I aslo add a button to view the statistics of each interest.-->
+						<% if result.class == Interest %>
+							<div class="well-interest-component">
+		                   <a href="/interests/<%= result.id%>"
+		                   style="display:block; float:left; height:100px;">
+		                   <% if not result.photo.file? %>
+		                     <%= image_tag "logo.jpeg", :class=>"img-user-component" %>
+		                   <% else %>
+		                     <img src= "<%= result.photo.url(:small) if result.photo.file? %>" width="80" style="height:100px"/>
+		                   <% end %> 
+		                   </a>
+		                   <div style="padding-left:10px; margin-left:100px;">
+		                    <h3>
+		                     <%= result.name  %>
+		                    </h3>
+		                     <%= link_to "Interest", 
+		                     {:controller => 'interests', :action => 'show',:id => result.id }, 
+		                    class: "interest-component-button-absolute btn btn-warning"%>
+		                    <h5>Rank : <%=result.get_interest_rank%></h5>
+		                    <h5>No Of Stories: <%=result.stories.count%></h5>
+		                    <%= link_to "Statistics", 
+		                      {:controller => 'statistics', :action => 'interests',:id => result.id }, 
+		                      class: "interest-component-button-absolute btn btn-primary"%>
+		                    <h5>No Of Subscribers: <%=result.adding_users.count%></h5>
+		                    <% if !(result.deleted ) %>
+		                      <span class="greenbadge"  style="width:100%" >Active</span>
+		                    <% elsif result.deleted %>
+		                      <span class="redbadge"  style="width:100%">Blocked</span>
+		                   <% end %>
+		                  </div>
+		                </div>
+						<% end %>
+					<% end %>
+		<!--Here I call the will_paginate method on the @results variable so that it shows the results in pages-->
+					<% if (@results[0].class == User and $users.length > 10) or (@results[0].class == Story and $stories.length > 10) or (@results[0].class == Interest and $interests.length > 10) %>			
+						<div class="apple_pagination">
+		  				<%= will_paginate @results, :container => false %>
+						</div>
+					<% end %>
+  			<% end %>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,56 @@
+<html>
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> LA2ETLAK! </title>
+  <%= stylesheet_link_tag    "mobile_style"%> 
+</head>
+   <header class="navbar navbar-fixed-top" >
+      <div class="navbar-inner">
+        <div class="container" >
+          <a href="<%= url_for :controller => "users", :action => "feed" %>" id="logo" ><h1 class = "pull-left" style = "float:up;">LA2ETLAK</h1></a>
+          <nav>
+            <ul class="nav">
+			  <li><%= link_to (image_tag("gear.png")) , {:controller => "users" , :action =>
+				"settings"}, {:style => 'width:25px;height:25px'}%>
+              <li><%= link_to (image_tag ("reload.png")) ,{:controller => params[:controller],:action  =>  params[:action]}, {:style => 'margin-right:2%;width:25px;height:25px;'} %></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+</header>
+<% if current_user %>
+  <% if current_user.get_notifications %>
+   <!-- if user has notification display this active div which
+        redirects to pending requests page
+        Author: Menisy -->
+   <a href="<%= url_for(controller: "friendships", action: "pending") %>" >
+    <div id="notification" class="flash-yellow well">
+      <% n = current_user.get_notifications.length %>
+    You have <%= n %> pending friendship <%= "request".pluralize(n) %>!
+    </div>
+   </a>
+  <% end %>
+<% end %>
+<!-- If a flash notice has been set, display it with the proper
+    color
+    Author: Menisy -->
+<% keys = flash.keys %>
+<% keys.each do |key| %>
+  <% fl = flash[key] %>
+  <% if fl == "" then next end %>
+  <% color = fl["$red"] || fl["$green"] || fl["$yellow"] || fl["$blue"]%>
+  <% if color %>
+    <% fl[color] = "" %>
+  <% else %>
+    <% color = "$yellow" %>
+  <% end %>
+  <div id="<%= key.to_s %>" class="flash-<%= color[1,10] %> well"> <!-- assigning css color class triming tailing $ -->
+  <%= raw fl %>
+  <% flash[key] = "" %>
+  </div>
+<% end %>
+  <body>
+    <%= yield %>
+  </body>
+</html>

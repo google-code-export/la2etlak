@@ -1,0 +1,43 @@
+
+<html> 
+	<% if @inviters.count != 0 %>
+	<header> Pending requests </header>
+
+	<ul>
+		<div>
+
+		<% @inviters.each do |inviter| %>
+			<li>
+				<div style="margin:1%;" >
+					<%= if inviter.name.nil?  then inviter.email.split('@').first else "#{member.name}  (#{member.email})"  end %>
+				</div>	
+				<%= link_to 'Approve',{:controller => 'friendships',
+				 	:action => 'accept',
+				  	:friend_id => inviter.id}, 
+				  	class: "btn btn-success" %>
+
+				<%= link_to 'Ignore',{:controller => 'friendships',
+				 	:action => 'remove',
+				 	:friend_id => inviter.id},
+				 	class: "btn" %>
+
+			</li>
+		<% end %>
+		</div>
+
+	</ul>
+	<% end %>
+	<div style="margin:2%;">
+	<%= link_to 'Friendlist',{:controller => 'friendships',
+		:action => 'index'}, 
+		class: "btn btn-small" %>
+	</div>
+
+	<% if @inviters.count > 5 %>
+		<div class="apple_pagination">
+			<%= will_paginate @inviters, :container => false %>
+		</div>
+	<% end %>
+
+
+</html>

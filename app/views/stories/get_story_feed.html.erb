@@ -1,0 +1,50 @@
+<% # encoding: utf-8%>
+<html>
+
+<!-- adding story title-->
+ <div align="center">
+        <h3> <%= @story.title %> </h3>
+      </div>
+
+<!--checking for media url if exsist adds the image-->
+    <% if @story.media_link != nil && @story.media_link.length > 3%>
+    <div align="center">
+    	<!-- Author: Menisy
+					making the image of the video redirect to 
+					the video link -->
+  <% if !@story.story_link.nil? && @story.category == "Facebook" %>
+   			 <a href="<%= @story.story_link %>" target="_new">
+  <% end %>
+    	<!-- Menisy end -->
+    <img src="<%=@story.media_link%>"  align="center">
+	 </div></br>
+	</a>
+	
+	<%end%>
+	
+ 	 
+<!-- adds content of story  -->
+ <% if @story.content != nil && @story.content.length > 0 && !@story.content.empty? %>
+ <div class="story-comment-box-mobile well" style="padding-left:10px;border-color:#D3C5C5;">
+ <%=raw @story.content %>
+ </div>
+ <%end%> 
+ <% type = "" %>
+ <% if @story.category == "Facebook" %>
+  <% if @story.title.index"shared a photo" %>
+    <% type = "photo" %>
+  <% else %>
+    <% type = "video" %>
+  <% end %>
+  <div class="story-comment-box-mobile" style="text-align:center">
+    <ul class="nav nav-list">
+      <li><%= link_to "Go to "+type , @story.story_link , class: "btn btn-primary", :target=>"_new" ,style: "margin:2%; height:25px;"%>
+      </li>
+      <li>
+          <font face="verdana" size="2" color="blue" >This button will redirect you out of LA2ETLAK!<br>Use the back soft key to return.</font>
+      </li>
+    </ul>
+  </div>
+ <% end %>
+</html> 	
+

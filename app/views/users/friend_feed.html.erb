@@ -1,0 +1,69 @@
+<!--$$$$$$$$$$$$$$$$$$ Rana $$$$$$$$$$$$$$$$$$$ -->
+
+<div id = "heading" class="story-component-box-mobile" style="padding-left: 5px;">
+     <!--displaying friend info and message if no stories were shared by him/her-->
+  <h4>Friend's information</h4><br>
+  <div class="well">
+     <table style="float:right">
+     <%@friend = User.find_by_id(@friend_id)
+         if (!(@friend.name.nil?) && @friend.name != "")
+              @username = @friend.name
+         else
+              @username = @friend.email.split('@')[0]
+         end%>
+     <tr><%= "Name: #{@username}"%></tr><br>
+     <tr><%= "Email: #{@friend.email}"%></tr>
+     </table>
+  </div>
+  <h4>Friend's feed</h4><br>
+</div>
+     
+<!--loop on each story to display it correctly-->
+<% # encoding: utf-8%>
+	<% unless @my_friend_stories.nil? || @my_friend_stories.empty? %>
+	<!-- if not nil -->
+	<% @my_friend_stories.each do |f| %>
+	<!-- I loop over the list of stories -->
+<div id ="my_stories" class="story-component-box-mobile">
+	<div class="well" style="border-right:5px solid #f89406;">
+				<% if f.id.nil?%>
+				<% serStory = Marshal::dump(f)%>
+					<h3><%= link_to(f.title, {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory} )%></h3>
+						<table style="float:right">
+							<tr>
+								<td><span class="pull-right bluebadge">Social Network Feed</span></td>
+							</tr>
+						</table>
+					
+				<%else%>
+						<h3><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h3>
+						<table style="float:right">
+							<tr>
+								<td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
+								<td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
+							</tr>
+						</table>
+					<%end%>
+	</div>		
+</div>
+	<%end%>
+        <%if (@my_friend_stories.size < 10)%>
+        <%else%>
+	<div class="apple_pagination">
+	<%= will_paginate @my_friend_stories, :container => false %>
+	</div>
+        <%end%>
+	<%else%>
+	<!--if nil or empty, a message appears -->
+	<div class="story-component-box-mobile">
+		This friend did not share any stories.
+	</div>
+	<%end%>
+<!-- block friend button -->
+<div id = "block">
+        <br><%= link_to " Block this friend ", 
+        {:controller => 'users', :action => 'block_friends_feed', :id => 
+        @friend_id},class: "user-component-button-absolute btn"%><br><br>
+</div>
+
+<!--$$$$$$$$$$$$$$$$$$ Rana $$$$$$$$$$$$$$$$$$$ -->

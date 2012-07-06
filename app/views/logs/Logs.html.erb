@@ -1,0 +1,156 @@
+	<div class="container-fluid maindiv">
+	
+	<div class="row-fluid">
+
+	 <div class="left_panel">
+	      	<ul class="nav nav-list left_panel ">
+
+		<li class="nav-header">
+					    Filter By
+					  </li>
+						<li class="divider"></li>
+					
+			<li>	<%= form_tag("/logs/filter", :method => "get") %>
+				<label class="checkbox">
+			    <input type="checkbox" value= "true" <%if( $admins=='true')%>  checked <%end%> name="admins" id="admin"> Admins
+			  </label>
+			 <label class="checkbox">
+			    <input type="checkbox" value= "true" <%if( $users=='true')%>  checked <%end%>  name="users" id="users"> Users
+			  </label>
+			 <label class="checkbox">
+			    <input type="checkbox" value= "true"  <%if( $stories=='true')%>  checked <%end%> name="stories" id="stories"> Stories
+			  </label>
+			 <label class="checkbox">
+			    <input type="checkbox" value= "true" <%if( $interests=='true')%>  checked <%end%>  name="interests" id="interests"> Interests
+			  </label>	  
+				<div>
+					 	<input class="btn btn-primary" name="commit" type="submit" 
+						         value="Filter" />
+					
+					</div>
+						</form>
+		
+			<li class="divider"></li>
+			<li class="nav-header">
+						   Choose a Period
+						  </li>
+			<li class="divider"></li>
+		
+			<li>
+				<%if( $datefilter==true ) 
+					@text1= $from_date 
+						end%>
+							<%if( $datefilter==true ) 
+								@text2= $to_date 
+									end%>
+				<%= form_tag("/logs/filterbydate", :method => "get") %>
+					  <label for="from" class="logs-take-input" >From :</label>
+					  <input type="text" class="input-medium" placeholder="YYYY-MM-DD" <%if( $datefilter==true )%> value=<%=@text1%> <%end%>  name="from"id="from">
+					 <label for="to"class="logs-take-input" >To :</label>
+					  <input type="text" class="input-medium" placeholder="YYYY-MM-DD" <%if( $datefilter==true )%> value=<%=@text2%> <%end%> name="to" id="to">
+				<div>
+					<div disabled="disabled">
+					<table>
+					 	<tr>
+						
+						<td><input class="btn btn-primary"  name="commit" type="submit" 
+						         value="Go" /></td>
+									<td><%=if $datefilter==true
+									link_to "Back to default", logs_path, class: "btn btn-primary" 
+									end%></td>
+									</tr>
+									</table>
+									</div>
+					</div>
+						</form>
+					
+				</li>
+					
+						<li class="divider"></li>
+						<li class="nav-header">
+									   Download Log File
+									  </li>
+									<%= link_to 'Get .xls file', logs_path(request.parameters.merge({:format => :xls})) ,class: "control-absolute btn btn-primary"%>
+						
+		
+			</ul>
+			
+		
+			  
+	    </div>
+
+	    <div class="right_panel" >
+			<table class=" table table-striped table-bordered">
+			  <thead>
+			    <tr>
+					 <td class="logs-table-row-type" ><h3>Type</h3></td>
+					  <td class="logs-table-row-timestamp"><h3>TimeStamp</h3></td>
+					 <td><h3>Log Message</h3></td>
+					<td><h3>Extra Variables</h3></td>
+			    </tr>
+			  </thead>
+			  <tbody>
+				<%$counter = 0%>
+			     <% $logs.each do |l| %>
+					<% if $typefilter==true && $admins!="true"&&l.loggingtype == 1 then next end%>	
+						<% if $typefilter==true && $users!="true"&&l.loggingtype == 0 then next end%>	
+							<% if $typefilter==true && $stories!="true"&&l.loggingtype == 2 then next end%>	
+								<% if $typefilter==true && $interests!="true"&&l.loggingtype == 3 then next end%>
+									<% if $datefilter==true && (l.created_at.to_date<$from_date || l.created_at.to_date>$to_date) then next end%>
+			                    <% if l.loggingtype == 0
+						         then  @st = "redbadge"
+						         elsif l.loggingtype == 1
+						           then @st = "bluebadge"
+						         elsif l.loggingtype == 2
+						           then @st = "yellowbadge"
+								elsif l.loggingtype == 3
+						          then @st = "greenbadge"
+						         end %>
+				  <tr >
+				  <td><span class=<%=@st%> >
+				                    <%= if l.loggingtype == 1
+							         then  "Admin"
+							         elsif l.loggingtype == 0
+							           then  "User"
+							         elsif l.loggingtype == 2
+							           then "Story"
+									elsif l.loggingtype == 3
+							          then "Interest"
+							         end %></span></td>
+				  <td class="logs-table-row"><%= l.created_at %></td>
+				  <td><%=  l.message %></td>
+					<td><%=  if(l.user_id_1 != nil)
+								link_to User.find(l.user_id_1).email,{:controller => 'users', :action => 'show', :id => l.user_id_1 },  class: " btn btn-primary btn-danger" 	
+							end%>
+						<%=	if(l.user_id_2 != nil)
+										link_to User.find(l.user_id_2).email,{:controller => 'users', :action => 'show', :id => l.user_id_2 }, class: "btn btn-primary  btn-danger" 	
+									end%>
+							
+												<%=	if(l.story_id != nil)
+																link_to Story.find(l.story_id).title,{:controller => 'stories', :action => 'show', :id => l.story_id },class: "btn btn-primary  btn-warning" 	
+															end%>
+															<%=	if(l.interest_id != nil)
+																			link_to Interest.find(l.interest_id).name,{:controller => 'interests', :action => 'show', :id => l.interest_id },  class: "btn btn-primary  btn-success" 	
+																		end%>
+						 </td>
+				  </tr>
+					<%$counter = $counter+1%>
+				<% end %>
+			
+			  </tbody>
+			</table>
+		
+				<%if $counter==0%>
+					
+							<h3 class="logs-take-input errorwell span10">No Data Found</h3>
+						
+					<%end%>
+		</div>
+	
+			
+	
+	</div>
+
+  </div>
+
+		</div>

@@ -1,0 +1,17 @@
+<!--$$$$$$$$$$$$$$$$$$ Rana $$$$$$$$$$$$$$$$$$$ -->
+
+<div id = "heading" style="padding-left:5px;">
+
+	      <h4>Click a friend to unblock him/her.</h4><br>
+</div>
+
+<div id = "list" class ="story-component-box-mobile", style ="padding-left:5px;">
+        <!--creates a button for each friend to unblock him/her -->
+	<% @my_friends.each do |fn|%>
+		<%= link_to fn.email, {:controller => 'users', :action =>
+                    'unblock_friends_feed', :id => User.find_by_email(fn.email).id},
+                    class: "user-component-button-absolute btn span3"%><br><br>
+	<%end%>
+</div>
+
+<!--$$$$$$$$$$$$$$$$$$ Rana $$$$$$$$$$$$$$$$$$$ -->

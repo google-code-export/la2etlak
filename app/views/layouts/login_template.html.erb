@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>LA2ETLAK!</title>
+
+	<%= stylesheet_link_tag    "application", :media => "all" %>
+  	<%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "exporting" %>
+	<%= javascript_include_tag "jquery" %>
+	<%= javascript_include_tag "prototype" %>
+	<%= javascript_include_tag "effects" %>
+	<%= javascript_include_tag "controls" %>
+    <%= javascript_include_tag "highcharts" %>
+	<%= javascript_include_tag "bootstrap-modal" %>
+	<%= javascript_include_tag "bootstrap-transition" %>
+	<%= javascript_include_tag "bootstrap-collapse" %>
+	<%= javascript_include_tag "bootstrap-dropdown" %>
+  	<%= javascript_include_tag "graph" %>
+  	<%= javascript_include_tag "bootstrap-tab" %>
+  	<%= csrf_meta_tags %>
+	
+
+
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+		
+		</head>
+
+<header class="navbar navbar-fixed-top">
+
+      <div class="navbar-inner">
+        <div class="container">
+          <%= link_to "LA2ETLAK", {controller: 'admins' ,action: 'index'}, id: "logo" %>
+        </div>
+      </div>
+    </header>
+	<SCRIPT language="javascript">
+		function dropdown(){
+		var $j = jQuery.noConflict();
+		$j('.dropdown-toggle').dropdown();
+		};
+	</SCRIPT>
+	<% keys = flash.keys %>
+	<% keys.each do |key| %>
+	  <% fl = flash[key] %>
+	  <% if fl == "" then next end %>
+	  <% color = fl["$red"] || fl["$green"] || fl["$yellow"] || fl["$blue"]%>
+	  <% if color %>
+	    <% fl[color] = "" %>
+	  <% else %>
+	    <% color = "$yellow" %>
+	  <% end %>
+	  <div class="flash-<%= color[1,10] %> well" id="notification"> <!-- assigning css color class triming tailing $ -->
+	  <%= raw fl %>
+	  <% flash[key] = "" %>
+	  </div>
+	<% end %>
+<body>
+      <%= yield %>
+
+</body>
+</html>

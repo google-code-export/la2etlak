@@ -1,0 +1,69 @@
+<div style="padding-left:1%;">
+    <h3> Choose a social network connect to</h3>
+
+      <div class="actions" style="margin:5%; clear:both">
+        <div>
+          <%= link_to image_tag('facebook.png', :size => "50x50") + "Facebook", 
+         url_for({:controller => 'facebook_account', :action => 'authenticate_facebook_init'}),
+           :class => 'quick', 
+           :remote => true%>
+          <% if @user.facebook_account %>
+          <br>
+          <%= link_to "Feed", {:controller => 'users', :action => 'facebook_feed'}, class: "btn", id: "facebook_feed"%>
+          <%= link_to "Disconnect", {:controller => 'facebook_account', :action => 'delete_account'}, class: "btn btn-danger", id: "facebook_disconnect"%>
+          <% end %>
+          </br>
+        </div>
+      </div>
+
+      <!-- This is the twitter division, please mock it 
+          in other social networks
+          
+          Author: Yahia -->
+      <div class="actions" style="margin:5%; clear:both">
+        <div>
+          <%= link_to image_tag('twitter.png', :size => "50x50") + "Twitter", 
+          url_for({:controller => 'twitter_accounts', :action => 'generate_request_token'}),
+          :class => 'quick', 
+          :remote => true%>
+          <% if @user.twitter_account %>
+          <br>
+          <%= link_to "Feed", {:controller => 'users', :action => 'twitter_feed'}, class: "btn", id:"feed_twitter"%>       
+          <%= link_to "Disconnect",  {:controller => 'twitter_accounts', :action => 'delete_account'}, class: "btn btn-danger", id:"disconnect_twitter"%>
+          <% end %>
+          </br>
+        </div>
+      </div>
+
+
+      <div class="actions" style="margin:5%; clear:both">
+        <div>
+          <%= link_to image_tag('flickr.png', :size => "50x50") + "Flickr", 
+            url_for({:controller => 'flickr_accounts', :action => 'auth'}),
+            :class => 'quick', 
+            :remote => true%>
+          <% if @user.flickr_account %>
+          <br>
+          <%= link_to "Feed", {:controller => 'users', :action => 'flickr_feed'}, class: "btn", id:"feed_flickr"%> 
+          <%= link_to "Disconnect", {:controller => 'flickr_accounts', :action => 'delete_account'}, class: "btn btn-danger", id:"disconnect_flickr"%>
+          <% end %>
+          </br>
+        </div>
+      </div>
+
+      <div class="actions" style="margin:5%; clear:both">
+        <div>
+          <%= link_to image_tag('tumblr.png', :size => "50x50") + "Tumblr", 
+            url_for({:controller => 'tumblr_accounts', :action => 'login'}),
+            :class => 'quick', 
+            :remote => true%> 
+          <% if @user.tumblr_account %>
+            <br>
+              <%= link_to "Feed", {:controller => 'users', :action => 'tumblr_feed'}, class: "btn", id: "feed_tumblr"%>
+              <%= link_to "Disconnect", {:controller => 'tumblr_accounts', :action => 'delete_account'}, class: "btn btn-danger", id:"disconnect_tumblr"%>
+          <% end %>
+          </br>
+        </div>
+      </div>
+
+</div>    

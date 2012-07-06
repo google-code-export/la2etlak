@@ -1,0 +1,208 @@
+<script type="text/javascript" charset="utf-8">
+  //This is a method that will be called on viewing this page it gets the data 
+  //that will be added to the graph + what's the start
+  //point and also what is the interval between each two points default will be 
+  //1 day also it takes the names of the things it
+  //view across time by default for a story we will view no of shares, 
+  //no of likes, no of dislikes and no of spams
+  //and then call method Graph that will view the graph with the parameters 
+  //already stated.
+   
+  //Also this method gets the start date of data flow from get_story_start_date 
+  //method in StoriesHelper.
+  var $j=jQuery.noConflict();
+  
+  $j(document).ready(function() {
+      //get The story's array of arrays of data
+      data= <%= @story.get_story_stat %>;
+      //the names of the graphs that we want to show
+      names = ["No Of Shares","No Of Likes","No of Dislikes","No of Flags","No of Comments"]; 
+      //the time interval between one point and another in the graph.
+      pointInterval = <%= 1.day * 1000 %> ;
+      //Start point of the graph.
+      start_date = <%= @story.get_story_start_date.to_i %>;
+      /*check if the story was deleted before the last 30 days
+      if no, then render the graph normally. If yes, 
+      then show the warning described in the HTML part below*/
+      if(start_date != -1) {
+      	pointStart = <%= @story.get_story_start_date.days.ago.to_i * 1000 %>;
+      	//Label for x-axis
+      	xl="Day"; 
+      	yl="Number";
+      	titleOfGraph="Story Statistics";
+      	document.getElementById("deletedStory").style.display = "none";
+      	//call the method that renders the graph with the calculated parameters.
+      	Graph(data,names,pointInterval,pointStart,xl,yl,titleOfGraph); 
+      } else {
+      	document.getElementById("ccc").style.display = "none";
+      	document.getElementById("deletedStory").style.display = "block";
+      }  
+   		likes= <%= @story.likedislikes.where(action: 1).count %>;
+   		dislikes = <%= @story.likedislikes.where(action: -1).count %>;
+   		total = likes + dislikes;
+   		if(total == 0) {
+     		document.getElementById("progressbar").style.display = "none";
+   		} else {
+      	document.getElementById("progressbar").style.display = "block";
+   		}
+   });
+   
+</script>
+<div class="row-fluid">
+	<div class="sidebar-nav-fixed">
+		<div class="well sidebar-nav">
+	    <ul class="nav nav-list">
+				<li class="nav-header">Directory</li>
+				<li class="divider"></li>		
+				<li><a href="/users"><i class="icon-user"></i><font size="4%">Users</font></a></li>
+				<li><a href="/interests/list"><i class="icon-heart"></i><font size="4%">Interests</font></a></li>
+				<li><a href="/stories"><i class="icon-book"></i><font size="4%">Stories</font></a></li>
+				<li class="divider"></li>
+				<li class="active"><a href="/admins/statistics/all_users"><i class="icon-signal"></i><font size="4%">Statistics</font></a></li>
+				<li><a href="/logs"><i class="icon-list"></i><font size="4%">Logs</font></a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="main-user-profile-page">
+		<div class="middle-user-profile-page-panel">
+    	<a href="/stories/<%=@story.id%>"> 
+    		<h2 style="margin-bottom: 20px;"><%= @story.title %></h2>
+    	</a>
+    	<div class="alert" id="deletedStory" style="display: none;">
+        <h1><strong>Warning!</strong> Story was hidden before the last 30 days. 
+        		Therefore, there is no graph to be shown.
+        </h1>
+     	</div>
+    	<!-- ccc is the id of the div that the graph would render to -->
+			<div id="ccc" style="margin-bottom: 20px;"></div>
+			<div id="graph" style="float:left; width:35%; background-color: whiteSmoke">
+				<ul class="nav nav-list">	
+					<li class="divider"></li>
+					<div class="statistics-page-well">
+						<div class="accordion-inner">
+							<h3 class="statistics-component-text">
+								Likes/Dislikes: <%= @story.likedislikes.where(action: 1).count %> / <%= @story.likedislikes.where(action: -1).count %>
+							</h3> 
+							<div class="progresscustom" id="progressbar" style="display: none;">
+	 							<div class="barcustom" id="barofprogress" style="width: <%= get_width %>%">
+	 							</div>
+							</div>						      					
+							<h3 class="statistics-component-text">Number of Flags: <%= @story.flags.count %>
+								<% if @story.flags.count == 1 %>
+									<%= "Flag" %>
+								<% else %>
+									<%= "Flags"  %>
+								<%  end %>
+							</h3>
+							<h3 class="statistics-component-text">Number of Shares: <%= @story.shares.count %>
+								<% if @story.shares.count == 1 %>
+									<%= "Share" %>
+								<% else %>
+									<%= "Shares"  %>
+								<%  end %>
+							</h3>
+							<h3 class="statistics-component-text">Number of Comments: <%= @story.comments.count %>
+								<% if @story.comments.count == 1 %>
+									<%= "Comment" %>
+								<% else %>
+									<%= "Comments"  %>
+								<%  end %>
+							</h3>
+						</div>
+					</div>
+				</ul>
+	 		</div>
+	 		<div style="float:right; width:60%; background-color:whiteSmoke;">
+				<ul class="nav nav-list">
+					<h3 class="statistics-component-text">
+						<% if @story.sharers.uniq.count == 0 %>
+	 						<%= "This story was not shared by anyone" %>
+						<% elsif @story.sharers.uniq.count == 1 %>
+							Shared by <%= @story.sharers.uniq.count %>
+							<%= "user" %>
+						<% else %>
+							Shared by <%= @story.sharers.uniq.count %>
+							<%= "users"  %>
+						<%  end %>
+					</h3>
+					<li class="divider"></li>
+					<% if @story.sharers.uniq.count != 0 %>
+						<div class="pre-scrollable-statistics">
+							<% @story.sharers.uniq.each do |user| %>
+								<div class="well-user-component" style="background-color: #E5E5E5;">
+                  <a href="/users/<%= user.id%>" style="display:block; float:left; height:100px;">
+                    <% if not user.image? %>
+                    	<%= image_tag "logo.jpeg", :class=>"img-user-component" %>
+                    <% else %>
+                    	<img src= "<%= user.image %>" width="80" style="height:100px"/>
+                    <% end %>
+                  </a>
+                  <div style="padding-left:10px; margin-left:100px;">
+                    <h3><% if user.name.nil? %>
+                      		<%= user.email.split("@")[0] %>
+                    		<% else %>
+                      		<%= user.name %>
+                    		<% end %>
+                  	</h3>
+                   	<%= link_to "Profile",
+                   	{:controller => 'users', :action => 'show',:id => user.id },
+                    class: "interest-component-button-absolute btn btn-warning"%>
+                    <h5>Email : <%=user.email%></h5>
+                    <h5>Shares for this story: 
+                   	(
+                    <%= @story.shares.where(user_id: user.id).count %>
+                    <% if @story.shares.where(user_id: user.id).count == 1 %>
+                      <%= "share" %>
+                    <% else %>
+                      <%= "shares"  %>
+                    <%  end %>
+                    )
+                    </h5>
+                    <%= link_to "Statistics",
+                    {:controller => 'statistics', :action => 'users',:id => user.id },
+                    class: "interest-component-button-absolute btn btn-primary"%>
+                   	<h5>Registration date : <%=time_ago_in_words(user.created_at) + " ago"%></h5>
+                   	<% if !(user.deactivated) %>
+                       <span class="greenbadge"  style="width:100%" >Active</span>
+                   	<% else%>
+                       <span class="redbadge"  style="width:100%">Deactivated</span>
+                   	<% end %>
+                 	</div>
+                </div>
+							<% end %>
+						</div>
+					<% end %>
+				</ul>
+			</div>
+      <div style="width:90%; margin-top:20px; float:left; margin-left:4%; margin-right:4%; background-color:whiteSmoke; padding-left: 10px; padding-right:10px;">
+        <h3 class="statistics-component-text" style="margin-bottom: 10px;">Related Interest:</h3>
+        <div class="well-interest-component" style="background-color: #E5E5E5;">
+          <a href="/interests/<%= @story.interest.id%>" style="display:block; float:left; height:100px;">
+          	<% if not @story.interest.photo.file? %>
+            	<%= image_tag "logo.jpeg", :class=>"img-user-component" %>
+            <% else %>
+            	<img src= "<%= @story.interest.photo.url(:small) if @story.interest.photo.file? %>" width="80" style="height:100px"/>
+            <% end %> 
+          </a>
+          <div style="padding-left:10px; margin-left:100px;">
+          	<h3><%= @story.interest.name  %></h3>
+            <%= link_to "Interest", 
+            {:controller => 'interests', :action => 'show',:id => @story.interest.id }, 
+            class: "interest-component-button-absolute btn btn-warning"%>
+            <h5>Rank : <%=@story.interest.get_interest_rank%></h5>
+            <h5>No Of Stories: <%=@story.interest.stories.count%></h5>
+            <%= link_to "Statistics", 
+            {:controller => 'statistics', :action => 'interests',:id => @story.interest.id }, 
+            class: "interest-component-button-absolute btn btn-primary"%>
+            <h5>No Of Subscribers: <%=@story.interest.adding_users.count%></h5>
+            <% if !(@story.interest.deleted ) %>
+            	<span class="greenbadge"  style="width:100%" >Active</span>
+            <% elsif @story.interest.deleted %>
+              <span class="redbadge"  style="width:100%">Blocked</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+	</div>
+</div>

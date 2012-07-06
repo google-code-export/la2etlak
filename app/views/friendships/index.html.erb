@@ -1,0 +1,61 @@
+<html> 
+	<% unless @friends.empty? %>
+		<ul>
+			<% @friends.each do |friend| %>
+				<li> <%= if friend.name.nil?  then friend.email.split('@').first else friend.name + " (#{friend.email})" end %> </li>
+				<% if @user.pending_invited.include? friend%>
+					<%=	link_to 'Remove request',{:controller => 'friendships',
+												:action => 'remove_request', 
+												:friend_id => friend.id}, 
+												class: "btn btn-warning" 	
+					%>					
+				<% else %>
+					<%=	link_to 'Remove',{:controller => 'friendships',
+												:action => 'remove', 
+												:friend_id => friend.id}, 
+												class: "btn btn-danger" 	
+					%>
+					<%= link_to 'Feed', {:controller => 'users',
+											  :action => 'friends_feed',
+											  :id => friend.id}, 
+												class: "btn"%>
+					<% if @user.blocked? friend %>
+						<%= link_to 'Unblock', {:controller => 'friendships',
+											  :action => 'unblock',
+											  :friend_id => friend.id}, 
+												class: "btn btn-warning"%>
+					<% else %>
+						<%= link_to 'Block', {:controller => 'friendships',
+											  :action => 'block',
+											  :friend_id => friend.id}, 
+												class: "btn btn-warning"%>
+
+					<% end %>												
+
+				<% end %>
+
+
+			<% end %>	
+		</ul>
+	<% end %>
+	<div style="padding-top:4%"> 
+		<%= form_tag("search", :method => "get") do %>
+		  <%= label_tag(:q, "Search for friends using name or email:") %>
+		  <%= text_field_tag(:query, "", :style => "height:40px;") %>
+		  <div>
+		  	<%= submit_tag("Search", :class => "btn", :style => "height:40px") %>
+		  <div>	
+		<% end %>
+	</div>
+	<div style="padding-top:1%">
+		<%= link_to 'Manage blocked friends', {:controller => 'users', :action => 'manage_blocked_friends'}, 
+		class: "btn"%>
+	</div>
+
+	<% if @friends.count > 5 %>
+		<div class="apple_pagination">
+			<%= will_paginate @friends, :container => false %>
+		</div>
+	<% end %>
+
+</html>

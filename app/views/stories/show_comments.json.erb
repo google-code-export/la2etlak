@@ -1,0 +1,12 @@
+{"Comments":[
+<% @n = @comments.length %>
+<% @comments.each do |c| %>
+<% @n-=1 %>
+{"id":"<%= c.id %>",
+"user_name":"<%= if User.find(c.user_id).name.nil? then "name" else User.find(c.user_id).name end%>",
+"content":"<%= if c.content.nil? then "content" else c.content  end%>",
+"story_id":"<%= c.story_id %>",
+"created_at":"<%= c.created_at %>",
+"ups":"<%= Upped.find_all_by_comment_id(c.id).length %>",
+"downs":"<%= Downed.find_all_by_comment_id(c.id).length %>"}<%= "," if(@n>0)%><% end %>]}
+
