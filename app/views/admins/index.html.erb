@@ -34,7 +34,18 @@ $j(function() {
 						<li class="bluebadge" id="users_signed_in"><p align="center"><%= User.get_no_of_users_signed_in_today %> sign ins</p></li>
 						<% end %>
 						</ul>
-				</div>		  
+				</div>
+				<div style="margin-top: 20px; background-color: #f8f8f8;">
+					<ul class="nav nav-list">
+					  <li class="nav-header">
+					     La2etlak Numbers : </li>
+					     <li class="divider"></li>
+					     <li class="nav-header" style="margin-left:20%; margin-right:20%; width: 60%;"> <%= User.all_user_registered %> users.</li>
+					     <li class="nav-header" style="margin-left:20%; margin-right:20%; width: 60%;"> <%= Interest.count %> interests.</li>
+					     <li class="nav-header" style="margin-left:20%; margin-right:20%; width: 60%;"> <%= Story.count %> stories.</li>
+				    
+				</ul>
+		</div>		  
 	 	</div>
 		<div id="feeds" class="admin_right_panel well" style="padding:10px">
 			<h2>Main Feeds</h2>
