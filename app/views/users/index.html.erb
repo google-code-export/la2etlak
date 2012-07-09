@@ -32,7 +32,7 @@
 					
 						<div class="well admin_story_feed "  style=" border-right:5px solid #b94a48; ">
 							<% if @user.image == nil%>
-				     		<%= image_tag "logo.jpeg"  , style: "float:left; margin-right:20px; width=150x; height:150px;" %>
+				     		<%=  link_to (image_tag "logo.jpeg"  , :style => "float:left; margin-right:20px; width=150x; height:150px;"), {:action => 'show', :controller => 'users' , :id => @user.id } %>
 				     		<% else %>
 				           <img style="width:150px; height:150px;" src= <%= user.image %> >
 				            <% end %>
