@@ -52,6 +52,8 @@
 		 <% if @likes.length > 0 %>
 		  <% @a = "#{@likes.length}" %>
 		 <%=link_to("#{@likes.length}"+" user".pluralize(@likes.length)+ " like this." , {:controller => "stories", :action => "liked_mobile_show", :id => (@story.id)})%>
+     <%else%>
+     <%="#{@likes.length}"+" user".pluralize(@likes.length)+ " like this."%>
 	 <%end%><br>
 
 
@@ -61,6 +63,8 @@
   <% if @dislikes.length > 0 %>
 	  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 	  <%=link_to(@a, {:controller => "stories", :action => "disliked_mobile_show", :id => (@story.id)})%>
+    <%else%>
+    <%="#{@dislikes.length}"+" user".pluralize(@likes.length)+ " dislike this."%>
   <%end%>
  <%end%>
 <%end%>
@@ -79,6 +83,8 @@
 	  <% if @dislikes.length > 0 %>
 		  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 		  <%=link_to(@a , {:controller => 'stories', :action => 'disliked_mobile_show', :id => (@story.id)})%>
+     <%else%>
+     <%="#{@dislikes.length}"+" user".pluralize(@likes.length)+ " dislike this."%> 
   	  <%end%>
  	
   <%end%>
@@ -92,6 +98,8 @@
 	 	<% if @likes.length > 0 %>
  			<% @a = "#{@likes.length}"+" user".pluralize(@likes.length)+ " like this." %>
  			<%=link_to(@a , {:controller => 'stories', :action => 'liked_mobile_show', :id => (@story.id)})%>
+      <%else%>
+           <%="#{@likes.length}"+" user".pluralize(@likes.length)+ " like this."%>
  		<%end%></br>
 
 	<%= link_to image_tag('un-dislike.png' , :style =>"width:30px;height:30px;"), {:controller => 'likedislikes' , :action => 'thumb' , :sid => @story.id  , :act => -1 }%> 
@@ -122,6 +130,8 @@
 		 <% if @likes.length > 0 %>
 		  <% @a = "#{@likes.length}" %>
 		 <%=link_to("#{@likes.length}"+" user".pluralize(@likes.length)+ " like this." , {:controller => "stories", :action => "liked_mobile_show", :id => (@story.id)})%>
+     <%else%>
+      <%="#{@likes.length}"+" user".pluralize(@likes.length)+ " like this."%>
 		 <%end%>
 	  </br>
 
@@ -132,7 +142,8 @@
 		  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 		  <%=link_to(@a, {:controller => "stories", :action => "disliked_mobile_show", :id => (@story.id)})%>
 		  <%end%>
-	
+      <%else%>
+      <%="#{@dislikes.length}"+" user".pluralize(@likes.length)+ " dislike this."%>
 		  <%end%>
 		  
 <!-- if user liked this story before remove like button and only adds dislike button -->
@@ -163,6 +174,8 @@
 	 	<% if @likes.length > 0 %>
 	 		<% @a = "#{@likes.length}"+" user".pluralize(@likes.length)+ " like this." %>
 	 		<%=link_to(@a , {:controller => 'stories', :action => 'liked_mobile_show', :id => (@story.id)})%>
+    <%else%>
+    <%="#{@likes.length}"+" user".pluralize(@likes.length)+ " like this."%>  
  		<%end%><br>
 
    	   <%= link_to image_tag('un-dislike.png' , :style =>"width:30px;height:30px;"), {:controller => 'likedislikes' , :action => 'thumb' , :sid => @story.id  , :act => -1 }%> 
