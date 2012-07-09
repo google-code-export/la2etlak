@@ -1,7 +1,7 @@
 <html> 
 
 	<%= form_tag("search", :method => "get") do %>
-	  <%= text_field_tag(:query, "#{@query}", :style => "height:40px; width:150px",
+	  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
 	  									 :placeholder => 'Search') %>
 	  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
 	<% end %>
@@ -10,10 +10,20 @@
 	<% if @query.nil? or @query == ''%>
 		<h5> No results </h5>
 	<% else %>
-		<ul>
+		<ul class="nav nav-list">
+			<table style="width:100%;">
+				<tr>
+		 	<td align="left"><font size = "4"><b align ="left">Search Results</b></font></td>
+			<td  align="right">	<%= link_to 'Back to your Friends list',{:controller => 'friendships',
+					:action => 'index'}, 
+					class: "btn btn-small" %></td>
+				</tr></table>
+			</ul>
+				<ul class="nav nav-list ">
 			<% @resulted_users.each do |member| %>
-				<li> <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </li>
-				
+				<li class="divider"></li>
+				<li><b> <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </b></li>
+					<div align="right">
 				<%=	if member.friends.include? @user or member.blocked? @user
 					link_to 'Remove friendship',{:controller => 'friendships',
 						:action => 'remove', 
@@ -43,21 +53,10 @@
 						
 
 				end %>
-
+				</div>
 			<% end %>	
 		</ul>
 	<% end %>
 	
-	<div style="margin:2%;">
-		<%= link_to 'Friendlist',{:controller => 'friendships',
-			:action => 'index'}, 
-			class: "btn btn-small" %>
-	</div>
-
-	<% if @resulted_users.count > 5 %>
-		<div class="apple_pagination">
-			<%= will_paginate @resulted_users, :container => false %>
-		</div>
-	<% end %>
 
 </html>

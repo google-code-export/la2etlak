@@ -39,7 +39,7 @@ $j(function() {
 			<%if $newsfeed != []%>
 			  		<% $newsfeed.each do |nf| %>
 					<%if (nf.kind_of?(Interest))%>
-					<%@interest = nf%>	
+					<%@interest = nf%>
 					<div>
 						<span class="pull-left greenbadge " style=" -webkit-transform: rotate(-45deg);	
 								-moz-transform: rotate(-45deg);
@@ -53,14 +53,14 @@ $j(function() {
 						<% name = @interest.name  %>
 						<%  end %>
 							<div class="well admin_story_feed "  style=" border-right:5px solid #468847; ">
-									<font size="5"><b><%= 
+									<font size="3"><b><%= 
 									link_to(name , {:controller => "interests", :action => "show",:id => @interest.id}) %></b></font>
 									<span class="pull-right bluebadge "><%=time_ago_in_words(@interest.created_at)%></span>
 									<div>
 								<% if !@interest.photo.file? %>
 					     		<%= image_tag "logo.jpeg"  , style: "float:left; margin-right:20px; width=150x; height:150px;" %>
 					     		<% else %>
-					            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px; height:150px;"/>
+					            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px;height:150px;float:left; margin-right:20px;"/>
 					            <% end %>
 								<div class"control-panel">
 									<% if (@interest.deleted == nil) %>
@@ -101,7 +101,7 @@ $j(function() {
 								<%if story.content != nil || story.content != ""%>
 									<%=raw story.content %>
 									<%else%>
-										<p><font size="3">No content</p>
+										<p><font size="3">No content</p></font>
 									<%end%>
 									
 							</div>
@@ -120,7 +120,7 @@ $j(function() {
 						<div class="well" style="margin-left:7%">
 							<h3><%= User.find(comment.user_id).email %></h3>
 							<div class="comment-component-well">
-								<p><font size="2"><%= comment.content %></p>
+								<p><font size="2"><%= comment.content %></p></font>
 							</div>
 										<span class="pull-right redbadge">Downs(<%=comment.get_num_downs%>)</span>
 							<span class="pull-right greenbadge">  Ups  (<%=comment.get_num_ups%>)</span>
@@ -128,8 +128,9 @@ $j(function() {
 						</div>
 							<%end%>
 							<%else%>
-							<p><font size="3">No comments</p>
-							<%end%>	
+							<p><font size="3">No comments</p></font>
+							<%end%>
+							</div>
 					<%end%>
 					</div>
 			<%end%>

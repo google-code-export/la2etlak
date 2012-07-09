@@ -10,6 +10,10 @@ class UsersController < ApplicationController
 	Author: Kiro
 =end
  	def new
+    unless nokia_user?
+      return render text: 'This app is for Nokia users only.'      
+    end 
+
     @user = User.new
     render :layout => "mobile_template"
   end
@@ -26,23 +30,33 @@ class UsersController < ApplicationController
 	Author: Kiro
 =end
   def create
-    @user = User.new(params[:user])
-		@user.email = params[:user][:email].downcase
-    if @user.save
-      @user.generateVerificationCode?
-      Emailer.verification_instructions(@user).deliver
-      flash[:notice] = "Thank you for joining La2etlak, you just recieved an E-mail containing the verification instructions $green"
-			session = UserSession.new(@user)
-			if session.save
-				UserLogIn.create!(:user_id => @user.id)				
-     		redirect_to "/mob/toggle"
-			else
-				redirect_to "/dummyLogin"
-			end
-   else
-     	flash[:notice] = @user.errors.full_messages[0].to_s + "$red"
-    redirect_to :action => 'new', :layout => "mobile_template"
-   end
+    # Author Yahia : added begin, rescue
+    unless nokia_user?
+      return render text: 'This app is for Nokia users only.'      
+    end 
+
+    begin
+      @user = User.new(params[:user])
+  		@user.email = params[:user][:email].downcase
+      @user.name = @user.email.split('@')[0]
+      if @user.save
+        @user.generateVerificationCode?
+        Emailer.verification_instructions(@user).deliver
+        flash[:notice] = "Thank you for joining La2etlak, you just recieved an E-mail containing the verification instructions $green"
+  			session = UserSession.new(@user)
+  			if session.save
+  				UserLogIn.create!(:user_id => @user.id)				
+       		redirect_to "/mob/toggle"
+  			else
+  				redirect_to "/dummyLogin"
+  			end
+     else
+      flash[:notice] = @user.errors.full_messages[0].to_s + "$red"
+      redirect_to :action => 'new', :layout => "mobile_template"
+     end
+    rescue 
+      redirect_to "/mob/toggle"
+    end 
   end
 
 =begin
@@ -76,6 +90,10 @@ class UsersController < ApplicationController
 	Author: Kiro
 =end
 	def resetPassword
+    unless nokia_user?
+      return render text: 'This app is for Nokia users only.'      
+    end 
+
 		@user = User.find_by_email(params[:email].downcase)
     if @user.nil?
       flash[:notice] ="This email doesn't exist $red"
@@ -93,6 +111,10 @@ class UsersController < ApplicationController
 	Author: Kiro
 =end
   def forgot_password
+    unless nokia_user?
+      return render text: 'This app is for Nokia users only.'      
+    end 
+    
     @email
     render :layout => 'mobile_template'
   end
@@ -130,162 +152,167 @@ Output: Array of Stories according to the Description Stored in variable @storie
 Author: Kareem
 =end
 
-def feed
-                user = current_user
-                int_name = params[:interest]
-                if(user.user_add_interests == [] && !int_name)
-                        stories = user.get_unblocked_stories(Story.get_stories_ranking_last_30_days[0..4])
-                        temp_stories = user.get_friends_stories
-                        temp_stories = temp_stories + user.get_social_feed
-                        temp_stories.shuffle!
-                        stories = stories + temp_stories
-                else
-                        if(int_name)
-                                #stories = user.get_feed(int_name)
-                                interest = Interest.find_by_name(int_name)
-                                stories = user.get_interest_stories(interest)
-                        else
-                                stories = user.get_unblocked_stories(Story.get_stories_ranking_last_30_days)[0..4]
-                                temp_stories = user.get_feed
-                                temp_stories = temp_stories + user.get_friends_stories
-                                temp_stories = temp_stories + user.get_social_feed
-                                temp_stories.shuffle!
-                                stories = stories + temp_stories
-                        end
-                end
-                stories = stories.uniq
-								if (stories == []) 	
-										flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=	\"color:#FF0000;\">Click here to add some 										interests. </h7> </a> $yellow"
-								end
-                # Author : Mina Adel
-                @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-                render :layout => "mobile_template"
-        #
-        end
+  def feed
+    user = current_user
+    int_name = params[:interest]
+    if(user.user_add_interests == [] && !int_name)
+     # stories = user.get_unblocked_stories(Story.get_stories_ranking_last_30_days[0..4])
+      temp_stories = user.get_friends_stories
+      temp_stories = temp_stories + user.get_social_feed
+      temp_stories.shuffle!
+      # stories = stories + temp_stories
+      stories = temp_stories 
+    else
+      if(int_name)
+        #stories = user.get_feed(int_name)
+        interest = Interest.find_by_name(int_name)
+        stories = user.get_interest_stories(interest)
+        stories.sort! {|b,a| a.created_at <=> b.created_at}
+      else
+        # stories = user.get_unblocked_stories(Story.get_stories_ranking_last_30_days)[0..4]
+        temp_stories = user.get_feed
+        temp_stories = temp_stories + user.get_friends_stories
+        temp_stories = temp_stories + user.get_social_feed
+        temp_stories.shuffle!
+        # stories = stories + temp_stories
+        stories = temp_stories
+      end
+    end
+    stories = stories.uniq    
+    # YAHIA
+    stories.delete_if{|x| x.hidden}
+    # YAHIA END
+    if (stories == []) 	
+        flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=	\"color:#FF0000;\">Click here to add some 										interests. </h7> </a> $yellow"
+    end
+    # Author : Mina Adel
+    @stories=stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template"
+  end
 ########################
 
 =begin
-Description: Method to render the settings view 
-Input: none
-Output: @user, the current user
-Author: Mina Adel
+  Description: Method to render the settings view 
+  Input: none
+  Output: @user, the current user
+  Author: Mina Adel
 =end
-def settings
-	@user = current_user
-  render :layout => "mobile_template"
-end
-
-
-=begin
-Description: Method to render the Facebook feed view
-Input: none
-Output: @user, the current user. @stories, the facebook stories
-Author: Mina Adel
-=end
-def facebook_feed
-  @user = current_user
-  stories = @user.filter_social_network(2)
-  @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-  render :layout => "mobile_template", :template => "users/feed"
-end
-
-=begin
-Description: Method to render the Twitter feed view
-Input: none
-Output: @user, the current user. @stories, the Twitter stories
-Author: Mina Adel
-=end
-def twitter_feed
-  @user = current_user
-  stories = @user.filter_social_network(1)
-  @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-  render :layout => "mobile_template", :template => "users/feed"
-end
-
-=begin
-Description: Method to render the Flickr feed view
-Input: none
-Output: @user, the current user. @stories, the flickr stories
-Author: Mina Adel
-=end
-def flickr_feed
-  @user = current_user
-  stories = @user.filter_social_network(3)
-  @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-  render :layout => "mobile_template", :template => "users/feed"
-end
-
-=begin
-Description: Method to render the Tumblr feed view
-Input: none
-Output: @user, the current user. @stories, the tumblr stories
-Author: Mina Adel
-=end
-def tumblr_feed
-  @user = current_user
-  stories = @user.filter_social_network(4)
-  @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-  render :layout => "mobile_template", :template => "users/feed"
-end
-
-=begin
-Description: Method to call on the User model method, share
-Input: story id via params
-Output: none
-Author: Mina Adel
-=end
-def share_story
-  @user = current_user
-  story_id = params[:id]
-  if(@user.share(story_id))
-    flash[:story_successfully_shared] = "You have successfully shared this story, it will now appear on your friends' feeds $green"
-  else
-    flash[:story_not_shared] = "Story not successfully shared, please try again later $red"
+  def settings
+    @user = current_user
+    render :layout => "mobile_template"
   end
-  redirect_to("/stories/"+story_id+"/get", :flash => flash)
-end
+
 
 =begin
-Discription : this method return current user interests and all interests on the system and render to mobile_template (toggle view )
- Author Omar 
+  Description: Method to render the Facebook feed view
+  Input: none
+  Output: @user, the current user. @stories, the facebook stories
+  Author: Mina Adel
+=end
+  def facebook_feed
+    @user = current_user
+    stories = @user.filter_social_network(2)
+    @stories=stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template", :template => "users/feed"
+  end
+
+=begin
+  Description: Method to render the Twitter feed view
+  Input: none
+  Output: @user, the current user. @stories, the Twitter stories
+  Author: Mina Adel
+=end
+  def twitter_feed
+    @user = current_user
+    stories = @user.filter_social_network(1)
+    @stories=stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template", :template => "users/feed"
+  end
+
+=begin
+  Description: Method to render the Flickr feed view
+  Input: none
+  Output: @user, the current user. @stories, the flickr stories
+  Author: Mina Adel
+=end
+  def flickr_feed
+    @user = current_user
+    stories = @user.filter_social_network(3)
+    @stories=stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template", :template => "users/feed"
+  end
+
+=begin
+  Description: Method to render the Tumblr feed view
+  Input: none
+  Output: @user, the current user. @stories, the tumblr stories
+  Author: Mina Adel
+=end
+  def tumblr_feed
+    @user = current_user
+    stories = @user.filter_social_network(4)
+    @stories=stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template", :template => "users/feed"
+  end
+
+=begin
+  Description: Method to call on the User model method, share
+  Input: story id via params
+  Output: none
+  Author: Mina Adel
+=end
+  def share_story
+    @user = current_user
+    story_id = params[:id]
+    if(@user.share(story_id))
+      flash[:story_successfully_shared] = "You have successfully shared this story, it will now appear on your friends' feeds $green"
+    else
+      flash[:story_not_shared] = "Story not successfully shared, please try again later $red"
+    end
+    redirect_to("/stories/"+story_id+"/get", :flash => flash)
+  end
+
+=begin
+  Discription : this method return current user interests and all interests on the system and render to mobile_template (toggle view )
+   Author Omar 
 =end
 
-def toggle
-   @user = current_user
-   @user_interests = @user.added_interests
-   @all_interests = Interest.get_all_interests_for_users
-   render :layout => "mobile_template"
-end
+  def toggle
+     @user = current_user
+     @user_interests = @user.added_interests
+     @all_interests = Interest.get_all_interests_for_users
+     render :layout => "mobile_template"
+  end
 
 =begin 
-Discription : updates user interests according what the user selects  and redirect to the same view toggle to update view of interests
-Author Omar
+  Discription : updates user interests according what the user selects  and redirect to the same view toggle to update view of interests
+  Author Omar
 =end
 
-def int_toggle
-  user = current_user
-  id_num = params[:id]
-  id = Interest.find(id_num)
-  text = user.toggle_interests(id)
-   if (text == "Interest added.")
-      flash[:block_interest_toggle_s] = "#{text} $green"
-   else 
-      flash[:block_interest_toggle_f] = "#{text} $red"
-   end    
-  redirect_to "/mob/toggle"
-end
+  def int_toggle
+    user = current_user
+    id_num = params[:id]
+    id = Interest.find(id_num)
+    text = user.toggle_interests(id)
+     if (text == "Interest added.")
+        flash[:block_interest_toggle_s] = "#{text} $green"
+     else 
+        flash[:block_interest_toggle_f] = "#{text} $red"
+     end    
+    redirect_to "/mob/toggle"
+  end
 
 
 
 #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 =begin
- Method Descriotion: This method is responsible for calling the resetPassword method 
- in the users model that generates a random password and updates his password then it 
- is passed to the emailer to send this mail with the format I made in send_forced_password 
- in the mailers view.Then a success flash appears to inform the admin that the password is
- sent successfully then it redirects again to the show page.
- Author: Gasser
+  Method Descriotion: This method is responsible for calling the resetPassword method 
+  in the users model that generates a random password and updates his password then it 
+  is passed to the emailer to send this mail with the format I made in send_forced_password 
+  in the mailers view.Then a success flash appears to inform the admin that the password is
+  sent successfully then it redirects again to the show page.
+  Author: Gasser
 =end
   def force_reset_password     
     @user = User.find(params[:id])
@@ -634,6 +661,10 @@ feed and renders the view.
 =end
   def update
     @user = current_user
+    # Author: Yahia
+    params[:user].map {|k,v| if v.blank? then params[:user].delete(k) end}
+
+    # Author: Yahia End 
     if @user.update_attributes(params[:user])
         flash[:notice] = "Your info has been updated $green"
         redirect_to action:"edit"

@@ -54,6 +54,7 @@
 					<% end %>
 				<% end %>
 			<% else %>
+			<%if f.interest.deleted.nil?%>
 			<div id=<%=f.title%> class="well" style="border-right:5px solid #f89406;">
 			<% if f.title.nil? %>
 				<h3><%= link_to("Interest Feed, No Title", {:controller => 'stories', :action => 'get', :id => f.id} )%></h3>
@@ -79,6 +80,7 @@
 				</table>
 				<% end %>
 				</div>
+				<%end%>
 			<% end %>
 		</div>
 		<% end %>

@@ -20,7 +20,7 @@ class TwitterAccountsController < ApplicationController
 
     #FIXME change IP 
     request_token = TwitterAccount.twitter_consumer.get_request_token(:oauth_callback => 
-                "http://127.0.0.1:3000/mob/twitter/generate_access_token")
+                "#{IP}mob/twitter/generate_access_token")
 
     url = request_token.authorize_url
     redirect_to(url)

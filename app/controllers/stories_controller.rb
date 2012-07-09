@@ -272,4 +272,15 @@ end
     end
 
 
+=begin
+  AFTER THE SPRINT 
+  redirects to the original story link
+  Input: params[:story_id]
+  Output: nothign
+=end 
+  def redirect
+    redirect_to Story.find(params[:story_id]).story_link
+  end 
+
+
 end

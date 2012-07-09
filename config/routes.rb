@@ -22,13 +22,14 @@ NokiaRuby::Application.routes.draw do
 	match "login" => "user_sessions#login_with_token"
 	match "register" => "users#register"
 	match "mob/resetPassword" => "users#resetPassword"
-	match "dummyLogin" => "users#dummyLogin"
+#	match "dummyLogin" => "users#dummyLogin"
 	match "mob/test" => "users#test"
 	match "mob/test_2" => "users#test_2"
   match "mob/forgot_password" => "users#forgot_password"
 	match "mob/verifySettings" => "users#verifySettings"
 	match "mob/verifyAccount" => "users#verifyAccount"
 	match "mob/resendCode" => "users#resendCode"
+  match "mob/" => "users#feed"
 	match 'logout', :controller => 'user_sessions', :action => 'destroy'
 	resources :user_sessions
 	resources :users
@@ -143,6 +144,9 @@ NokiaRuby::Application.routes.draw do
   match "mob/friendship/pending" => "friendships#pending"
   match "mob/friendship/accept/:friend_id" => "friendships#accept"
   match "mob/friendship/index" => "friendships#index"
+  match "mob/" => "users#feed"
+  match '/admin' => 'admins#index'
+  match 'mob/redirect/:story_id' => 'stories#redirect'
   # $$$$$$$$$$$$$$  YAHIA  END $$$$$$$$$$$$$$$$$$$
   
   # $$$$$$$$$$$$$$  MENISY $$$$$$$$$$$$$$$$$$$$$$$
@@ -189,7 +193,7 @@ NokiaRuby::Application.routes.draw do
   
 
 
-  root :to => 'admins#index'
+  root :to => 'users#feed'
   
  # resources :users
  # resources :h_accounts

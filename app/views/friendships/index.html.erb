@@ -1,8 +1,23 @@
 <html> 
+<%= form_tag("search", :method => "get") do %>
+  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
+  									 :placeholder => 'Search') %>
+  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
+<% end %>
 	<% unless @friends.empty? %>
-		<ul>
+ <ul class="nav nav-list">
+	<table style="width:100%;">
+		<tr>
+ 	<td align="left"><font size = "4"><b align ="left">Your Friends</b></font></td>
+	<td  align="right">	<%= link_to 'Blocked friends', {:controller => 'users', :action => 'manage_blocked_friends'}, 
+		class: "btn"%></td>
+		</tr></table>
+	</ul>
+		<ul class="nav nav-list ">
 			<% @friends.each do |friend| %>
-				<li> <%= if friend.name.nil?  then friend.email.split('@').first else friend.name + " (#{friend.email})" end %> </li>
+				<li class="divider"></li>
+				<li> <b><%= if friend.name.nil?  then friend.email.split('@').first else friend.name + " (#{friend.email})" end %> </b></li>
+				<div align="right">
 				<% if @user.pending_invited.include? friend%>
 					<%=	link_to 'Remove request',{:controller => 'friendships',
 												:action => 'remove_request', 
@@ -33,26 +48,12 @@
 					<% end %>												
 
 				<% end %>
-
+				</div>
 
 			<% end %>	
 		</ul>
 	<% end %>
-	<div style="padding-top:4%"> 
-		<%= form_tag("search", :method => "get") do %>
-		  <%= label_tag(:q, "Search for friends using name or email:") %>
-		  <%= text_field_tag(:query, "", :style => "height:40px;") %>
-		  <div>
-		  	<%= submit_tag("Search", :class => "btn", :style => "height:40px") %>
-		  <div>	
-		<% end %>
-	</div>
-	<div style="padding-top:1%">
-		<%= link_to 'Manage blocked friends', {:controller => 'users', :action => 'manage_blocked_friends'}, 
-		class: "btn"%>
-	</div>
-
-	<% if @friends.count > 5 %>
+	<% if not @friends.empty? %>
 		<div class="apple_pagination">
 			<%= will_paginate @friends, :container => false %>
 		</div>

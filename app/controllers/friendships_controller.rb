@@ -193,10 +193,9 @@ class FriendshipsController < ApplicationController
   def search
     @user = current_user
     @query = params[:query]
-    @resulted_users = Admin.search_user(@query)
+    @resulted_users = Admin.search_user(@query.downcase)
     @resulted_users.delete @user
     @resulted_users.sort! {|a,b| a.email <=> b.email}
-    @resulted_users = @resulted_users.paginate(:per_page => 5, :page=> params[:page])
     render layout: 'mobile_template'
   end 
 

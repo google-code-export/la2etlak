@@ -20,7 +20,7 @@ class FacebookAccount < ActiveRecord::Base
   def get_feed
   	begin
       self.auth_secret = self.auth_secret.to_i+1
-      new_token = Koala::Facebook::OAuth.new("http:\\127.0.0.1:3000").exchange_access_token(self.auth_token.to_s)
+      new_token = Koala::Facebook::OAuth.new(IP).exchange_access_token(self.auth_token.to_s)
       self.auth_token = new_token.to_s
       self.auth_secret = self.auth_secret.to_i+1
       self.save!
@@ -30,13 +30,13 @@ class FacebookAccount < ActiveRecord::Base
       pic = ""
       content = ""
       media = ""
-      p g.nil?
+      # p g.nil?
       if g
         i = 0
         g.each do |s| 
           i = i+1
-          p i.to_s
-          p s["type"]
+          # p i.to_s
+          # p s["type"]
           title = s["from"]["name"]+" shared "
           # check on the type of post
           if s["type"] == "photo"
@@ -56,7 +56,13 @@ class FacebookAccount < ActiveRecord::Base
           elsif s["type"] == "video"
             title = title+"a video:\n"
             title = title+"\n"+s["name"] if s["name"]
-            story_link = s["link"]
+            if s["link"]
+              story_link = s["link"]
+            elsif s["source"]
+              story_link = s["source"]
+            else
+              next
+            end
             img = s["picture"]
             if img
               if img.index("url=")
@@ -77,6 +83,12 @@ class FacebookAccount < ActiveRecord::Base
           # create new story with the attributes
           # that were fetched
           story = Story.new
+          if title.length > 500
+            title = title[0,500]+"..."
+          end
+          if content.length > 500
+            content = content[0,500]+"..."
+          end
           story.title = title
           story.media_link = media
           story.story_link = story_link

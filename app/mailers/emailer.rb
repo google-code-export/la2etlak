@@ -1,28 +1,28 @@
 
 class Emailer < ActionMailer::Base
-  default from: "info.2allak@gmail.com"
-  default_url_options[:host] = "localhost:3000"
+  default from: "info.la2etlak@gmail.com"
+  default_url_options[:host] = IP
 	# Author: Kiro
 	def verification_instructions(user)
 		@code = user.verification_code.code
-		mail(:to => user.email, :subject => "La2etlak Verification Instructions")
+		mail(:to => user.email, :subject => "La2etlak verification instructions")
 	end
 
 	# Author: Kiro
   def resend_code(user)
   	@code = user.verification_code.code
-  	mail(:to => user.email, :subject => "La2etlak Verification Code")
+  	mail(:to => user.email, :subject => "La2etlak verification code")
   end
 
 	# Author: Kiro
   def reset_password(user,pass)
   	@pass = pass
-  	mail(:to => user.email, :subject => "La2etlak New Password")
+  	mail(:to => user.email, :subject => "La2etlak new password")
   end
 
   def password_reset(h_account, pass)
     @passw = pass
-    mail(:to => h_account.email, :subject => "2allak New Password")
+    mail(:to => h_account.email, :subject => "La2etlak new password")
   end
   
 =begin 
@@ -34,7 +34,7 @@ class Emailer < ActionMailer::Base
 =end
   def send_forced_password(user, pass)
     @passw = pass
-    mail(:to => user.email, :subject => "Your Password was reset by the Admin")
+    mail(:to => user.email, :subject => "Your password was reset")
   end
 #Author: khaled
 	def recommend_story(sender, reciever, message, stitle, surl)
@@ -45,7 +45,7 @@ class Emailer < ActionMailer::Base
 	 @storytit=stitle
    @storyurl=surl
 
-	mail(:to => @friend, :subject => "recommendation in La2etlak app")
+	mail(:to => @friend, :subject => "Recommendation in La2etlak")
 
 	end
 
@@ -58,14 +58,14 @@ class Emailer < ActionMailer::Base
 	   @storytit=stitle
      @storyurl=surl
 		
-		mail(:to => @friend, :subject => "invitation to La2etlak app")
+		mail(:to => @friend, :subject => "Invitation to La2etlak")
 
 	 end
 
 	# Author: Mouaz
   def reset_admin_password(admin,pass)
   	@pass = pass
-  	mail(:to => admin.email, :subject => "La2etlak New Password")
+  	mail(:to => admin.email, :subject => "La2etlak new password")
   end
 
 
@@ -89,6 +89,6 @@ class Emailer < ActionMailer::Base
     #sent_on       Time.now
     #body  = :edit_password_reset_url => edit_password_reset_url(admin.perishable_token)
     @edit_password_reset_url = edit_password_reset_url(admin.perishable_token)
-mail(:to => admin.email, :subject => "Password Reset Instructions")
+mail(:to => admin.email, :subject => "Password reset instructions")
   end 
 end

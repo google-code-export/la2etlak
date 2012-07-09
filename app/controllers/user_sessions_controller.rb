@@ -29,8 +29,13 @@ class UserSessionsController < ApplicationController
 	Author: Kiro
 =end
 	def new
+    if current_user
+      flash[:notice]= 'You already signed it, to sign out choose logout from the settings menu $yellow'
+      redirect_to controller: 'users', action: 'feed'
+    else
   		@user_session = UserSession.new
   		render :layout =>"mobile_template"
+    end 
 	end
 
 =begin

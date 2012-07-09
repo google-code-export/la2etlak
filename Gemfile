@@ -5,7 +5,8 @@ gem 'rails', '3.2.3'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+gem 'pg', :group => [:production]
+gem 'sqlite3', :group => [:development, :test]
 gem 'bootstrap-sass'
 gem 'twitter'
 gem 'oauth'
@@ -22,12 +23,16 @@ gem 'matenia-tumblr-api', "~> 0.1.6", :require => 'tumblr'
 gem 'nokogiri'
 gem 'rufus-scheduler'
 gem 'chronic'
+gem 'rmagick'
+# To prevent zombie dynos
+gem "SystemTimer", :require => "system_timer", :platforms => :ruby_18
+gem "rack-timeout"
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-  gem 'paperclip'
+  gem 'paperclip', '~> 3.0'
   gem 'random_data'
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platform => :ruby

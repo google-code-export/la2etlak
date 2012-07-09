@@ -6,11 +6,11 @@
 				<li><h3 style="color:#555;">Settings</h3></li>
 				<li class="divider"></li>
 				
-		<li><%= link_to "Connect social accounts", {:controller => 'users', :action => 'connect_social_accounts'}, class: "btn", style: "margin:2%; height:30px;"%></li>
+		<li><%= link_to "Social accounts", {:controller => 'users', :action => 'connect_social_accounts'}, class: "btn", style: "margin:2%; height:30px;"%></li>
 			<li>	<%= link_to "Friends", {:controller => 'friendships', :action => 'index'}, class: "btn", style: "margin:2%; height:30px;" %>	</li>
 
 				<li><%= link_to "Main feed", {:controller => 'users', :action => 'feed'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
-				<li><%= link_to "Manage blocked stories", {:controller => "users", :action => "manage_blocked_stories"}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
+				<li><%= link_to "Blocked stories", {:controller => "users", :action => "manage_blocked_stories"}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
 				<li><%= link_to "Modify info", {:controller => 'users', :action => 'edit'}, class: "btn", style: "margin:2%; height:30px;" %>	</li>
 				<li><%= link_to "Toggle interests", {:controller => 'users', :action => 'toggle'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
 				<% if !@user.verification_code.verified %>

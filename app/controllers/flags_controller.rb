@@ -10,20 +10,21 @@ Output: nothing
 Author:Kareem
 =end
 
-   def flag
+	def flag
 
-				story_id = params[:sid]
-  			story = Story.find(story_id)
-  			user = current_user
-  			result = user.flag_story(story)
-				if(result == true)
-						flash[:notice] = "Story flagged succesfully $green"
-	 			 		redirect_to :controller => "stories", :action => "get" , :id => story_id
-	  	  else
-	  				flash[:notice] = "You already flagged this Story $red"
-	 					redirect_to :controller => "stories", :action => "get" , :id => story_id 
-				end
+		story_id = params[:sid]
+		story = Story.find(story_id)
+		user = current_user
+		result = user.flag_story(story)
+		if(result == true)
+			flash[:notice] = "Story flagged succesfully $green"
+		    Admin_Settings.update_story_if_flagged (story)
+	 		redirect_to :controller => "stories", :action => "get" , :id => story_id
+		else
+			flash[:notice] = "You already flagged this Story $red"
+			redirect_to :controller => "stories", :action => "get" , :id => story_id 
+		end
 
-   end
+	end
 
 end

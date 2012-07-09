@@ -9,7 +9,7 @@
 		<% @inviters.each do |inviter| %>
 			<li>
 				<div style="margin:1%;" >
-					<%= if inviter.name.nil?  then inviter.email.split('@').first else "#{member.name}  (#{member.email})"  end %>
+					<%= if inviter.name.nil?  then inviter.email.split('@').first else "#{inviter.name}  (#{inviter.email})"  end %>
 				</div>	
 				<%= link_to 'Approve',{:controller => 'friendships',
 				 	:action => 'accept',
@@ -33,7 +33,7 @@
 		class: "btn btn-small" %>
 	</div>
 
-	<% if @inviters.count > 5 %>
+	<% if not @inviters.empty? %>
 		<div class="apple_pagination">
 			<%= will_paginate @inviters, :container => false %>
 		</div>

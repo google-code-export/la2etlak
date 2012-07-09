@@ -2,50 +2,39 @@ module UsersHelper
   #This method when called will return the difference between today and the day the user registered in our app in days.
   def get_no_of_activity(needed_graph, creation_date, last_update, deactivated)
 
+    activities_by_day=[]
     if deactivated && creation_date >= 30.days.ago.to_date && 
        last_update >= 30.days.ago.to_date
-      activities_by_day = needed_graph.where(:created_at => 
-      creation_date..last_update).group("date(created_at)").select("created_at, 
-      count(user_id) as noPerDay")
-      (creation_date.to_date..last_update.to_date).map do |date|
-        activity = activities_by_day.detect { |activity| 
-        activity.created_at.to_date == date }
-        activity && activity.noPerDay.to_i || 0
-      end.inspect
+        days= (Time.zone.now.to_date - creation_date.to_date).to_i
+        days2= (Time.zone.now.to_date - last_update.to_date).to_i
+        (days.downto(days2)).each do |i|
+            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+           end
+          return activities_by_day
       
     elsif deactivated && creation_date < 30.days.ago.to_date && 
           last_update >= 30.days.ago.to_date
-      activities_by_day = needed_graph.where(:created_at => 
-      30.days.ago.beginning_of_day..last_update).group(
-      "date(created_at)").select("created_at, count(user_id) as noPerDay")
-      (30.days.ago.to_date..last_update.to_date).map do |date|
-        activity = activities_by_day.detect { |activity| 
-        activity.created_at.to_date == date }
-        activity && activity.noPerDay.to_i || 0
-      end.inspect
+          days= (Time.zone.now.to_date - last_update.to_date).to_i
+          (30.downto(days)).each do |i|
+            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+           end
+          return activities_by_day
       
     elsif deactivated && creation_date < 30.days.ago.to_date && 
           last_update < 30.days.ago.to_date
       activities_by_day = []
       
     elsif creation_date < 30.days.ago.to_date
-      activities_by_day = needed_graph.where(:created_at => 30.days.ago.beginning_of_day..Time.zone.now.end_of_day).group(
-      "date(created_at)").select("created_at, count(user_id) as noPerDay")
-      (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
-        activity = activities_by_day.detect { |activity| 
-        activity.created_at.to_date == date }
-        activity && activity.noPerDay.to_i || 0
-     end.inspect
+      (30.downto(0)).each do |i|
+        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+       end
+       return activities_by_day
     else
-    
-      activities_by_day = needed_graph.where(
-      :created_at => creation_date..Time.zone.now.end_of_day).group(
-      "date(created_at)").select("created_at, count(user_id) as noPerDay")
-      (creation_date.to_date..Time.zone.now.to_date).map do |date|
-        activity = activities_by_day.detect { |activity| 
-        activity.created_at.to_date == date }
-        activity && activity.noPerDay.to_i || 0
-      end.inspect
+      days= (Time.zone.now.to_date - creation_date.to_date).to_i
+      (days.downto(0)).each do |i|
+        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+       end
+       return activities_by_day
     end
   end
 

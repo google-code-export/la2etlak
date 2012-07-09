@@ -200,37 +200,27 @@ end
  def self.get_num_registered_day
  
  first_user = User.first
-
+ all_users= User.all
  if first_user.nil?
  
   registered_per_day = []
 
  else
 
-  first_user_create_date = User.first.created_at
+  first_user_create_date = User.all.sort_by { |usr| usr[:created_at]}.first.created_at.to_date
+  registered_per_day=[]
+  days=get_all_users_start_date.to_i
  
   if first_user_create_date >= 30.days.ago.to_date
-
-   registered_per_day = User.where(:created_at => first_user_create_date.
-   beginning_of_day..Time.zone.now.end_of_day).group("date(created_at)").
-   select("created_at , count(id) as regs_day") 
-
-   (first_user_create_date.to_date..Time.zone.now.to_date).map do |date|
-   reg = registered_per_day.detect { |reg| reg.created_at.to_date == date}
-   reg && reg.regs_day.to_i || 0
-     end.inspect
-
+    (days.downto(0)).each do |i|
+      registered_per_day<<all_users.select{|x| x.created_at >= i.days.ago.beginning_of_day and x.created_at <= i.days.ago.end_of_day}.count
+    end
+    return registered_per_day
   else
- 
-   registered_per_day = User.where(:created_at => 30.days.ago.beginning_of_day..
-   Time.zone.now.end_of_day).group("date(created_at)")
-   .select("created_at , count(id) as regs_day") 
-
-   (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
-   reg = registered_per_day.detect { |reg| reg.created_at.to_date == date}
-   reg && reg.regs_day.to_i || 0
-    end.inspect
- 
+    (30.downto(0)).each do |i|
+      registered_per_day<<all_users.select{|x| x.created_at >= i.days.ago.beginning_of_day and x.created_at <= i.days.ago.end_of_day}.count
+    end
+    return registered_per_day
    end
   end
  end
@@ -253,6 +243,7 @@ end
  def self.get_num_logged_in_day
 
  first_user = UserLogIn.first
+ logsall=UserLogIn.find(:all, :select => "user_id, created_at")
 
  if first_user.nil?
 
@@ -260,30 +251,21 @@ end
 
  else
 
- first_user_log_date = User.first.created_at 
+ first_user_create_date = User.all.sort_by { |usr| usr[:created_at]}.first.created_at.to_date
+  logged_per_day=[]
+  days=get_all_users_start_date.to_i
  
- if first_user_log_date >= 30.days.ago.to_date
-
-  logged_per_day = UserLogIn.where(:created_at => first_user_log_date
-  .beginning_of_day..Time.zone.now.end_of_day).group("date(created_at)")
-  .select("created_at , count(distinct(user_id)) as logs_day") 
-
-  (first_user_log_date.to_date..Time.zone.now.to_date).map do |date|
-  log = logged_per_day.detect { |log| log.created_at.to_date == date}
-  log && log.logs_day.to_i || 0
-   end.inspect
-
+ if first_user_create_date >= 30.days.ago.to_date
+  (days.downto(0)).each do |i|
+      logged_per_day<<logsall.select{|log| log.created_at>= i.days.ago.beginning_of_day && log.created_at <= i.days.ago.end_of_day}.map{|x| x.user_id}.uniq.count
+    end
+    return logged_per_day
  else
 
-  logged_per_day = UserLogIn.where(:created_at => 30.days.ago.beginning_of_date..
-  Time.zone.now.end_of_day).group("date(created_at)")
-  .select("created_at , count(distinct(user_id)) as logs_day")
-  
-  (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
-  log = logged_per_day.detect { |log| log.created_at.to_date == date}
-  log && log.logs_day.to_i || 0
-     end.inspect
-
+  (30.downto(0)).each do |i|
+      logged_per_day<<logsall.select{|log| log.created_at>= i.days.ago.beginning_of_day && log.created_at <= i.days.ago.end_of_day}.map{|x| x.user_id}.uniq.count
+    end
+    return logged_per_day
    end
  end
 end
@@ -306,7 +288,7 @@ end
    date=-1
  else
 
- first_user_create_date = User.first.created_at.to_date 
+ first_user_create_date = User.all.sort_by { |usr| usr[:created_at]}.first.created_at.to_date 
  
  if first_user_create_date >= 30.days.ago.to_date
 
@@ -318,8 +300,7 @@ end
  
    end
   end
- end
- 
+ end 
  #to get num of users registered in the system
  ##########Author: Diab ############
  def self.all_user_registered
@@ -519,16 +500,10 @@ Author:Kareem
   Author: Shafei
 =end
   def get_user_rank
-        i = 0
-        User.all.each do |user|
-                if (user.blocked? self) == true
-                        i = i + 10
-                end
-        end
         rank = (self.comments.count * 2) + (self.user_log_ins.count * 2)
-        rank = rank + self.likedislikes.where(action: 1).count + self.flags.count
-        rank = rank + self.likedislikes.where(action: -1).count+(self.user_add_interests.count * 5)
-        rank = rank + self.friends.count + (self.shares.count * 3) - i
+        rank = rank + self.likedislikes.count + self.flags.count
+        rank = rank +(self.user_add_interests.count * 5)
+        rank = rank + self.friends.count + (self.shares.count * 3)
         return rank
   end
 
@@ -869,21 +844,29 @@ Author:Kareem
     # Author : Essam Hafez
 =end
    def get_social_feed()
-     user = self
-     social_stories = Array.new #Initialize new empty array
+    Rack::Timeout.timeout = 7
+    puts 'GETTING THE SOCIAL FEED'
+    user = self
+    social_stories = Array.new #Initialize new empty array
     if(!user.twitter_account.nil?) # if user has twitter account then enters if
+      puts 'TWITTER '
        social_stories = social_stories + (user.twitter_account.get_feed) # appends twitter feed to list
      end
      if(!user.tumblr_account.nil?) #if user has tumblr account then enters if
+      puts 'TUMBLR'
        social_stories = social_stories + (user.tumblr_account.get_feed) #appends tumblr feed to list
      end
      if(!user.facebook_account.nil?) # if user has facebook account then enters if
+      puts 'FACEBOOK'
        social_stories = social_stories + (user.facebook_account.get_feed) #appends facebook feed to list
      end
      if(!user.flickr_account.nil?) # if user has flickr account then enters if
+      puts 'FLICKR '
        social_stories = social_stories + (user.flickr_account.get_feed) # appends flickr feed to list
      end
+     Rack::Timeout.timeout =33
      return social_stories.shuffle # returned stories shuffled
+     puts 'GETTING THE SOCIAL FEED END'
    end
    
 
@@ -989,6 +972,27 @@ Author: Kareem
     end 
     return blockers
   end 
+
+ 
+  '''
+  This is the method that should return the data of statistics of a user
+  with this format first element in the data arrays is ARRAY OF "No Of Shares",
+  second one is "No Of Likes"
+  third one is "No of Dislikes"
+  and forth one is "No of Flags"
+  and fifth one is "No of Comments"
+  '''
+  
+  def get_user_stat(user_id)
+    creation_date = created_at.beginning_of_day
+    last_update = updated_at.end_of_day
+    share = get_no_of_activity(shares, creation_date, last_update, deactivated)
+    like = get_no_of_activity(likedislikes.where(:action => 1) , creation_date, last_update, deactivated)
+    dislike = get_no_of_activity(likedislikes.where(:action => -1), creation_date, last_update, deactivated)
+    flag = get_no_of_activity(flags, creation_date, last_update, deactivated)
+    comment = get_no_of_activity(comments, creation_date, last_update, deactivated)
+    data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
+  end
 
 
 end

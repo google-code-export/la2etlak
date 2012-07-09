@@ -4,12 +4,16 @@ class AdminsController < ApplicationController
 
   def search
     if params[:autocomplete][:query].length > 0
-      $search_result = Admin.search(params[:autocomplete][:query])
+      begin
+        $search_result = Admin.search(params[:autocomplete][:query])
+      rescue
+        $search_result =  [[],[],[]]
+      end
 
       $users = $search_result[0]
       $stories = $search_result[1]
       $interests = $search_result[2]
-      
+
       if $users.length == 0 and $stories.length == 0 and $interests.length == 0
         @message = "There are no matching results."
       end

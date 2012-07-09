@@ -6,8 +6,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_admin
   helper_method :nokia_user?
   
-
     def nokia_user?
+      return true
     	agent = request.env["HTTP_USER_AGENT"].downcase
     	if agent.index('nokia'.downcase)
     		return true
@@ -26,6 +26,9 @@ class ApplicationController < ActionController::Base
   end
 
   def user_authenticated?
+    unless nokia_user?
+      return render text: 'This app is for Nokia users only.'
+    end 
     if(current_user.nil?)
       redirect_to new_user_session_path
     return false

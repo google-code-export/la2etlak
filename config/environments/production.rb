@@ -51,8 +51,8 @@ NokiaRuby::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
 
-config.action_controller.consider_all_requests_local = false
-config.action_controller.perform_caching             = true
+#config.action_controller.consider_all_requests_local = false
+#config.action_controller.perform_caching             = true
 
   # Enable threaded mode
   # config.threadsafe!
@@ -67,4 +67,14 @@ config.action_controller.perform_caching             = true
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :domain               => 'baci.lindsaar.net',
+    :user_name            => 'info.la2etlak@gmail.com',
+    :password             => 'la2etlakkol7aga',
+    :authentication       => 'plain',
+    :enable_starttls_auto => true  }
+
 end

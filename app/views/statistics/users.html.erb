@@ -9,7 +9,7 @@
   var $j = jQuery.noConflict();
   $j(document).ready(function() {
      //get The user's array of arrays of data
-      data= <%= get_user_stat(@id) %>;
+      data= <%= @user.get_user_stat(@id) %>;
       //the graphs that we want to show
       names=["No Of Shares","No Of Likes","No of Dislikes","No of Spams","No of Comments"]; 
       //the time interval between one point and another in the graph.

@@ -48,24 +48,29 @@ class TumblrAccount < ActiveRecord::Base
 =end  
   def self.convert_blog_to_story(post)
     story = Story.new #new Story
-    #story.instance_variables
-    story.category = 'tumblr' #sets story category to tumblr
-    post_type = post["type"] # get post type
-    if(post_type == "photo") # story is a photo
-      photo_type = post["photo_url"] #Grabs required parameters 
-      story.media_link = post["photo_url"][3]["__content__"] #gets photo @ position 3 with max width of 250px
-      story.content = post["photo_caption"] # get caption in case phoro can be loaded
-      story.content = story.content.gsub(/<\/?[^>]+>/, '')
-      story.title = post["slug"] # title encapsulated into "slug" hash
-      story.title = story.title.gsub(/<\/?[^>]+>/, '')
-    elsif(post_type == "regular")
-      story.content = post["regular_body"] #story body encapsulated in regular body
-      story.content = story.content.gsub(/<\/?[^>]+>/, '')
-      story.title = post["slug"] # title encapsulated into "slug" hash
-      story.title = story.title.gsub(/<\/?[^>]+>/, '')
-    else
-      story.content = ""
+    begin
+
+      #story.instance_variables
+      story.category = 'tumblr' #sets story category to tumblr
+      post_type = post["type"] # get post type
+      if(post_type == "photo") # story is a photo
+        photo_type = post["photo_url"] #Grabs required parameters 
+        story.media_link = post["photo_url"][3]["__content__"] #gets photo @ position 3 with max width of 250px
+        story.content = post["photo_caption"] # get caption in case phoro can be loaded
+        story.content = story.content.gsub(/<\/?[^>]+>/, '')
+        story.title = post["slug"] # title encapsulated into "slug" hash
+        story.title = story.title.gsub(/<\/?[^>]+>/, '')
+      elsif(post_type == "regular")
+        story.content = post["regular_body"] #story body encapsulated in regular body
+        story.content = story.content.gsub(/<\/?[^>]+>/, '')
+        story.title = post["slug"] # title encapsulated into "slug" hash
+        story.title = story.title.gsub(/<\/?[^>]+>/, '')
+      else
+        story.content = ""
+      end
+      return story
     end
-    return story
-  end
+    rescue 
+      return story
+    end 
 end

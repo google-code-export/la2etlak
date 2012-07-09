@@ -92,16 +92,17 @@
 				<div class="well" style="margin-left:7%">
 					<h3><%= User.find(comment.user_id).email %></h3>
 					<div class="comment-component-well">
-						<p><font size="2"><%= comment.content %></p>
+						<p><font size="2"><%= comment.content %></p></font>
 					</div>
 					<span class="pull-right greenbadge">  Ups  (<%=comment.get_num_ups%>)</span>
 					<span class="pull-right redbadge">Downs(<%=comment.get_num_downs%>)</span>
 				</div>
 					<%end%>
 					<%else%>
-					<p><font size="3">No comments</p>
+					<p><font size="3">No comments</p></font>
 					<%end%>	
 			</div>
+		</div>
 			<%end%>
 			<%else%>
 				<h2 class="alert alert-error" align="center">No Stories to Show !!</h2>

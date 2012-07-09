@@ -39,6 +39,7 @@ include StoriesHelper
       return Story.find(story_id)
   end
 
+
   #Author: Lydia
   ''' 
   This is the method that should return the data of statistics of a story
@@ -113,9 +114,9 @@ include StoriesHelper
   Author: Shafei
 =end
   def get_story_rank_all_time
-	rank = (self.shares.count * 5) + self.comments.count
-	rank = rank + (self.likedislikes.where(action: 1).count * 2) - (self.flags.count * 5)
-	rank = rank - (self.likedislikes.where(action: -1).count * 2)
+  	rank = (self.shares.find(:all, :select => "id").count * 5) + self.comments.find(:all, :select => "id").count
+	rank = rank + (self.likedislikes.find(:all, :select => "action", :conditions => {action: 1}).count * 2) - (self.flags.find(:all, :select => "id").count * 5)
+	rank = rank - (self.likedislikes.find(:all, :select => "action", :conditions => {action: -1}).count * 2)
 	return rank
   end
 =begin  
@@ -139,22 +140,22 @@ include StoriesHelper
 =end
 
   def self.get_stories_ranking_all_time
-	all_stories = Array.new
-	top_stories = Array.new
+    all_stories = Array.new
     final_stories = Array.new
-	Story.all.each do |story|
-		all_stories << {:rank => story.get_story_rank_all_time, :thestory => story}
-	end
-	(all_stories.sort_by {|element| element[:rank]}).each do |hsh|
-		final_stories << hsh[:thestory]
-	end
-	top_stories =  final_stories.reverse
-	if (top_stories.empty? == true)
-		return []
-	else
-		return top_stories
-	end
+    Story.all.each do |story|
+      all_stories << {:rank => story.get_story_rank_all_time, :thestory => story}
+    end
+    xstories=((all_stories.sort_by {|element| element[:rank]}).reverse)
+    xstories.each do |hsh|
+      final_stories << hsh[:thestory]
+    end
+    if (final_stories.empty? == true)
+      return []
+    else
+      return final_stories
+    end
   end
+
   
 =begin
   This action returns a list of all stories sorted according to their rank in the last 30 days
@@ -184,19 +185,18 @@ include StoriesHelper
 =end
   def self.get_stories_ranking_all_time_rank
     all_stories = Array.new
-    top_stories = Array.new
     final_stories = Array.new
     Story.all.each do |story|
-		all_stories << {:rank => story.get_story_rank_all_time, :thestory => story}
+      all_stories << {:rank => story.get_story_rank_all_time, :thestory => story}
     end
-    (all_stories.sort_by {|element| element[:rank]}).each do |hsh|
-		final_stories << hsh[:rank]
+    xstories=((all_stories.sort_by {|element| element[:rank]}).reverse)
+    xstories.each do |hsh|
+      final_stories << hsh[:rank]
     end
-    top_stories =  final_stories.reverse
-    if (top_stories.empty? == true)
-		return []
+    if (final_stories.empty? == true)
+      return []
     else
-		return top_stories
+      return final_stories
     end
   end
 

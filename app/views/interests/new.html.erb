@@ -123,7 +123,7 @@ var $j = jQuery.noConflict();
 							<% if !@interest.photo.file? %>
 				     		<%= image_tag "logo.jpeg"  , style: "float:left; margin-right:20px; width=150x; height:150px;" %>
 				     		<% else %>
-				            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px; height:150px;"/>
+				            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px;height:150px;float:left; margin-right:20px;"/>
 				            <% end %>
 							<div class"control-panel">
 								<% if !(@interest.deleted ) %>

@@ -136,6 +136,9 @@ body {
   line-height: 18px;
   color: #333333;
   background-color: #ffffff;
+  padding-top: 0px;
+  height:100%;
+  background-color:#eee;
 }
 a {
   color: #0088cc;
@@ -4265,6 +4268,7 @@ button.close {
 }
 @media (max-width: 767px) {
   body {
+    padding-top: 0px;
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -4881,6 +4885,10 @@ button.close {
     height: auto !important;
     overflow: visible !important;
   }
+  body {
+   padding-top: 60px;
+   height: 100%;
+  }
 }
 
 #logo {
@@ -4901,7 +4909,7 @@ button.close {
 }
 
 body {
-	padding-top: 60px;
+	padding-top: 0px;
 	height:100%;
   	background-color:#e5e5e5;
   	font-size: 0.87em;

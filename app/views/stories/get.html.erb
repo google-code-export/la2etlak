@@ -1,11 +1,17 @@
 <html>
 <head>
-	<script>
-	function fbs_click(u,t) {
-		<%=5%>
-	window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=50,height=50');return false;
-	}
-	</script>
+	
+	<% if @story.media_link.nil? %>
+		<meta property="og:image" content="<%=image_tag('L.png')%>" />
+	<% else %>
+		<meta property="og:image" content="<%=@story.media_link%>" />
+	<% end %>
+	<% if !@story.title.nil? %>
+		<meta property="og:site_name" content="Shared via La2etlak App" />
+	<% else %>
+		<meta property="og:site_name" content="<%=@story.title%> via La2etlak App" />
+	<% end %>
+
 </head>
 
 <% m = 1 %>
@@ -106,7 +112,7 @@
 <!-- adds content of story  -->
  <% if !@story.mobile_content.nil?  && @story.mobile_content.length > 0 %>
 	 <div class="story-comment-box-mobile well-large" style="padding-left:10px;background-color:#E0DCDC;margin-bottom:5px;">
-		 <%= @story.mobile_content %><br>
+		 <%= raw @story.mobile_content.gsub(/\..*\{.*\}/, '') %><br>
 	 </div>
  <%end%>
         <div>
@@ -182,11 +188,19 @@
 <br>
    &nbsp;
 <!-- I create the facebook sharer url with the media link, then I put it into the url part of the button -->
-  <% media_url = "http://127.0.0.1:3000/stories/"+@story.id.to_s+"/get"%>
-  <% facebook_url = "127.0.0.1:3000/stories/"+@story.id.to_s+"/get"%>
-  <a id="Facebook" href="http://www.facebook.com/share.php?u=<%=facebook_url%>" onclick="return fbs_click(<%=facebook_url%>,via%20nokia)" target="_blank"><%= image_tag('facebook.png' , :style =>"width:32px;height:32px;padding-right:10%;")%></a>
-  <!-- I create the twitter sharer url with the media link along with the message "Shared via La2etlak Nokia App", then I put it into the url part of the button -->
-	<% twitter_url = "http://twitter.com/intent/tweet?url=http://127.0.0.1:3000/stories/"+@story.id.to_s+"/get&text=Shared%20via%20La2etlak%20Nokia%20App" %>
+  <% media_url = "#{IP}stories/"+@story.id.to_s+"/get"%>
+  <% facebook_url = @story.story_link %>
+  <a id="Facebook" href="https://www.facebook.com/dialog/feed?
+  app_id=218414151609364&
+  link=<%=IP%>mob/redirect/<%=@story.id%>&
+  picture=<%=unless @story.media_link.blank? then @story.media_link else "#{IP}assets/L.png" end%>&
+  name=<%=@story.title.gsub(' ', '%20')%>&
+  caption=<%= "From La2etlak #{@story.interest.name} feed.".gsub(' ', '%20')%>&
+  description=<%= @story.mobile_content.gsub(/\..*\{.*\}/, '').gsub(' ', '%20')[0..150] + '..'%>&
+  redirect_uri=<%=IP%>stories/<%=@story.id%>/get
+  "><%= image_tag('facebook.png' , :style =>"width:32px;height:32px;padding-right:10%;")%></a>
+  <!-- I create the twitter sharer url with the media link along with the message "Shared via La2etlak App", then I put it into the url part of the button -->
+	<% twitter_url = "http://twitter.com/intent/tweet?url="+@story.story_link+"&text=Shared%20via%20La2etlak%20App&hashtags=La2etlak" %>
 	<%= link_to image_tag('twitter.png' , :style =>"width:32px;height:32px;padding-right:10%;"), twitter_url, id: "Twitter"%>
   <!-- This is a link to the users controller, which calls the method share_story with a the story id as a parameter -->
     <%= link_to image_tag('L.png' , :style =>"width:30px;height:30px;"), {:controller => 'users' , :action => 'share_story' , :id => @story.id }, id: "La2etlak"%>
@@ -283,15 +297,18 @@
           <%end%>
  	<%end%>
   
+  <div>
 <!-- block story link -->
-   </br><%=link_to('Block story' , {:controller => 'users', :action => 'block_story', :id => (@story.id)})%> &nbsp;
+   <br style="padding-left:4px"><%=link_to('Block story' , {:controller => 'users', :action => 'block_story', :id => (@story.id)})%> &nbsp;</br>
    	
 <!-- block interest link -->
-   	<br><br><%=link_to('Block interest' , { :controller => 'users', :action => 'block_interest', :id => (@story.id)})%></br><br>
+   <br style="padding-left:4px"><%=link_to('Block interest' , { :controller => 'users', :action => 'block_interest', :id => (@story.id)})%></br>
  
 	<%end%>
-	
-	<%= "Added "%><%= time_ago_in_words(@story.created_at)%><%= " ago."%>
+	<br style="padding-left:4px">
+    <%= "Added "%><%= time_ago_in_words(@story.created_at)%><%= " ago."%>
+  </br>
  </div>
+ 
 </html> 	
 

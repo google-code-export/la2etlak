@@ -1,6 +1,6 @@
 class Notifier < ActionMailer::Base  
-  default from: "info.2allak@gmail.com"
-  default_url_options[:host] = "localhost.com:3000"
+  default from: "info.la2etlak@gmail.com"
+  default_url_options[:host] = IP
 
   
   def password_reset_instructions(admin)

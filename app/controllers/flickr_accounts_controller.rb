@@ -45,7 +45,7 @@ class FlickrAccountsController < ApplicationController
     Rails.cache.write("user_id", @user.id)
     flickr = FlickRaw::Flickr.new
     token = flickr.get_request_token(:oauth_callback => (
-    'http://127.0.0.1:3000/mob/flickr/callback'))
+    "#{IP}mob/flickr/callback"))
     Rails.cache.write("oauth_token_secret",token['oauth_token_secret'])
     auth_url = flickr.get_authorize_url(token['oauth_token'], :perms => 'read')
     redirect_to(auth_url)

@@ -40,8 +40,8 @@ NokiaRuby::Application.configure do
     :address              => "smtp.gmail.com",
     :port                 => 587,
     :domain               => 'baci.lindsaar.net',
-    :user_name            => 'info.2allak@gmail.com',
-    :password             => 'info2allak',
+    :user_name            => 'info.la2etlak@gmail.com',
+    :password             => 'la2etlakkol7aga',
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
 end

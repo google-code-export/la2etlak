@@ -34,10 +34,13 @@ end
           StoriesHelper.fetch_rss(params[:feed][:link])
           Log.create(loggingtype:3, interest_id:@interestid, message:"A new RSS link is added.")
         else #if saving faild a flash message box will appear with the errors
-        flash[:invalid_link] = "Link is invalid. Please try again" 
-        redirect_to :controller => 'interests', :action => 'show', :id => @interestid
-       end 
-     end
+          flash[:invalid_link] = "Link is invalid. Please try again" 
+          redirect_to :controller => 'interests', :action => 'show', :id => @interestid
+        end 
+      else 
+          flash[:invalid_link] = "Link is invalid. Please try again $red" 
+          redirect_to :controller => 'interests', :action => 'show', :id => @interestid
+      end
     else 
       flash[:same_rss_feed] = "Sorry, you cannot add the same RSS feed more than once. $red"
       redirect_to :controller => 'interests', :action => 'show', :id => @interestid
