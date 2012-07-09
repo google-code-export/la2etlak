@@ -10,7 +10,6 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
-    SystemTimer (1.2.3)
     actionmailer (3.2.3)
       actionpack (= 3.2.3)
       mail (~> 2.4.4)
@@ -126,7 +125,6 @@ GEM
       rack
     rack-test (0.6.1)
       rack (>= 1.0)
-    rack-timeout (0.0.3)
     rails (3.2.3)
       actionmailer (= 3.2.3)
       actionpack (= 3.2.3)
@@ -146,7 +144,6 @@ GEM
     random_data (1.5.2)
     rdoc (3.12)
       json (~> 1.4)
-    rmagick (2.13.1)
     ruby-ole (1.2.11.3)
     rufus-scheduler (2.0.16)
       tzinfo (>= 0.3.23)
@@ -190,7 +187,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  SystemTimer
   amistad
   authlogic
   bootstrap-sass
@@ -204,12 +200,9 @@ DEPENDENCIES
   minitest
   nokogiri
   oauth
-  paperclip (~> 3.0)
-  pg
-  rack-timeout
+  paperclip
   rails (= 3.2.3)
   random_data
-  rmagick
   rufus-scheduler
   sass-rails (~> 3.2.3)
   spreadsheet
