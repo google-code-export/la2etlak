@@ -66,8 +66,10 @@
 						<td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
 						<td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
 					</tr>
-					<span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
-				</table>
+				</table><br>
+			<table>
+				<span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
+			</table>
 				<% else %>
 				<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h4>
 					<%if f.media_link!=""%>
@@ -79,8 +81,10 @@
 						<td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
 						<td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
 					</tr>
-					<span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
-				</table>
+					</table><br>
+			<table>
+				<span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
+			</table>		
 				<% end %>
 				</div>
 				<%end%>
