@@ -27,7 +27,7 @@
 				<% if f.title.nil? %>
 					<h4><%= link_to("Social Feed, No Title", {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory} )%></h4>
 						<%if f.media_link!=""%>
-						<img src= <%=f.media_link %>>
+						<%= link_to image_tag(f.media_link),  {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory}%>
 						<%end%>
 							<% if f.category == "Facebook"%>
 							<span class="pull-right facebookbadge" >Facebook</span>
@@ -41,7 +41,7 @@
 				<% else %>
 					<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory} )%></h4>
 						<%if f.media_link!=""%>
-						<img src= <%=f.media_link %>>
+						<%= link_to image_tag(f.media_link),  {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory}%>
 						<%end%>
 							<% if f.category == "Facebook"%>
 							<span class="pull-right facebookbadge">Facebook</span>
@@ -59,24 +59,27 @@
 			<% if f.title.nil? %>
 				<h3><%= link_to("Interest Feed, No Title", {:controller => 'stories', :action => 'get', :id => f.id} )%></h3>
 					<%if f.media_link!=""%>
-					<img src= <%=f.media_link %>>
+					<%= link_to image_tag(f.media_link),  {:controller => 'stories' , :action => 'get' , :id => f.id }%>
 					<%end%>
 				<table style="float:right">
 					<tr>
 						<td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
 						<td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
 					</tr>
+					<span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
 				</table>
 				<% else %>
-				<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%><%= "("+f.interest.name+")"%></h4>
+				<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h4>
 					<%if f.media_link!=""%>
-					<%= link_to image_tag(f.media_link , {:controller => 'stories' , :action => 'get' , :id => f.id } )%>
+					<%= link_to image_tag(f.media_link),  {:controller => 'stories' , :action => 'get' , :id => f.id }%>					
 					<%end%>
 				<table style="float:right">
 					<tr>
+						<td><span  class="pull-right bluebadge"><%=f.interest.name%> </span></td>
 						<td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
 						<td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
 					</tr>
+					<span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
 				</table>
 				<% end %>
 				</div>
