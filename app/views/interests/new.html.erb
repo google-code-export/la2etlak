@@ -119,12 +119,19 @@ var $j = jQuery.noConflict();
 					<font size="3"><b><%= 
 					link_to(name , {:controller => "interests", :action => "show",:id => @interest.id}) %></b></font>
 					<span class="pull-right bluebadge "><%=time_ago_in_words(@interest.created_at)%></span>
+
 						<div class="well admin_story_feed "  style=" border-right:5px solid #468847; ">
+
+
+
 							<% if !@interest.photo.file? %>
-				     		<%= image_tag "logo.jpeg"  , style: "float:left; margin-right:20px; width=150x; height:150px;" %>
+				     		<%=  link_to (image_tag "logo.jpeg"  , :style => "float:left; margin-right:20px; width=150x; height:150px;"), {:action => 'show', :controller => 'interests' , :id => @interest.id } %>
 				     		<% else %>
-				            <img src= "<%=@interest.photo.url(:small) %>" style=" width=150px;height:150px;float:left; margin-right:20px;"/>
+				     
+				             <img style="width:150px; height:150px;" src= "<%=@interest.photo.url(:small) %>">
 				            <% end %>
+
+
 							<div class"control-panel">
 								<% if !(@interest.deleted ) %>
 								<ul class="nav nav-list">
