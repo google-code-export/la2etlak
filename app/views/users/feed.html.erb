@@ -68,9 +68,9 @@
 					</tr>
 				</table>
 				<% else %>
-				<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h4>
+				<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%><%= "("+f.interest.name+")"%></h4>
 					<%if f.media_link!=""%>
-					<img src= <%=f.media_link %>>
+					<%= link_to image_tag(f.media_link , {:controller => 'stories' , :action => 'get' , :id => f.id } )%>
 					<%end%>
 				<table style="float:right">
 					<tr>
