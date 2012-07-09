@@ -25,6 +25,7 @@ gem 'rufus-scheduler'
 gem 'chronic'
 gem 'rmagick'
 
+gem 'execjs' , '1.3.0'
 
 # To prevent zombie dynos
 gem "SystemTimer", :require => "system_timer", :platforms => :ruby_18
