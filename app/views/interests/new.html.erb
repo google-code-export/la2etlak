@@ -141,8 +141,8 @@ var $j = jQuery.noConflict();
 							<% if !@interest.photo.file? %>
 				     		<%=  link_to (image_tag "logo.jpeg"  , :style => "float:left; margin-right:20px; width=150x; height:150px;"), {:action => 'show', :controller => 'interests' , :id => @interest.id } %>
 				     		<% else %>
+				     		<%= link_to image_tag(@interest.photo.url(:small) ), :action => 'show', :controller => 'interests' , :id =>  @interest.id  %>
 				     
-				             <img style="width:150px; height:150px;" src= "<%=@interest.photo.url(:small) %>">
 				            <% end %>
 
 
