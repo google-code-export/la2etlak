@@ -113,9 +113,7 @@ padding-bottom:20px;
   border-radius: 3px;
  
 }
-.redbadge:hover {
-  background-color: #953b39;
-}
+
 .bluebadge {
   padding: 1px 4px 2px;
   font-size: 14.998px;
@@ -130,9 +128,7 @@ padding-bottom:20px;
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
-.bluebadge:hover {
-  background-color: #2d6987;
-}
+
 .yellowbadge {
   padding: 1px 4px 2px;
   font-size: 14.998px;
@@ -147,9 +143,7 @@ padding-bottom:20px;
   -moz-border-radius: 3px;
   border-radius: 3px;
 }
-.yellowbadge:hover {
-  background-color: #c67605;;
-}
+
 .greenbadge {
   padding: 1px 4px 2px;
   font-size: 14.998px;
@@ -163,9 +157,6 @@ padding-bottom:20px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-}
-.greenbadge:hover {
-  background-color: #356635;
 }
 
 .maindiv{
@@ -877,10 +868,10 @@ div.auto_complete ul strong.highlight {
 .main-user-profile-page{
   background-color:#e5e5e5;
   width:70%;
-  margin-left:24%;
+  margin-left:2%;
   padding-left:0.5%;
   padding-bottom:20px;
-  overflow-x: hidden;
+  overflow-x: scroll;
   float:left;
   border:1px solid #eeeeee;
   border:1px solid rgba(0,0,0,0.05);
@@ -972,9 +963,7 @@ padding-bottom:20px;
     background-color:#e5e5e5;
     padding-left:10px;
     padding-right:10px;
-    margin-top: 9px;
-
-
+    float:left;
 }
 .sidebar-nav-fixed-right {
     padding: 9px 0;
