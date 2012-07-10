@@ -4,7 +4,8 @@ class Log < ActiveRecord::Base
   def as_xls(options = {})
     {
         "DateTime" => created_at.to_s,
-        "Message" => message
+        "Message" => message,
+        "LastModified" => updated_at
     }
   end
 
