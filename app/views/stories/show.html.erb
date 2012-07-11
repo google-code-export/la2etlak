@@ -34,8 +34,12 @@
 							<ul class="nav nav-list" >
 							<li class="divider"></li>
 							</ul>
-							
 							</div>
+							<% if Story.find(params[:id]).hidden %>
+            <%= link_to  "Unhide Stroy",{:controller => "stories", :action => "toggle_hiding"} ,:class => "btn btn-large btn-danger" %>
+            <%else%>
+            <%= link_to  "Hide Stroy",{:controller => "stories", :action => "toggle_hiding"} ,:class => "btn btn-large btn-warning" %>
+            <%end%>
 				</div>
 				
 		</ul>	

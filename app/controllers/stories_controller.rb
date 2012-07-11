@@ -278,9 +278,22 @@ end
   Input: params[:story_id]
   Output: nothign
 =end 
+
   def redirect
     redirect_to Story.find(params[:story_id]).story_link
   end 
 
+  #Author: Gasser
+def toggle_hiding
+    s=Story.find(params[:id])
+    if s.hidden
+      s.update_attributes :hidden => false
+      flash[:unhide] = "This story is now available to the users $green"
+    else 
+      s.update_attributes :hidden => true
+      flash[:hide] = "This story is now hidden from the users $yellow"
+    end
+    redirect_to '/stories/'+params[:id]
+  end
 
 end
