@@ -57,7 +57,7 @@
 	 <%end%><br>
 
 
-<!-- checks for number of likes and dislikes per story -->
+<!-- checks for number of likes and -..- dislikes per story -->
  
 	 <%= link_to image_tag('dislikekh.png' , :style =>"width:30px;height:30px;"), {:controller => 'likedislikes' , :action => 'thumb' , :sid => @story.id  , :act => -1}%>
   <% if @dislikes.length > 0 %>
