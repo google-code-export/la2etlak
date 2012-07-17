@@ -473,4 +473,21 @@ end
 
 	end
 
+  #Kareem New
+  test "cannot send twice" do
+    toto = User.create!(:email=>"tesssst@test.com" , :password => "12345678" , :password_confirmation => "12345678")
+    flag = toto.send_feedback("Message")
+    flag1 = toto.send_feedback("hahahaha")
+    assert_not_equal flag,flag1,"User Can't Send Feedback twice in 10 days"
+  end
+
+
+  #Kareem New
+  test "feedback should be added to table" do
+    toty = User.create(:email=>"tote@test.com" , :password => "12345678" , :password_confirmation => "12345678")
+    toty.send_feedback("hahahahaha")
+    flag = Feedback.find_by_user_id(toty.id)
+    assert_not_nil flag , "User Feedback should be added to Feedback table"
+end
+
 end

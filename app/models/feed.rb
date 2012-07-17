@@ -13,4 +13,20 @@ class Feed < ActiveRecord::Base
 
 #interest _id should be there to create the RSS feed 
   validates :interest_id, :presence => true
+
+# author : Mouaz			 
+# get_feed is a method that takes a specific feed_id as an input  and searches the database 
+# for the feed with this id and returns #this feed to the caller
+
+  def self.get_feed(feed_id)
+      return Feed.find(feed_id)
+  end
+
+# author : Mouaz			 
+# get_feed is a method that takes a specific feed_link as an input  and searches the database 
+# for the feed with this id and returns #this feed to the caller
+
+  def self.get_feed_by_link(feed_link)
+      return Feed.find_by_link(feed_link)
+  end
 end

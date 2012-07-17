@@ -261,5 +261,11 @@ No arguments
   def deliver_password_reset_instructions!  
    reset_perishable_token!  
    Emailer.password_reset_instructions(self)  
-  end  
+  end 
+
+#mouaz
+#use as find_by_email 
+  def self.get_admin_by_email(email)
+   return Admin.find_by_email(email)
+  end
 end

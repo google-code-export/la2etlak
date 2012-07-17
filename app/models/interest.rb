@@ -481,5 +481,9 @@ takes as argument the id of the interest and returns the interest after updating
     return @interest
   end
 
+def self.get_interest_by_name(interest_name)
+   Interest.find_by_name(interest_name)
+end
+
 end
 

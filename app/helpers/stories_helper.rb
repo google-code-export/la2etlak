@@ -18,62 +18,7 @@ require 'open-uri'
 	return doc
 
  end
- '''
-  This method gets the number of a certain activity (shares, likes, dislikes, 
-  flags) of a certain story using its id in each day in the last 30 days.
-  There are several cases, concerning the date of creation, last update and
-  hiding of the story, that has to handeled:
-  1) If the story was created and hidden within the last 30 days, then I only 
-  return the activity from the table between the creation date and the last 
-  update which is the hiding.
-  2) If the story was created before the last 30 days and hidden within the last
-  30 days, then I only return the activity from the table between the last 30 
-  days and the last update which is the hiding.
-  3) If the story was created and hidden before the last 30 days, then I will 
-  return an empty array.
-  4) If the story was not hidden and it was created before the last 30 days, 
-  then I return the activity from the table between the last 30 days and the 
-  current date.
-  5) If the story was not hidden and it was created within the last 30 days, 
-  then I return the activity from the table between the creation date of the 
-  story and the current date.
-  '''
-  def get_no_of_activity(needed_graph, creation_date, last_update, hidden)
-    activities_by_day=[]
-    if hidden && creation_date >= 30.days.ago.to_date && 
-       last_update >= 30.days.ago.to_date
-        days= (Time.zone.now.to_date - creation_date.to_date).to_i
-        days2= (Time.zone.now.to_date - last_update.to_date).to_i
-        (days.downto(days2)).each do |i|
-            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
-           end
-          return activities_by_day
-      
-    elsif hidden && creation_date < 30.days.ago.to_date && 
-          last_update >= 30.days.ago.to_date
-          days= (Time.zone.now.to_date - last_update.to_date).to_i
-          (30.downto(days)).each do |i|
-            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
-           end
-          return activities_by_day
-      
-    elsif hidden && creation_date < 30.days.ago.to_date && 
-          last_update < 30.days.ago.to_date
-      activities_by_day = []
-      
-    elsif creation_date < 30.days.ago.to_date
-      (30.downto(0)).each do |i|
-        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
-       end
-       return activities_by_day
-    else
-      days= (Time.zone.now.to_date - creation_date.to_date).to_i
-      (days.downto(0)).each do |i|
-        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
-       end
-       return activities_by_day
-    end
-  end
+ 
  
 =begin
 Discription : this method takes as a parameter the html file and extract the img src (url) from it 
@@ -111,24 +56,7 @@ require 'open-uri'
  end
  
 
- 
- 
   
-  
-  '''
-  This method returns the percentage of the likes to the total number 
-  of likes and dislikes
-  '''
-  def get_width
-    likes =  @story.likedislikes.where(action: 1).count
-    dislikes =  @story.likedislikes.where(action: -1).count
-    total = likes + dislikes
-    if total == 0
-      width = 0
-    else 
-      width = likes*100/total
-    end
-  end
 
 #the method of fetching rss feeds
 
