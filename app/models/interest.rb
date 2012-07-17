@@ -39,8 +39,9 @@ class Interest < ActiveRecord::Base
     self.stories [0..stories_number-1]
   end
 
+# A method that gets all the interests in the database.
 def self.get_all_interests
-Interest.all
+  Interest.all
 end
 
  #This method when called will return an array of ActiveRecords having 
@@ -405,8 +406,9 @@ def get_users_added_interest
 
 end
 
+# A method that gets the interest with this id.
 def self.get_interest(id)
-Interest.find(id)
+  Interest.find(id)
 end
 =begin
 #Author: jailan

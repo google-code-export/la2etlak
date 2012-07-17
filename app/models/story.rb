@@ -39,6 +39,15 @@ include StoriesHelper
       return Story.find(story_id)
   end
 
+  # A method that gets the story with this link
+  def self.get_story_by_link (media_link)
+    return Story.find_by_story_link(media_link)
+  end 
+
+  # A method that gets the story with this title
+  def self.get_story_by_title (title)
+    return Story.find_by_title(title)
+  end
 
   #Author: Lydia
   ''' 

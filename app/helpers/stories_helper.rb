@@ -165,7 +165,7 @@ def fetch_rss(link)
 
     #check if the story already exists in the database
     #count_of_stories_with_same_title = Story.where(:title => stitle).select("count(title)")
-    sid = Story.find_by_story_link(slink)
+    sid = Story.get_story_by_link(slink)
 
     #if it is a new story, it will enter automatically
     #if count_of_stories_with_same_title == 0
@@ -180,7 +180,7 @@ def fetch_rss(link)
 
 	#getting the id of the interest
       
-	sinterest = Feed.find_by_link(source).interest_id
+	sinterest = Feed.get_feed_by_link(source).interest_id
 
     #if it is a new story, it will enter automatically
     if sid == nil
@@ -201,7 +201,7 @@ def fetch_rss(link)
       storynow.mobile_content = storynow.new_content(sdescription)
       storynow.save
 
-      sid = Story.find_by_title(stitle).id
+      sid = Story.get_story_by_title(stitle).id
       
       Log.create(loggingtype: 2,story_id: sid,message: "new story")
 
@@ -211,7 +211,7 @@ def fetch_rss(link)
       puts '#######################################################3'
       #if the story exists in the database it will enter the array without modifications
 
-      storynow = Story.find_by_title(stitle)
+      storynow = Story.get_story_by_title(stitle)
       listOfStories.append(storynow)
     end
       i+=1

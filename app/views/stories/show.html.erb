@@ -28,14 +28,14 @@
 									<li class="nav-header">Rank :</li>
 									<li><%= @story.get_story_rank_all_time %></li>
 									<li class="nav-header">Interest Name :</li>
-									<li><%= Interest.find(@story.interest_id).name %></li>
+									<li><%= Interest.get_interest(@story.interest_id).name %></li>
 
 							</div>
 							<ul class="nav nav-list" >
 							<li class="divider"></li>
 							</ul>
 							</div>
-							<% if Story.find(params[:id]).hidden %>
+							<% if Story.get_story(params[:id]).hidden %>
             <%= link_to  "Unhide Stroy",{:controller => "stories", :action => "toggle_hiding"} ,:class => "btn btn-large btn-danger" %>
             <%else%>
             <%= link_to  "Hide Stroy",{:controller => "stories", :action => "toggle_hiding"} ,:class => "btn btn-large btn-warning" %>
@@ -75,7 +75,7 @@
 						<div class="well-comment-component">
 <a href=" #"class="thumbnail-comment-component"><img src="http://placehold.it/75x75"></a>
 <div class="comment-component-info">
-<h3><%= User.find(comment.user_id).name %></h3>
+<h3><%= User.get_user(comment.user_id).name %></h3>
 <div class="comment-component-well">
 <p><font size="2"><%= comment.content %>
 </p>

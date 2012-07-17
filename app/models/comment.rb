@@ -15,6 +15,11 @@ class Comment < ActiveRecord::Base
   validates_presence_of :content
   validates_presence_of :user
   validates_presence_of :story
+
+# A method that gets the comment with this id
+def self.get_comment(comment_id)
+  return Comment.find(comment_id)
+end
   
 =begin
  This method adds the details of this comment to the log file.
@@ -137,5 +142,11 @@ class Comment < ActiveRecord::Base
     else
       return false
     end
-  end   
+  end
+
+
+  # A method to get all the comments of a story
+    def self.get_comments_of_story (story_id)
+      return Comment.find_all_by_story_id(story_id)
+    end 
 end

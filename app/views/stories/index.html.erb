@@ -73,7 +73,7 @@
 					-o-transform: rotate(-45deg);
 					transform: rotate(-45deg); 
 					margin-top:35px;
-					position:relative;"><%=Interest.find(story.interest_id).name%></span>
+					position:relative;"><%=Interest.get_interest(story.interest_id).name%></span>
 				<font size="3"><b>
 				<%= link_to( story.title, {:controller => "stories", :action => "show",:id => story.id}) %></b></font>
 				<span class="pull-right bluebadge"><%=time_ago_in_words(story.created_at)%></span>
@@ -102,7 +102,7 @@
 					<% if !(@comments.nil? || @comments.empty?) %>
 							<% @comments.each do |comment| %>
 				<div class="well" style="margin-left:7%">
-					<h3><%= User.find(comment.user_id).email %></h3>
+					<h3><%= User.get_user(comment.user_id).email %></h3>
 					<div class="comment-component-well">
 						<p><font size="2"><%= comment.content %></p></font>
 					</div>

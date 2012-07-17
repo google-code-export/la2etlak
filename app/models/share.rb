@@ -6,4 +6,8 @@ class Share < ActiveRecord::Base
   
   validates :story_id, presence: true
   validates :user_id, presence: true
+
+  def self.get_shares_of_story (story_id)
+  	Share.find_all_by_story_id(story_id)
+  end
 end
