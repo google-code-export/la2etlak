@@ -15,8 +15,8 @@ def thumb
 	action = params[:act]
 	action = action.to_i  
 	story_id = params[:sid]
+	story = Story.get_story(story_id)
 	user = current_user
-	story = Story.find(story_id)
 	user.thumb_story(story,action)
  	#redirects to the story View After doing the thumb up/down 
         redirect_to :controller => "stories", :action => "get" , :id => story_id 

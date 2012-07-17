@@ -5,7 +5,7 @@
   <h4>Friend's information</h4><br>
   <div class="well">
      <table style="float:right">
-     <%@friend = User.find_by_id(@friend_id)
+     <%@friend = User.get_user(@friend_id)
          if (!(@friend.name.nil?) && @friend.name != "")
               @username = @friend.name
          else
