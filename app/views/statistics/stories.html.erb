@@ -86,7 +86,7 @@
 								Likes/Dislikes: <%= @story.likedislikes.where(action: 1).count %> / <%= @story.likedislikes.where(action: -1).count %>
 							</h3> 
 							<div class="progresscustom" id="progressbar" style="display: none;">
-	 							<div class="barcustom" id="barofprogress" style="width: <%= get_width %>%">
+	 							<div class="barcustom" id="barofprogress" style="width: <%= @story.get_width %>%">
 	 							</div>
 							</div>						      					
 							<h3 class="statistics-component-text">Number of Flags: <%= @story.flags.count %>

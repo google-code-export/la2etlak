@@ -1,7 +1,7 @@
 class AdminSessionsController < ApplicationController
 
  def new  
-    @admin_session = AdminSession.find
+    @admin_session = AdminSession.get_admin_current_session
     if current_admin == nil
    @admin_session = AdminSession.new
     render layout: "login_template", template: "admin_sessions/new"  
@@ -34,7 +34,7 @@ class AdminSessionsController < ApplicationController
 =end
 
  def destroy  
-    @admin_session = AdminSession.find
+    @admin_session = AdminSession.get_admin_current_session
   if @admin_session == nil
     redirect_to('/admin/login')
   else  
@@ -42,6 +42,4 @@ class AdminSessionsController < ApplicationController
     redirect_to('/admin/login')
   end  
  end 
- 
-
 end

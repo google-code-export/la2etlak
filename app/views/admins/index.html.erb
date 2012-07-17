@@ -131,7 +131,7 @@ $j(function() {
 							<% if !(@comments.nil? || @comments.empty?) %>
 									<% @comments.each do |comment| %>
 						<div class="well" style="margin-left:7%">
-							<h3><%= User.find(comment.user_id).email %></h3>
+							<h3><%= User.get_user(comment.user_id).email %></h3>
 							<div class="comment-component-well">
 								<p><font size="2"><%= comment.content %></p></font>
 							</div>

@@ -23,7 +23,7 @@ end
     $saved
     $savedinterest = false
 
-    feed = Feed.find_by_link(params[:feed][:link]) 
+    feed = Feed.get_feed_by_link(params[:feed][:link]) 
     @feed= Feed.new(params[:feed]) #retrieving the feed from the database using the table feed parameters
     @interestid= params[:feed][:interest_id] 
     if feed.nil?    
@@ -48,8 +48,8 @@ end
 end
 
   def destroy
-        @id = Feed.find(params[:id]).interest_id
-	Feed.find(params[:id]).destroy
+        @id = Feed.get_feed(params[:id]).interest_id
+	Feed.get_feed(params[:id]).destroy
 	redirect_to :controller=>'interests', :action => 'show', :id => @id
         Log.create(loggingtype:3, interest_id:@interestid, message:"A new RSS link is deleted.")
   end

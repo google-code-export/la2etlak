@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
   :uniqueness => { :case_sensitive => false}
   validates :first_name, :length => { :maximum => 20 }
   validates :last_name,  :length => { :maximum => 20 }
+ 
 
 =begin  
  gets the shared stories of one friend given his/her id
@@ -343,11 +344,11 @@ end
   '''
   
  def get_user_stat(user_id)
-  s = get_no_of_shares_user(user_id)
-  n = get_no_of_likes_user(user_id)
-  m = get_no_of_dislikes_user(user_id)
-  p = get_no_of_flags_user(user_id)
-  c = get_no_of_comments_user(user_id)
+  s = User.get_no_of_shares_user(user_id)
+  n = User.get_no_of_likes_user(user_id)
+  m = User.get_no_of_dislikes_user(user_id)
+  p = User.get_no_of_flags_user(user_id)
+  c = User.get_no_of_comments_user(user_id)
  data = "[#{s},#{n},#{m},#{p},#{c}]"
  end
 
@@ -973,7 +974,45 @@ Author: Kareem
     return blockers
   end 
 
- 
+ #author: Shafei
+  def self.get_no_of_activity(needed_graph, creation_date, last_update, deactivated)
+
+    activities_by_day=[]
+    if deactivated && creation_date >= 30.days.ago.to_date && 
+       last_update >= 30.days.ago.to_date
+        days= (Time.zone.now.to_date - creation_date.to_date).to_i
+        days2= (Time.zone.now.to_date - last_update.to_date).to_i
+        (days.downto(days2)).each do |i|
+            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+           end
+          return activities_by_day
+      
+    elsif deactivated && creation_date < 30.days.ago.to_date && 
+          last_update >= 30.days.ago.to_date
+          days= (Time.zone.now.to_date - last_update.to_date).to_i
+          (30.downto(days)).each do |i|
+            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+           end
+          return activities_by_day
+      
+    elsif deactivated && creation_date < 30.days.ago.to_date && 
+          last_update < 30.days.ago.to_date
+      activities_by_day = []
+      
+    elsif creation_date < 30.days.ago.to_date
+      (30.downto(0)).each do |i|
+        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+       end
+       return activities_by_day
+    else
+      days= (Time.zone.now.to_date - creation_date.to_date).to_i
+      (days.downto(0)).each do |i|
+        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+       end
+       return activities_by_day
+    end
+  end
+
   '''
   This is the method that should return the data of statistics of a user
   with this format first element in the data arrays is ARRAY OF "No Of Shares",
@@ -982,17 +1021,240 @@ Author: Kareem
   and forth one is "No of Flags"
   and fifth one is "No of Comments"
   '''
-  
   def get_user_stat(user_id)
     creation_date = created_at.beginning_of_day
     last_update = updated_at.end_of_day
-    share = get_no_of_activity(shares, creation_date, last_update, deactivated)
-    like = get_no_of_activity(likedislikes.where(:action => 1) , creation_date, last_update, deactivated)
-    dislike = get_no_of_activity(likedislikes.where(:action => -1), creation_date, last_update, deactivated)
-    flag = get_no_of_activity(flags, creation_date, last_update, deactivated)
-    comment = get_no_of_activity(comments, creation_date, last_update, deactivated)
+    share = User.get_no_of_activity(shares, creation_date, last_update, deactivated)
+    like = User.get_no_of_activity(likedislikes.where(:action => 1) , creation_date, last_update, deactivated)
+    dislike = User.get_no_of_activity(likedislikes.where(:action => -1), creation_date, last_update, deactivated)
+    flag = User.get_no_of_activity(flags, creation_date, last_update, deactivated)
+    comment = User.get_no_of_activity(comments, creation_date, last_update, deactivated)
     data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
   end
+  #This method when called will return the difference between today and the day the user registered in our app in days.
+  def self.get_user_start_date(user_id)
+   user_reg_date = User.get_user(user_id).created_at_before_type_cast.to_date
+   last_updated = User.get_user(user_id).updated_at_before_type_cast.to_date
+   deactivated = User.get_user(user_id).deactivated_before_type_cast
+   if deactivated && user_reg_date > 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+     date = Time.zone.now.to_date - user_reg_date
+   elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+     date = Time.zone.now.to_date - 30.days.ago.to_date
+   elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated <= 30.days.ago.to_date
+     date = -1
+   elsif user_reg_date <= 30.days.ago.to_date
+     date = Time.zone.now.to_date - 30.days.ago.to_date
+   else
+     date = Time.zone.now.to_date - user_reg_date
+   end
+ end
 
+ #This method gets the number of Shares by this user in the last 30 days
+ def self.get_no_of_shares_user(user_id)
+
+   user_reg_date = User.get_user(user_id).created_at_before_type_cast.to_date
+   last_updated = User.get_user(user_id).updated_at_before_type_cast.to_date
+   deactivated = User.get_user(user_id).deactivated
+   #1) If the user registered and was deactivated within the last 30 days
+     if deactivated && user_reg_date > 30.days.ago.to_date
+       shares_by_day = Share.where(:user_id => user_id, :created_at => user_reg_date..last_updated).group("date(created_at)").select("created_at, count(user_id) as noOfSharesPerDay")
+       (user_reg_date.to_date..last_updated.to_date).map do |date|
+         share = shares_by_day.detect { |share| share.created_at.to_date == date}
+         share && share.noOfSharesPerDay.to_i || 0
+       end.inspect
+   #2) If the user registered before the last 30 days and was dactivated within the last 30 days
+     elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+       shares_by_day = Share.where(:created_at => 30.days.ago..last_updated, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfSharesPerDay")
+     (30.days.ago.to_date..last_updated.to_date).map do |date|
+         share = shares_by_day.detect { |share| share.created_at.to_date == date }
+         share && share.noOfSharesPerDay.to_i || 0
+        end.inspect
+   #3) If the user registered and deactivated before the last 30 days
+   elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated <= 30.days.ago.to_date
+       shares_by_day = []
+   #4) if the user registered before 30 days and wasn't deactivated
+     elsif user_reg_date <= 30.days.ago.to_date
+       shares_by_day = Share.where(:created_at => 30.days.ago..Time.zone.now.end_of_day, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfSharesPerDay")
+       (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
+         share = shares_by_day.detect { |share| share.created_at.to_date == date }
+         share && share.noOfSharesPerDay.to_i || 0
+       end.inspect
+   #5) if the user registered within 30 days and wasn't deactivated
+     else
+       shares_by_day = Share.where(:created_at => user_reg_date.beginning_of_day..Time.zone.now.end_of_day, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfSharesPerDay")
+       (user_reg_date.to_date..Time.zone.now.to_date).map do |date|
+         share = shares_by_day.detect { |share| share.created_at.to_date == date }
+         share && share.noOfSharesPerDay.to_i || 0
+        end.inspect
+      end
+  end
+    
+  #This method gets the number of Likes by this user in the last 30 days          
+  def self.get_no_of_likes_user(user_id)
+
+    user_reg_date = User.get_user(user_id).created_at_before_type_cast.to_date
+    last_updated = User.get_user(user_id).updated_at_before_type_cast.to_date
+    deactivated = User.get_user(user_id).deactivated
+    #1) If the user registered and was deactivated within the last 30 days
+    if deactivated && user_reg_date > 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      likes_by_day = Likedislike.where(:created_at => user_reg_date..last_updated, :user_id => user_id, :action => 1).group("date(created_at)").select("created_at, count(user_id) as noOfLikesPerDay")
+      (user_reg_date.to_date..last_updated.to_date).map do |date|
+        like = likes_by_day.detect { |like| like.created_at.to_date == date }
+        like && like.noOfLikesPerDay.to_i || 0
+      end.inspect
+    #2) If the user registered before the last 30 days and was dactivated within the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      likes_by_day = Likedislike.where(:created_at => 30.days.ago..last_updated, :user_id => user_id, :action => 1).group("date(created_at)").select("created_at, count(user_id) as noOfLikesPerDay")
+      (30.days.ago.to_date..last_updated.to_date).map do |date|
+        like = likes_by_day.detect { |like| like.created_at.to_date == date }
+        like && like.noOfLikesPerDay.to_i || 0
+       end.inspect
+    #3) If the user registered and deactivated before the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated <= 30.days.ago.to_date
+      likes_by_day = []
+    #4) if the user registered before 30 days and wasn't deactivated
+    elsif user_reg_date <= 30.days.ago.to_date
+      likes_by_day = Likedislike.where(:created_at => 30.days.ago..Time.zone.now.end_of_day, :user_id => user_id, :action => 1).group("date(created_at)").select("created_at, count(user_id) as noOfLikesPerDay")
+      (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
+        like = likes_by_day.detect { |like| like.created_at.to_date == date }
+        like && like.noOfLikesPerDay.to_i || 0
+      end.inspect
+    #5) if the user registered within 30 days and wasn't deactivated
+    else
+      likes_by_day = Likedislike.where(:created_at => user_reg_date.beginning_of_day..Time.zone.now.end_of_day, :user_id => user_id, :action => 1).group("date(created_at)").select("created_at, count(user_id) as noOfLikesPerDay")
+      (user_reg_date.to_date..Time.zone.now.to_date).map do |date|
+        like = likes_by_day.detect { |like| like.created_at.to_date == date }
+        like && like.noOfLikesPerDay.to_i || 0
+      end.inspect
+    end
+  end
+  
+#This method gets the number of Dislikes by this user in the last 30 days
+  def self.get_no_of_dislikes_user(user_id)
+
+    user_reg_date = User.get_user(user_id).created_at_before_type_cast.to_date
+    last_updated = User.get_user(user_id).updated_at_before_type_cast.to_date
+    deactivated = User.get_user(user_id).deactivated    
+    #1) If the user registered and was deactivated within the last 30 days
+    if deactivated && user_reg_date > 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      dislikes_by_day = Likedislike.where(:created_at => user_reg_date..last_updated, :user_id => user_id, :action => -1).group("date(created_at)").select("created_at, count(user_id) as noOfDislikesPerDay")
+      (user_reg_date.to_date..last_updated.to_date).map do |date|
+        dislike = dislikes_by_day.detect { |dislike| dislike.created_at.to_date == date }
+        dislike && like.noOfDislikesPerDay.to_i || 0
+      end.inspect
+    #2) If the user registered before the last 30 days and was dactivated within the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      dislikes_by_day = Likedislike.where(:created_at => 30.days.ago..last_updated, :user_id => user_id, :action => -1).group("date(created_at)").select("created_at, count(user_id) as noOfDislikesPerDay")
+      (30.days.ago.to_date..last_updated.to_date).map do |date|
+        dislike = dislikes_by_day.detect { |dislike| dislike.created_at.to_date == date }
+        dislike && dislike.noOfDislikesPerDay.to_i || 0
+      end.inspect
+    #3) If the user registered and deactivated before the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated <= 30.days.ago.to_date
+      dislikes_by_day = []
+    #4) if the user registered before 30 days and wasn't deactivated
+      elsif user_reg_date <= 30.days.ago.to_date
+        dislikes_by_day = Likedislike.where(:created_at => 30.days.ago..Time.zone.now.end_of_day, :user_id => user_id, :action => -1).group("date(created_at)").select("created_at, count(user_id) as noOfDislikesPerDay")
+        (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
+          dislike = dislikes_by_day.detect { |dislike| dislike.created_at.to_date == date }
+          dislike && dislike.noOfDislikesPerDay.to_i || 0
+        end.inspect
+    #5) if the user registered within 30 days and wasn't deactivated
+      else
+        dislikes_by_day = Likedislike.where(:created_at => user_reg_date.beginning_of_day..Time.zone.now.end_of_day, :user_id => user_id, :action => -1).group("date(created_at)").select("created_at, count(user_id) as noOfDislikesPerDay")
+        (user_reg_date.to_date..Time.zone.now.to_date).map do |date|
+          dislike = dislikes_by_day.detect { |dislike| dislike.created_at.to_date == date }
+          dislike && dislike.noOfDislikesPerDay.to_i || 0
+        end.inspect
+      end
+   end
+
+#This method gets the number of Comments by this user in the last 30 days       
+  def self.get_no_of_comments_user(user_id)
+
+    user_reg_date = User.get_user(user_id).created_at_before_type_cast.to_date
+    last_updated = User.get_user(user_id).updated_at_before_type_cast.to_date
+    deactivated = User.get_user(user_id).deactivated
+    #1) If the user registered and was deactivated within the last 30 days
+    if deactivated && user_reg_date > 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      comments_by_day = Comment.where(:created_at => user_reg_date..last_updated, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfCommentsPerDay")
+      (user_reg_date.to_date..last_updated.to_date).map do |date|
+        comment = comments_by_day.detect { |comment| comment.created_at.to_date == date }
+        comment && comment.noOfcommentsPerDay.to_i || 0
+      end.inspect
+    #2) If the user registered before the last 30 days and was dactivated within the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      comments_by_day = Comment.where(:created_at => 30.days.ago..last_updated, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfCommentsPerDay")
+      (30.days.ago.to_date..last_updated.to_date).map do |date|
+        comment = comments_by_day.detect { |comment| comment.created_at.to_date == date }
+        comment && comment.noOfCommentsPerDay.to_i || 0
+      end.inspect
+    #3) If the user registered and deactivated before the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated <= 30.days.ago.to_date
+      comments_by_day = []
+    #4) if the user registered before 30 days and wasn't deactivated
+    elsif user_reg_date <= 30.days.ago.to_date
+      comments_by_day = Comment.where(:created_at => 30.days.ago..Time.zone.now.end_of_day, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfCommentsPerDay")
+      (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
+        comment = comments_by_day.detect { |comment| comment.created_at.to_date == date }
+        comment && comment.noOfCommentsPerDay.to_i || 0
+      end.inspect
+    #5) if the user registered within 30 days and wasn't deactivated
+    else
+      comments_by_day = Comment.where(:created_at => user_reg_date.beginning_of_day..Time.zone.now.end_of_day, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfCommentsPerDay")
+      (user_reg_date.to_date..Time.zone.now.to_date).map do |date|
+        comment = comments_by_day.detect { |comment| comment.created_at.to_date == date }
+        comment && comment.noOfCommentsPerDay.to_i || 0
+      end.inspect
+    end
+  end
+  
+  #This method gets the number of flags by this user in the last 30 days        
+  def self.get_no_of_flags_user(user_id)
+    user_reg_date = User.get_user(user_id).created_at_before_type_cast.to_date
+    last_updated = User.get_user(user_id).updated_at_before_type_cast.to_date
+    deactivated = User.get_user(user_id).deactivated
+    #1) If the user registered and was deactivated within the last 30 days
+    if deactivated && user_reg_date > 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      flags_by_day = Flag.where(:created_at => user_reg_date..last_updated, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfFlagsPerDay")
+      (user_reg_date.to_date..last_updated.to_date).map do |date|
+        flag = flags_by_day.detect { |flag| flag.created_at.to_date == date }
+        flag && flag.noOfFlagsPerDay.to_i || 0
+      end.inspect
+    #2) If the user registered before the last 30 days and was dactivated within the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated > 30.days.ago.to_date
+      flags_by_day = Flag.where(:created_at => 30.days.ago..last_updated, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfFlagsPerDay")
+      (30.days.ago.to_date..last_updated.to_date).map do |date|
+        flag = flags_by_day.detect { |flag| flag.created_at.to_date == date }
+        flag && flag.noOfFlagsPerDay.to_i || 0
+      end.inspect
+    #3) If the user registered and deactivated before the last 30 days
+    elsif deactivated && user_reg_date <= 30.days.ago.to_date && last_updated <= 30.days.ago.to_date
+      flags_by_day = []
+    #4) if the user registered before 30 days and wasn't deactivated
+    elsif user_reg_date <= 30.days.ago.to_date
+      flags_by_day = Flag.where(:created_at => 30.days.ago..Time.zone.now.end_of_day, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfFlagsPerDay")
+      (30.days.ago.to_date..Time.zone.now.to_date).map do |date|
+        flag = flags_by_day.detect { |flag| flag.created_at.to_date == date }
+        flag && flag.noOfFlagsPerDay.to_i || 0
+      end.inspect
+    #5) if the user registered within 30 days and wasn't deactivated
+    else
+      flags_by_day = Flag.where(:created_at => user_reg_date.beginning_of_day..Time.zone.now.end_of_day, :user_id => user_id).group("date(created_at)").select("created_at, count(user_id) as noOfFlagsPerDay")
+      (user_reg_date.to_date..Time.zone.now.to_date).map do |date|
+        flag = flags_by_day.detect { |flag| flag.created_at.to_date == date }
+        flag && flag.noOfFlagsPerDay.to_i || 0
+      end.inspect
+    end
+  end
+
+
+def self.get_user_by_email(email)
+    return User.find_by_email(email)
+  end
+
+def self.get_user(id)
+    return User.find(id)
+end
 
 end

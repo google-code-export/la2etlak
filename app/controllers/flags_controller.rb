@@ -13,7 +13,7 @@ Author:Kareem
 	def flag
 
 		story_id = params[:sid]
-		story = Story.find(story_id)
+		story = Story.get_story(story_id)
 		user = current_user
 		result = user.flag_story(story)
 		if(result == true)

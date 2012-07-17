@@ -94,7 +94,7 @@ class UsersController < ApplicationController
       return render text: 'This app is for Nokia users only.'      
     end 
 
-		@user = User.find_by_email(params[:email].downcase)
+		@user = User.get_user_by_email(params[:email].downcase)
     if @user.nil?
       flash[:notice] ="This email doesn't exist $red"
       redirect_to :controller => 'users', :action => 'forgot_password'
@@ -128,7 +128,7 @@ class UsersController < ApplicationController
 	end
 
 	def test
-		user = User.find_by_id(params[:id])
+		user = User.get_user(params[:id])
 		UserSession.create(user)
 		@user = current_user
 	end
@@ -166,7 +166,7 @@ Author: Kareem
     else
       if(int_name)
         #stories = user.get_feed(int_name)
-        interest = Interest.find_by_name(int_name)
+        interest = Interest.get_interest_by_name(int_name)
         stories = user.get_interest_stories(interest)
         stories.sort! {|b,a| a.created_at <=> b.created_at}
       else
@@ -293,7 +293,7 @@ Author: Kareem
   def int_toggle
     user = current_user
     id_num = params[:id]
-    id = Interest.find(id_num)
+    id = Interest.get_interest(id_num)
     text = user.toggle_interests(id)
      if (text == "Interest added.")
         flash[:block_interest_toggle_s] = "#{text} $green"
@@ -316,7 +316,7 @@ Author: Kareem
   Author: Gasser
 =end
   def force_reset_password     
-    @user = User.find(params[:id])
+    @user = User.get_user(params[:id])
     @logs = @user.get_recent_activity(Time.zone.now)
     @friends = @user.friends
     @interests = @user.added_interests
@@ -332,7 +332,7 @@ Author: Kareem
  # @friends contain the list of users who are friends with our user
  # @interests is the list of interests that the user is subscribed to
  def show
-    @user = User.find(params[:id])
+    @user = User.get_user(params[:id])
     @logs = @user.get_recent_activity(Time.zone.now)
     @friends = @user.friends
     @interests = @user.added_interests
@@ -368,7 +368,7 @@ Author: Kareem
 =end
   
   def deactivate
-    @user = User.find(params[:id])
+    @user = User.get_user(params[:id])
     @user.deactivate_user()
     flash[:deactivate_user] = "User successfully deactivated. An e-mail was sent to notify him/her about this action. $yellow"
     redirect_to(:action => 'show', :id => @user.id)
@@ -381,7 +381,7 @@ Author: Kareem
   Author: bassem
 =end
   def activate
-    @user = User.find(params[:id])
+    @user = User.get_user(params[:id])
     @user.activate_user()
     flash[:activate_user] = "User successfully activated. An e-mail was sent to notify him/her about this action. $yellow"
 
@@ -418,7 +418,7 @@ Author: Kareem
   def block_interest
     @user = current_user
     @story_id = params[:id]
-    @story = Story.find_by_id(@story_id)
+    @story = Story.get_story(@story_id)
     @interest = @story.interest
     @text = @user.block_interest1(@interest)
     if (@text == "Interest blocked.")
@@ -439,7 +439,7 @@ redirects to toggle interests page.
   def block_interest_from_toggle
     @user = current_user
     @interest_id = params[:id]
-    @interest = Interest.find_by_id(@interest_id)
+    @interest = Interest.get_interest(@interest_id)
     @text = @user.block_interest1(@interest)
     if (@text == "Interest blocked.")
       flash[:block_interest_toggle_s] = "#{@text} $green"
@@ -459,7 +459,7 @@ redirects to toggle interests page.
   def block_friends_feed
       @user = current_user
       @friend_id = params[:id]
-      @friend = User.find_by_id(@friend_id)
+      @friend = User.get_user(@friend_id)
       @text = @user.block_friends_feed1(@friend) 
       if (@text == "#{@friend.email} blocked.")
         flash[:block_friends_feed_s] = "#{@text} $green"
@@ -515,7 +515,7 @@ redirects to toggle interests page.
   def unblock_story
       @user = current_user
       @story_id = params[:id]
-      @story = Story.find_by_id(@story_id)
+      @story = Story.get_story(@story_id)
       @text = @user.unblock_story1(@story)
       if(@text == "Story unblocked.") 
          flash[:story_unblocked_s] = "#{@text} $green"
@@ -539,7 +539,7 @@ redirects to toggle interests page.
   def unblock_story_from_undo
       @user = current_user
       @story_id = params[:id]
-      @story = Story.find_by_id(@story_id)
+      @story = Story.get_story(@story_id)
       @text = @user.unblock_story1(@story)
       if(@text == "Story unblocked.") 
          flash[:story_unblocked_s] = "#{@text} $green"
@@ -559,7 +559,7 @@ redirects to toggle interests page.
   def unblock_interest_from_toggle
       @user = current_user
       @interest_id = params[:id]
-      @interest = Interest.find_by_id(@interest_id)
+      @interest = Interest.get_interest(@interest_id)
       @text = @user.unblock_interest1(@interest)
       if(@text == "Interest unblocked.") 
          flash[:interest_unblocked_toggle_s] = "#{@text} $green"
@@ -579,7 +579,7 @@ redirects to toggle interests page.
   def unblock_interest
       @user = current_user
       @story_id = params[:id]
-      @story = Story.find_by_id(@story_id)
+      @story = Story.get_story(@story_id)
       @interest = @story.interest
       @text = @user.unblock_interest1(@interest)
       if(@text == "Interest unblocked.") 
@@ -600,7 +600,7 @@ feed and renders the view.
   def unblock_friends_feed
       @user = current_user
       @friend_id = params[:id]
-      @friend = User.find_by_id(@friend_id)
+      @friend = User.get_user(@friend_id)
       @text = @user.unblock_friends_feed1(@friend) 
       if(@text == "#{@friend.email} unblocked.")
         flash[:unblock_friend_s] = "#{@text} $green"

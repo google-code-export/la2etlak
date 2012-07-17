@@ -83,7 +83,7 @@ class AdminsController < ApplicationController
   Author: MESAI
 =end
   def index
-    @admin_session = AdminSession.find
+    @admin_session = AdminSession.get_admin_current_session
     if current_admin == nil
      redirect_to('/admin/login')
     else
@@ -92,7 +92,7 @@ class AdminsController < ApplicationController
   end
  #this method for reseting password
   def resetPassword
-    @admin = Admin.find_by_email(params[:email])
+    @admin = Admin.get_admin_by_email(params[:email])
     if @admin.nil?
       flash[:notice] ="This email doesn't exist red"
       redirect_to('/password_resets/new')

@@ -31,6 +31,7 @@ class InterestsController < ApplicationController
   @feed = Feed.new # creaing a new interest and returning it in a variable @interest used in the form in new.html.erb 
   @interest = Interest.new
   @title = "Add interest"
+  @number = Interest.count
   end
 =begin  
 
