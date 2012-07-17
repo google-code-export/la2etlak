@@ -1249,4 +1249,12 @@ Author: Kareem
   end
 
 
+def self.get_user_by_email(email)
+    return User.find_by_email(email)
+  end
+
+def self.get_user(id)
+    return User.find(id)
+end
+
 end
