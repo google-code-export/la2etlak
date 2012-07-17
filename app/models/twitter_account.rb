@@ -2,6 +2,9 @@ require 'twitter'
 
 class TwitterAccount < ActiveRecord::Base
 
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
 =begin  
    Those are our Consumer Token and Consumer secret that twitter
    provided us. This correspons our entity to twitter. The Consumer

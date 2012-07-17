@@ -1,5 +1,7 @@
 class CommentUpDown < ActiveRecord::Base
-
+  
+include Mongoid::Document
+include Mongoid::Timestamps
 =begin
   This class is solely done by me, Menisy.
 =end
