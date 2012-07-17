@@ -12,6 +12,11 @@ class FlickrAccount < ActiveRecord::Base
   authentication. see flickr_accounts_controller.rb for more info 
 =end
 
+
+  field :user_id, type: Integer
+  field :consumer_key, type: String
+  field :secret_key, type: String
+
   attr_accessible :consumer_key, :secret_key
   belongs_to :user, class_name: "User" 
 

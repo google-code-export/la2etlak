@@ -1,20 +1,30 @@
 class Comment < ActiveRecord::Base
   
-=begin
-    
+=begin  
   This class is done solely by me, Menisy
-
-
 =end
 
+include Mongoid::Document
+include Mongoid::Timestamps
 
-  attr_accessible :content
-  belongs_to :user
-  belongs_to :story
-  has_many :comment_up_downs
-  validates_presence_of :content
-  validates_presence_of :user
-  validates_presence_of :story
+field :user_id, type: Integer 
+field :story_id, type: Integer 
+field :content, type: string 
+#field :created_at, type: datetime 
+#field :created_at, type: datetime 
+#Since I added the timestamps we dont need them 
+
+add_index "comments", ["user_id", "story_id"], :name => "index_comments_on_user_id_and_story_id"
+
+attr_accessible :content
+
+belongs_to :user
+belongs_to :story
+has_many :comment_up_downs
+  
+validates_presence_of :content  
+validates_presence_of :user
+validates_presence_of :story
   
 =begin
  This method adds the details of this comment to the log file.
