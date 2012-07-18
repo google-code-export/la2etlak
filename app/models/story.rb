@@ -39,7 +39,20 @@ include StoriesHelper
       return Story.find(story_id)
   end
 
+  # A method that gets the story with this link
+  def self.get_story_by_link (media_link)
+    return Story.find_by_story_link(media_link)
+  end 
 
+  # A method that gets the story with this title
+  def self.get_story_by_title (title)
+    return Story.find_by_title(title)
+  end
+
+  # A method that gets all the stories of a certain interest
+  def self.get_stories_by_interest (interest_id)
+    return Story.find_all_by_interest_id (interest_id)
+  end
   '''
   This method gets the number of a certain activity (shares, likes, dislikes, 
   flags) of a certain story using its id in each day in the last 30 days.
@@ -375,7 +388,6 @@ Author: Omar
 =end
 
  def get_related_stories
- 
  	stories =  Story.get_stories_ranking_all_time
 	st = Array.new
 	for story in stories 

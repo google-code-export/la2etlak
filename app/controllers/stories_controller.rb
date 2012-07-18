@@ -11,9 +11,8 @@ class StoriesController < ApplicationController
   $active = true
 
 def show
-   @comments = Comment.find_all_by_story_id(params[:id]) # get comments of this story
-   @story = Story.find(params[:id])
-
+  @comments = Comment.get_comments_of_story(params[:id]) # get comments of this story
+  @story = Story.get_story(params[:id])
   end
   
   
@@ -39,7 +38,7 @@ Author: Omar
    def get
 	id = params[:id]
 	@user = current_user
-	@story = Story.find(id)
+	@story = Story.get_story(id)
 	@likes = @story.liked
 	@dislikes = @story.disliked
 	@action1 = @story.check_like(@user)
@@ -48,7 +47,7 @@ Author: Omar
 	if(all_related_stories.length > 0)
 	  @block = true
 	 else 
-	      @block = false
+	  @block = false
 	 end
 	filter_related_stories = all_related_stories - @user.blocked_stories
 	 if (filter_related_stories.length < 5)
@@ -63,7 +62,7 @@ Author: Omar
   
   # instance variables for comments
   # Author: Menisy
-  @story = Story.find(params[:id])
+  @story = Story.get_story(params[:id])
   @comment = Comment.new
   @user = current_user
   ### end of comment variables ###
@@ -80,7 +79,7 @@ Author: Omar
   Author: Menisy
 =end
   def mobile_show
-    @story = Story.find(params[:id])
+    @story = Story.get_story(params[:id])
     @comment = Comment.new
     @user = current_user
     render :layout => "mobile_template" 
@@ -91,7 +90,7 @@ Author: Omar
   Author: Menisy
 =end  
   def up_comment
-    comment = Comment.find(params[:comment_id])
+    comment = Comment.get_comment(params[:comment_id])
     upped = comment.up_comment(current_user)
     if upped 
       redirect_to :action => "get" ,:id => params[:id]
@@ -105,7 +104,7 @@ Author: Omar
   Author: Menisy
 =end
   def down_comment
-    comment = Comment.find(params[:comment_id])
+    comment = Comment.get_comment(params[:comment_id])
     downed = comment.down_comment(current_user)
     if downed 
       redirect_to :action => "get" ,:id => params[:id]
@@ -117,7 +116,7 @@ Author: Omar
 
 
   def index
-    @interests = Interest.all   
+    @interests = Interest.get_all_interests   
     @stories = Story.filter_stories($hidden,$flagged,$active) # passing a list of all stories to the view .
     if @stories.nil?
       @stories = []
@@ -215,7 +214,7 @@ Author: Omar
 #this method returns friend emails and ids when takes the user id.
 def get_friend_id()
  @useremail=params[:email] 
- @id = User.find_by_email(@useremail).id
+ @id = User.get_user_by_email(@useremail).id
  render text: @id.to_s
 end
 
@@ -280,12 +279,12 @@ end
 =end 
 
   def redirect
-    redirect_to Story.find(params[:story_id]).story_link
+    redirect_to Story.get_story(params[:story_id]).story_link
   end 
 
   #Author: Gasser
 def toggle_hiding
-    s=Story.find(params[:id])
+    s=Story.get_story(params[:id])
     if s.hidden
       s.update_attributes :hidden => false
       flash[:unhide] = "This story is now available to the users $green"

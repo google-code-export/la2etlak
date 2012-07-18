@@ -9,7 +9,7 @@ Author: Bassem
 =end
   	def index
   		@admin = Admin.new
-      @admin2 = current_admin
+      	@admin2 = current_admin
   	end	
 =begin	
 	Method Description: A method in the admin_settings controller passed 

@@ -9,7 +9,7 @@
     <% @comments.each do |comment| %>
 
     <div class="story-comment-box-mobile" style="float:left; width:95%; clear:both; margin:1px;">
-        <h5 style="padding-left:3%;padding-top:1px;">    <%= User.find(comment.user_id).name %> says:</h5>
+        <h5 style="padding-left:3%;padding-top:1px;">    <%= User.get_user(comment.user_id).name %> says:</h5>
         <div style="clear:both;padding:1px;">
             <a href="#" style="float:left;padding-right:5px;padding-left:3px;padding-top:10px;" align="top"> <img
                     src="http://placehold.it/50x50"></a>

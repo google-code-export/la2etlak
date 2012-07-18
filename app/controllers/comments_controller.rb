@@ -22,7 +22,7 @@ class CommentsController < ApplicationController
 
 # included by default upon generation
   def show
-    respond_with(@comment = Comment.find(params[:id]))
+    respond_with(@comment = Comment.get_comment(params[:id]))
   end 
 
 =begin
@@ -41,9 +41,9 @@ class CommentsController < ApplicationController
 =end 
   def create
     @comment = Comment.new
-    @comment.story = Story.find(params[:comment][:story_id])
+    @comment.story = Story.get_story(params[:comment][:story_id])
     @comment.content = params[:comment][:content]
-    @comment.user = User.find(params[:comment][:user_id])
+    @comment.user = User.get_user(params[:comment][:user_id])
     if @comment.save
       @comment.add_to_log
       redirect_to :controller => "stories", :action => "get" , :id => @comment.story.id

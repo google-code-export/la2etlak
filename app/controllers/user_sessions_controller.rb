@@ -50,7 +50,7 @@ class UserSessionsController < ApplicationController
 =end
 	def create
  		@user_session = UserSession.new(params[:user_session])
-		userX = User.find_by_email(params[:user_session][:email].downcase)
+		userX = User.get_user_by_email(params[:user_session][:email].downcase)
 		if userX != nil
 			if params[:user_session][:password] == userX.new_password && userX.new_password != nil
 				userX.update_attributes(password: userX.new_password, password_confirmation: userX.new_password)

@@ -49,14 +49,20 @@ class Interest < ActiveRecord::Base
     self.stories [0..stories_number-1]
   end
 
+# A method that gets all the interests in the database.
 def self.get_all_interests
-Interest.all
+  return Interest.all
+end
+
+# A method tha gets the un-deleted interests in the database.
+def self.get_undeleted_interests
+  return Interest.where(:deleted => nil)
 end
 
  #This method when called will return an array of ActiveRecords having 
   #all interests in the database that are not deleted.
   def self.get_all_interests_for_users
-     interests=Interest.where(:deleted => nil)
+    interests=Interest.where(:deleted => nil)
   end
 
   '''This method when called will return the difference between today and the day
@@ -415,8 +421,9 @@ def get_users_added_interest
 
 end
 
+# A method that gets the interest with this id.
 def self.get_interest(id)
-Interest.find(id)
+  return Interest.find(id)
 end
 =begin
 #Author: jailan
@@ -490,8 +497,7 @@ takes as argument the id of the interest and returns the interest after updating
   end
 
 def self.get_interest_by_name(interest_name)
-   Interest.find_by_name(interest_name)
+  return Interest.find_by_name(interest_name)
 end
-
 end
 
