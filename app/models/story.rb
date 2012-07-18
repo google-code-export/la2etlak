@@ -194,19 +194,23 @@ class Story
 
 =begin  
   This method returns a list of users who liked a certain story
-  Author: Lydia
+  Author: Lydia 
 =end
   def liked
-    likers = likedislikes.where(action: 1).map {|like| User.find(like.user_id)}
+    i = self.id
+    tmp = likedislikes.where(:action => 1 , :story_id => i).select(:user_id)
+    likers = User.where(:id=>tmp)
   end
   
   
 =begin
   This method returns a list of users who disliked a certain story
-  Author: Lydia
+  Author: Lydia , Modified : Diab
 =end
   def disliked
-    dislikers = likedislikes.where(action: -1).map {|dislike| User.find(dislike.user_id)}
+    i = self.id
+    tmp = likedislikes.where(:action => -1 , :story_id => i).select(:user_id)
+    dislikers = User.where(:id=>tmp)
   end
   
 =begin
@@ -411,6 +415,13 @@ Author: Omar
 	
  end
 
-
+=begin
+  This Method to get the sharers of the story
+=end  
+  def sharers
+    i = self.id
+    tmp = Share.where(:story_id => i).select(:user_id)
+    sharers = User.where(:id=>tmp)
+  end
 
 end
