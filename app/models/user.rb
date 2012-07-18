@@ -32,9 +32,9 @@ attr_accessible :name, :first_name, :last_name, :date_of_birth, :email, :deactiv
   has_one :tumblr_account
   has_one :flickr_account
   has_many :shares
-  has_many :shared_stories, class_name: "Story", :through => :shares
+#  has_many :shared_stories, class_name: "Story", :through => :shares
   has_many :likedislikes
-  has_many :likedisliked_stories, class_name: "Story", :through => :likedislikes
+#  has_many :likedisliked_stories, class_name: "Story", :through => :likedislikes
   has_many :flags
   has_many :flaged_stories, class_name: "Story", :through => :flags
   has_many :block_interests
@@ -87,9 +87,9 @@ attr_accessible :name, :first_name, :last_name, :date_of_birth, :email, :deactiv
   has_one :tumblr_account
   has_one :flickr_account
   has_many :shares
-  has_many :shared_stories, :class_name => "Story", :through => :shares
+#  has_many :shared_stories, :class_name => "Story", :through => :shares
   has_many :likedislikes
-  has_many :likedisliked_stories, :class_name => "Story", :through => :likedislikes
+#  has_many :likedisliked_stories, :class_name => "Story", :through => :likedislikes
   has_many :flags
   has_many :flaged_stories, :class_name => "Story", :through => :flags
   has_many :block_interests
@@ -112,6 +112,29 @@ attr_accessible :name, :first_name, :last_name, :date_of_birth, :email, :deactiv
   :uniqueness => { :case_sensitive => false}
   validates :first_name, :length => { :maximum => 20 }
   validates :last_name,  :length => { :maximum => 20 }
+ 
+
+=begin
+  This to replace the shared_stories through
+  Author: 3OBAD 
+=end
+
+  def shared_stories
+    tmp = Share.where(:user_id => self.id).select(:story_id)
+    shared_stories = Story.where(:id => tmp)
+  end
+
+=begin
+  This to replace the likedisliked_stories through
+  Note that this is not used anywhere else
+  Author: 3OBAD 
+=end
+
+  def likedisliked_stories
+    tmp = Likedislike.where(:user_id => self.id).select(:story_id)
+    likedisliked_stories = Story.where(:id => tmp)
+  end
+
  
 
 =begin  
