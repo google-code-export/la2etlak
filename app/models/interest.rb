@@ -43,6 +43,23 @@ class Interest < ActiveRecord::Base
 #description can never exceed 240 characters .
   validates :description,  length: { maximum: 100 }
 
+  
+  ##Author : Jailan ,  Replacement of "Blockers" through
+
+  def blockers
+i = self.id
+tmp = BlockInterest.where(:interest_id => i).select(:user_id)
+blockers = User.where(:id => tmp)
+end
+
+  ##Author : Jailan ,  Replacement of "adding_users" through
+
+  def adding_users
+i = self.id
+tmp = UserAddInterest.where(:interest_id => i).select(:user_id)
+blockers = User.where(:id => tmp)
+end
+
 #a method that takes a number and returns this number of stories related to this interest
   def get_stories(stories_number=10)
 # querying the related stories to the passed interest and take only the number given in the method
