@@ -69,13 +69,13 @@
             <% end %>
            
             <h2 id="story_settings">Story settings</h2>
-            <% if Admin_Settings.find_by_key("auto_hiding").value == 0 %>
+            <% if Admin_Settings.get_settings_by_key("auto_hiding").value == 0 %>
             <%= link_to  "Automatic Hiding",{:controller => "admin_settings", :action => "configure_auto_hiding"} ,:class => "btn btn-primary" %>
             <%else%>
             <%= link_to  "Manual Hiding",{:controller => "admin_settings", :action => "configure_auto_hiding"} ,:class => "btn btn-primary" %>
             <%= form_tag("/admin_settings/configure_flags_threshold", :method => "post") %>
                 <label><b>Configure flags threshold: </b></label>
-                <input type="text" class="span3" placeholder= "<%= Admin_Settings.find_by_key("flags_threshold").value %>" name="valuee" ><br/>
+                <input type="text" class="span3" placeholder= "<%= Admin_Settings.get_settings_by_key("flags_threshold").value %>" name="valuee" ><br/>
                 <button type="submit" class="btn">Submit</button>
               </form> 
                 <span class="badge badge-info">Active Stories: <%= Story.find_all_by_hidden(false).count%></span>
@@ -87,7 +87,7 @@
 
               <%= form_tag("/admin_settings/statistics_time_span", :method => "post") %>
                    <label>Configure statistics time span</label>
-                <input type="number" class="span3" placeholder= <%= Admin_Settings.find_by_key("statistics_time_span").value %>
+                <input type="number" class="span3" placeholder= <%= Admin_Settings.get_settings_by_key("statistics_time_span").value %>
                 name="days" disabled="true">
                 <br />
                 <button type="submit" class="btn" disabled="true">Submit</button> 
