@@ -1,5 +1,65 @@
 class User < ActiveRecord::Base
 
+	#Author: Kiro ------------------------------------Mongo Stuff------------------------------------
+	include Mongoid::Document
+	include Mongoid::Timestamps
+
+	#Fields:
+
+	field :name, type: String
+	field :first_name, type: String
+	field :last_name, type: String
+	field :date_of_birth, type: Date
+	field :email, type: String
+	field :deactivated, type: Boolean
+	field :crypted_password, type: String
+	field :password_salt, type: String
+	field :persistence_token, type: String
+	field :single_access_token, type: String
+	field :perishable_token, type: String
+	field :image, type: String
+	field :new_password, type: String
+
+attr_accessible :name, :first_name, :last_name, :date_of_birth, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password
+  
+	#Associations
+
+  has_many :comments
+  has_many :comment_up_downs
+  has_one :facebook_account
+  has_one :twitter_account
+	has_one :verification_code
+  has_one :tumblr_account
+  has_one :flickr_account
+  has_many :shares
+  has_many :shared_stories, class_name: "Story", :through => :shares
+  has_many :likedislikes
+  has_many :likedisliked_stories, class_name: "Story", :through => :likedislikes
+  has_many :flags
+  has_many :flaged_stories, class_name: "Story", :through => :flags
+  has_many :block_interests
+  has_many :blocked_interests, class_name: "Interest", :through => :block_interests
+  has_many :block_stories
+  has_many :blocked_stories, class_name: "Story", :through => :block_stories 
+  has_many :user_log_ins
+  has_and_belongs_to_many :user_add_interests
+  has_many :added_interests, class_name: "Interest", :through => :user_add_interests
+  has_many :user_add_interests
+  has_many :added_interests, class_name: "Interest", :through => :user_add_interests 
+
+	#Validations
+
+	email_regex = /\A(?:\w+\.)*\w+@(?:[a-z\d]+[.-])*[a-z\d]+\.[a-z\d]+\z/i
+
+	
+  validates :name, length: { maximum: 20 }
+  validates :email, presence: true, format: { with: email_regex }, uniqueness: { case_sensitive: false}
+  validates :first_name, length: { maximum: 20 }
+  validates :last_name, length: { maximum: 20 }
+
+
+	#----------------------------------------end of mongo stuff-------------------------------#
+	
 	# This is added to use the authlogic gem
 	# Author: Kiro
 	acts_as_authentic	do |c|
