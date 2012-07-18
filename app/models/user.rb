@@ -1308,13 +1308,30 @@ Author: Kareem
     end
   end
 
-
+# Author : Kareem
+# A method that gets the user by his email
 def self.get_user_by_email(email)
     return User.find_by_email(email)
   end
-
+# Author : Kareem
+# A method that gets the user by his id
 def self.get_user(id)
     return User.find(id)
 end
+
+# Author: Gasser
+# A method that replaces added_interest through
+  def added_interests
+    i = self.id
+    tmp = UserAddInterest.where(:user_id => i).select(:interest_id)
+    added_interests = Interest.where(:id => tmp)
+  end
+# Author: Gasser
+# A method that replaces blocked_stories through 
+  def blocked_stories
+    i = self.id
+    tmp = BlockStory.where(:user_id => i).select(:story_id)
+    blocked_stories = Story.where(:id => tmp)
+  end
 
 end
