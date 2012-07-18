@@ -1,8 +1,11 @@
-class Feed < ActiveRecord::Base
+class Feed
+	include Mongoid::Document
+	field :link, type: String
+	belongs_to :interest_id
 
 #attributes  that can be modified automatically by outside users
-  attr_accessible  :link, :interest_id
-  belongs_to :interest
+  #attr_accessible  :link, :interest_id
+  #belongs_to :interest
  # RSS feed link has to be of the form "http://www.abc.com"
   LINK_regex = /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?$/ix
     # link ignores upper/lower cas issue
