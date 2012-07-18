@@ -1,13 +1,22 @@
 class Comment < ActiveRecord::Base
   
-=begin
-    
+=begin  
   This class is done solely by me, Menisy
-
-
 =end
 
+include Mongoid::Document
+include Mongoid::Timestamps
 
+field :user_id, type: Integer 
+field :story_id, type: Integer 
+field :content, type: string 
+#field :created_at, type: datetime 
+#field :created_at, type: datetime 
+#Since I added the timestamps we dont need them 
+
+add_index "comments", ["user_id", "story_id"], :name => "index_comments_on_user_id_and_story_id"
+
+<<<<<<< HEAD
   attr_accessible :content
   belongs_to :user
   belongs_to :story
@@ -15,6 +24,22 @@ class Comment < ActiveRecord::Base
   validates_presence_of :content
   validates_presence_of :user
   validates_presence_of :story
+
+# A method that gets the comment with this id
+def self.get_comment(comment_id)
+  return Comment.find(comment_id)
+end
+=======
+attr_accessible :content
+
+belongs_to :user
+belongs_to :story
+has_many :comment_up_downs
+  
+validates_presence_of :content  
+validates_presence_of :user
+validates_presence_of :story
+>>>>>>> 36799b111647e3197e490eb02363e3204e423855
   
 =begin
  This method adds the details of this comment to the log file.
@@ -137,5 +162,11 @@ class Comment < ActiveRecord::Base
     else
       return false
     end
-  end   
+  end
+
+
+  # A method to get all the comments of a story
+    def self.get_comments_of_story (story_id)
+      return Comment.find_all_by_story_id(story_id)
+    end 
 end

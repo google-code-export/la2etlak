@@ -1,4 +1,12 @@
 class Admin_Settings < ActiveRecord::Base
+  #Author:Diab  ((Mongoid))
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
+  
+   field :key, type: String
+   field :value,   type: Integer
+
   attr_accessible :key, :value
 =begin
   Method Descritpion: A static method that takes as an input the threshold 
@@ -56,6 +64,10 @@ class Admin_Settings < ActiveRecord::Base
     end
 end
 
+# A method that finds the desired setting by its name(key)
+def self.get_settings_by_key (key)
+  return Admin_Settings.find_by_key(key)
+end
 =begin
 This method takes the number of days as an input, checks if its not equal to zero and sets the value of the time span
 to this number which is to be checked lately whenever statistics are shown.

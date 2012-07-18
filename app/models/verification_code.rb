@@ -3,10 +3,10 @@ class VerificationCode < ActiveRecord::Base
   
   belongs_to :user, {:foreign_key => "user_id"}
   
-  validates :code, :presence => true,
-  :length => { :is => 4}
+  validates :code, presence: true,
+  length: { minimum: 4, maximum: 4}
   
-  validates :user_id, :presence => true,
-  :uniqueness => true
+  validates :user_id, presence: true,
+  uniqueness: true
 
 end

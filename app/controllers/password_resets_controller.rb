@@ -11,7 +11,7 @@ Author: Mouaz
 Arguments : Admin.email
 =end 
 def create  
- @admin = Admin.find_by_email(params[:email])  
+ @admin = Admin.get_admin_by_email(params[:email])  
  if @admin  
   @admin.deliver_password_reset_instructions!
   Emailer.password_reset_instructions(@admin).deliver

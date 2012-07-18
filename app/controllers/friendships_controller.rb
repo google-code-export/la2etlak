@@ -35,7 +35,7 @@ class FriendshipsController < ApplicationController
 =end
   def create
     @user = current_user
-    @friend = User.find(params[:friend_id])
+    @friend = User.get_user(params[:friend_id])
     @friendship_created = @user.invite(@friend)
     if @friendship_created
       flash[:request_sent] = 'Frindship request has succesffully been sent $green'
@@ -66,7 +66,7 @@ class FriendshipsController < ApplicationController
 =end
   def accept
     @user = current_user
-    @friend = User.find(params[:friend_id])
+    @friend = User.get_user(params[:friend_id])
     @friendship_approved = @user.approve(@friend)
     @friends = @user.friends
     @pending_invited_by = @user.pending_invited_by
@@ -90,7 +90,7 @@ class FriendshipsController < ApplicationController
 =end
   def remove
     @user = current_user
-    @friend = User.find(params[:friend_id])
+    @friend = User.get_user(params[:friend_id])
     @friendship = @user.send(:find_any_friendship_with, @friend)
     if @friendship
       @friendship.delete
@@ -113,7 +113,7 @@ class FriendshipsController < ApplicationController
 
   def remove_request
     @user = current_user
-    @friend = User.find(params[:friend_id])
+    @friend = User.get_user(params[:friend_id])
     @friendship = @user.send(:find_any_friendship_with, @friend)
     if @friendship
       @friendship.delete
@@ -144,7 +144,7 @@ class FriendshipsController < ApplicationController
 =end
   def block
     @user = current_user
-    @friend = User.find(params[:friend_id])
+    @friend = User.get_user(params[:friend_id])
     @user.block @friend
 
     l = Log.new
@@ -167,7 +167,7 @@ class FriendshipsController < ApplicationController
 =end
   def unblock
     @user = current_user
-    @friend = User.find(params[:friend_id])
+    @friend = User.get_user(params[:friend_id])
     @user.unblock @friend
 
     l = Log.new

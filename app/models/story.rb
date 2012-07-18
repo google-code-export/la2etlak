@@ -1,35 +1,47 @@
-class Story < ActiveRecord::Base
-
-include StoriesHelper
+class Story
+#Author: Akila ------------------------------------Mongo Stuff------------------------------------
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include StoriesHelper
 #definition of some attributes:-
 # :rank==>hottness of a story, :interest_id==>id of the related interest,
 # :type==> 1 (Article) 2 (Image) 3 (video)
+
+#Fields:
+  field :content , type: String
+  field :date , type: Date
+  field :rank , type: Integer
+  field :media_link , type: String
+  field :category , type: String
+  field :hidden , type:Boolean
+  field :deleted , type: Boolean
+  field :story_link , type: String
+  field :mobile_content , type: String
   attr_accessible :interest_id, :title, :date, :rank, 
 		  :media_link, :category, :content, :deleted, :hidden
+  
+#Associations 
   belongs_to :interest
-  has_many   :comments
-  
-  
+  has_many   :comments  
   has_many :shares
-  has_many :sharers, :class_name => "User", :through => :shares
+  has_many :sharers, class_name: "User", :through => :shares
   has_many :likedislikes
-  has_many :likedislikers, :class_name => "User", :through => :likedislikes
+  has_many :likedislikers, class_name: "User", :through => :likedislikes
   has_many :flags
-  has_many :flagers, :class_name => "User", :through => :flags
+  has_many :flagers, class_name: "User", :through => :flags
   has_many :block_stories
-  has_many :blockers, :class_name => "User", :through => :block_stories 
+  has_many :blockers, class_name: "User", :through => :block_stories 
   
-  #def initialize(title, date, body)
-   # @title = title
-    #@body = body
-  #end
-
+#Validations
   URL_regex = /^(?:(?:http|https):\/\/[a-z0-9]+(?:[\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(?::[0-9]{1,5})?(\/.*)?)|(?:^$)$/ix
 # putting some validations on the title and interest_id that they are present
-  validates :title , :presence=>true
-  validates :interest_id, :presence=>true
+  validates_presence_of :title
+  validates_presence_of :interest_id
 # checking that the media_link is a valid URL according to the regex defined above.
-  validates :media_link, :format=> {:with => URL_regex}
+  validates_presence_of :media_link
+  validates_format_of :media_link, with: URL_regex
+
+#----------------------------------------end of mongo stuff-------------------------------#
 
 # author : Gasser			 
 # get_story is a method that takes a specific story_id as an input  and searches the database 
@@ -37,6 +49,94 @@ include StoriesHelper
 
   def self.get_story(story_id)
       return Story.find(story_id)
+  end
+
+  # A method that gets the story with this link
+  def self.get_story_by_link (media_link)
+    return Story.find_by_story_link(media_link)
+  end 
+
+  # A method that gets the story with this title
+  def self.get_story_by_title (title)
+    return Story.find_by_title(title)
+  end
+
+  # A method that gets all the stories of a certain interest
+  def self.get_stories_by_interest (interest_id)
+    return Story.find_all_by_interest_id (interest_id)
+  end
+  '''
+  This method gets the number of a certain activity (shares, likes, dislikes, 
+  flags) of a certain story using its id in each day in the last 30 days.
+  There are several cases, concerning the date of creation, last update and
+  hiding of the story, that has to handeled:
+  1) If the story was created and hidden within the last 30 days, then I only 
+  return the activity from the table between the creation date and the last 
+  update which is the hiding.
+  2) If the story was created before the last 30 days and hidden within the last
+  30 days, then I only return the activity from the table between the last 30 
+  days and the last update which is the hiding.
+  3) If the story was created and hidden before the last 30 days, then I will 
+  return an empty array.
+  4) If the story was not hidden and it was created before the last 30 days, 
+  then I return the activity from the table between the last 30 days and the 
+  current date.
+  5) If the story was not hidden and it was created within the last 30 days, 
+  then I return the activity from the table between the creation date of the 
+  story and the current date.
+  '''
+  # Author:Lydia
+  def self.get_no_of_activity(needed_graph, creation_date, last_update, hidden)
+    activities_by_day=[]
+    if hidden && creation_date >= 30.days.ago.to_date && 
+       last_update >= 30.days.ago.to_date
+        days= (Time.zone.now.to_date - creation_date.to_date).to_i
+        days2= (Time.zone.now.to_date - last_update.to_date).to_i
+        (days.downto(days2)).each do |i|
+            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+           end
+          return activities_by_day
+      
+    elsif hidden && creation_date < 30.days.ago.to_date && 
+          last_update >= 30.days.ago.to_date
+          days= (Time.zone.now.to_date - last_update.to_date).to_i
+          (30.downto(days)).each do |i|
+            activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+           end
+          return activities_by_day
+      
+    elsif hidden && creation_date < 30.days.ago.to_date && 
+          last_update < 30.days.ago.to_date
+      activities_by_day = []
+      
+    elsif creation_date < 30.days.ago.to_date
+      (30.downto(0)).each do |i|
+        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+       end
+       return activities_by_day
+    else
+      days= (Time.zone.now.to_date - creation_date.to_date).to_i
+      (days.downto(0)).each do |i|
+        activities_by_day<<needed_graph.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day).count
+       end
+       return activities_by_day
+    end
+  end
+
+  #Author: Lydia
+  '''
+  This method returns the percentage of the likes to the total number 
+  of likes and dislikes
+  '''
+  def get_width
+    likes =  self.likedislikes.where(action: 1).count
+    dislikes =  self.likedislikes.where(action: -1).count
+    total = likes + dislikes
+    if total == 0
+      width = 0
+    else 
+      width = likes*100/total
+    end
   end
 
 
@@ -53,11 +153,11 @@ include StoriesHelper
     creation_date = created_at.beginning_of_day
     last_update = updated_at.end_of_day
    
-    share = get_no_of_activity(shares, creation_date, last_update, hidden)
-    like = get_no_of_activity(likedislikes.where(:action => 1) , creation_date, last_update, hidden)
-    dislike = get_no_of_activity(likedislikes.where(:action => -1), creation_date, last_update, hidden)
-    flag = get_no_of_activity(flags, creation_date, last_update, hidden)
-    comment = get_no_of_activity(comments, creation_date, last_update, hidden)
+    share = Story.get_no_of_activity(shares, creation_date, last_update, hidden)
+    like = Story.get_no_of_activity(likedislikes.where(:action => 1) , creation_date, last_update, hidden)
+    dislike = Story.get_no_of_activity(likedislikes.where(:action => -1), creation_date, last_update, hidden)
+    flag = Story.get_no_of_activity(flags, creation_date, last_update, hidden)
+    comment = Story.get_no_of_activity(comments, creation_date, last_update, hidden)
     data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
   end
   
@@ -94,19 +194,23 @@ include StoriesHelper
 
 =begin  
   This method returns a list of users who liked a certain story
-  Author: Lydia
+  Author: Lydia 
 =end
   def liked
-    likers = likedislikes.where(action: 1).map {|like| User.find(like.user_id)}
+    i = self.id
+    tmp = likedislikes.where(:action => 1 , :story_id => i).select(:user_id)
+    likers = User.where(:id=>tmp)
   end
   
   
 =begin
   This method returns a list of users who disliked a certain story
-  Author: Lydia
+  Author: Lydia , Modified : Diab
 =end
   def disliked
-    dislikers = likedislikes.where(action: -1).map {|dislike| User.find(dislike.user_id)}
+    i = self.id
+    tmp = likedislikes.where(:action => -1 , :story_id => i).select(:user_id)
+    dislikers = User.where(:id=>tmp)
   end
   
 =begin
@@ -300,7 +404,6 @@ Author: Omar
 =end
 
  def get_related_stories
- 
  	stories =  Story.get_stories_ranking_all_time
 	st = Array.new
 	for story in stories 
@@ -312,6 +415,13 @@ Author: Omar
 	
  end
 
-
+=begin
+  This Method to get the sharers of the story
+=end  
+  def sharers
+    i = self.id
+    tmp = Share.where(:story_id => i).select(:user_id)
+    sharers = User.where(:id=>tmp)
+  end
 
 end

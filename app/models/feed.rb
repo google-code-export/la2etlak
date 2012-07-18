@@ -25,6 +25,15 @@ class Feed
       return Feed.find(feed_id)
   end
 
+# A method that gets all the stories of a certain interest
+  def self.get_feeds_by_interest (interest_id)
+    return Feed.find_all_by_interest_id (interest_id)
+  end
+
+# A method that gets the feed by the interest_id
+def self.get_feed_by_interest (interest_id)
+  return Feed.find_by_interest_id(interest_id)
+end
 # author : Mouaz			 
 # get_feed is a method that takes a specific feed_link as an input  and searches the database 
 # for the feed with this id and returns #this feed to the caller

@@ -2,21 +2,21 @@ class StatisticsController < ApplicationController
  before_filter {admin_authenticated?}
  respond_to :js, :html
  def index
-   @interests= Interest.all
+   @interests= Interest.get_all_interests
  end
  def interests
    @id=params[:id]
-   @interest=Interest.find(@id)
+   @interest=Interest.get_interest(@id)
  end
  
  def stories
    @id=params[:id]
-   @story= Story.find(@id)
+   @story= Story.get_story(@id)
  end
  
  def users
    @id=params[:id]
-   @user=User.find(@id)
+   @user=User.get_user(@id)
  end
  
  def all_users

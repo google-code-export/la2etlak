@@ -1,4 +1,16 @@
 class BlockInterest < ActiveRecord::Base
+
+ #Author: jailan ---------- Mongo-----------
+
+
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
+  #Fields:
+
+  field :user_id, type: Integer
+  field :interest_id, type: Integer
+
   attr_accessible :user_id, :interest_id
   
   belongs_to :blocked_interest, class_name: "Interest", foreign_key: "interest_id"
