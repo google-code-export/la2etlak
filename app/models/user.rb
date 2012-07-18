@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User 
 
 	#Author: Kiro ------------------------------------Mongo Stuff------------------------------------
 	include Mongoid::Document
