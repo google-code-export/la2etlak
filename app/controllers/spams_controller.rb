@@ -1,2 +1,0 @@
-class SpamsController < ApplicationController
-end

@@ -1,8 +1,0 @@
-{
-"content" : "<%= @comment.content %>",
-"user_name" : "<%= User.find(@comment.user_id).name %>",
-"id":"<%= @comment.id %>",
-"story_id":"<%= @comment.story_id %>",
-"ups":"<%= Upped.find_all_by_comment_id(@comment.id).length %>",
-"downs":"<%= Downed.find_all_by_comment_id(@comment.id).length %>"
-}
