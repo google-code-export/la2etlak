@@ -1,37 +1,47 @@
 class Interest < ActiveRecord::Base
-#Author: jailan
-#attributes  that can be modified automatically by outside users
+#Author: jailan ---------- Mongo-----------
+
+
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
+  #Fields:
+
+  field :name, type: String
+  field :description, type: String
+  field :deleted, type: Boolean
+  #field :photo, type: String
+
+ 
   attr_accessible :description, :name, :deleted, :photo  
   has_many :stories
   has_many :feeds, :dependent => :destroy
 
 #the attached file we migrated with the interest to upload the interest's image from the Admin's computer
-  has_attached_file :photo, :styles => { :small => "150x150>" },
-                    :url  => "/assets/products/:id/:style/:basename.:extension",
-                    :path => ":rails_root/public/assets/products/:id/:style/:basename.:extension"
+  #has_attached_file :photo, :styles => { :small => "150x150>" },
+                    #:url  => "/assets/products/:id/:style/:basename.:extension",
+                    #:path => ":rails_root/public/assets/products/:id/:style/:basename.:extension"
 #here we validate the an Image should be specified with a certain size & type
 #validates_attachment_presence :photo
-  validates_attachment_size :photo, :less_than => 5.megabytes
-  validates_attachment_content_type :photo, :content_type => ['image/jpeg', 'image/png']
+  #validates_attachment_size :photo, :less_than => 5.megabytes
+  #validates_attachment_content_type :photo, :content_type => ['image/jpeg', 'image/png']
 
  # RSS feed link has to be of the form "http://www.abc.com"
   LINK_regex = /^(?:(?:http|https):\/\/[a-z0-9]+(?:[\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(?::[0-9]{1,5})?(\/.*)?)|(?:^$)$/ix
  
   # name cannot be duplicated and has to be there .
 
-  validates :name, :presence => true,
-                   :uniqueness => {:case_sensitive => false},
-                   :length   => { :maximum => 20 }
+  validates :name, presence: true, uniqueness: {case_sensitive: false},length:{ maximum: 20 }
 
                  
 
   has_many :block_interests
-  has_many :blockers, :class_name => "User", :through => :block_interests
+  has_many :blockers, class_name: "User", :through => :block_interests
   has_many :user_add_interests
-  has_many :adding_users, :class_name => "User", :through => :user_add_interests
+  has_many :adding_users, class_name:"User", :through => :user_add_interests
 
 #description can never exceed 240 characters .
-  validates :description,  :length   => { :maximum => 100 }
+  validates :description,  length: { maximum: 100 }
 
 #a method that takes a number and returns this number of stories related to this interest
   def get_stories(stories_number=10)
@@ -39,14 +49,20 @@ class Interest < ActiveRecord::Base
     self.stories [0..stories_number-1]
   end
 
+# A method that gets all the interests in the database.
 def self.get_all_interests
-Interest.all
+  return Interest.all
+end
+
+# A method tha gets the un-deleted interests in the database.
+def self.get_undeleted_interests
+  return Interest.where(:deleted => nil)
 end
 
  #This method when called will return an array of ActiveRecords having 
   #all interests in the database that are not deleted.
   def self.get_all_interests_for_users
-     interests=Interest.where(:deleted => nil)
+    interests=Interest.where(:deleted => nil)
   end
 
   '''This method when called will return the difference between today and the day
@@ -405,8 +421,9 @@ def get_users_added_interest
 
 end
 
+# A method that gets the interest with this id.
 def self.get_interest(id)
-Interest.find(id)
+  return Interest.find(id)
 end
 =begin
 #Author: jailan
@@ -480,8 +497,7 @@ takes as argument the id of the interest and returns the interest after updating
   end
 
 def self.get_interest_by_name(interest_name)
-   Interest.find_by_name(interest_name)
+  return Interest.find_by_name(interest_name)
 end
-
 end
 

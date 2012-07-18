@@ -9,10 +9,10 @@ class InterestsController < ApplicationController
      
     @interests = Interest.get_all_interests
     @interest = Interest.get_interest(params[:id])
-    @stories = Story.find_all_by_interest_id(params[:id]) # get
+    @stories = Story.get_stories_by_interest(params[:id]) # get
     @stories = @stories.sort_by { |obj| obj.created_at }.reverse
-    @feeds = Feed.find_all_by_interest_id(params[:id])
-    @feed = Feed.find_by_interest_id(params[:id])#retrieving the feeds for a certain interest in the database using the id of the interest
+    @feeds = Feed.get_feeds_by_interest(params[:id])
+    @feed = Feed.get_feed_by_interest(params[:id])#retrieving the feeds for a certain interest in the database using the id of the interest
 
     if @feed == nil #if the list of RSS feeds if a certain interest is empty we will create a new one
        @feed = Feed.new
@@ -31,6 +31,7 @@ class InterestsController < ApplicationController
   @feed = Feed.new # creaing a new interest and returning it in a variable @interest used in the form in new.html.erb 
   @interest = Interest.new
   @title = "Add interest"
+  @number = Interest.count
   end
 =begin  
 
