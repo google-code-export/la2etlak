@@ -1,4 +1,7 @@
-class Likedislike < ActiveRecord::Base
+class Likedislike
+
+    include Mongoid::Document
+    include Mongoid::Timestamps
   attr_accessible :action, :story_id, :user_id
   
   belongs_to :likedisliked_story, class_name: "Story", foreign_key: "story_id"

@@ -1,4 +1,4 @@
-class Comment < ActiveRecord::Base
+class Comment
   
 =begin  
   This class is done solely by me, Menisy
@@ -9,9 +9,10 @@ include Mongoid::Timestamps
 
 field :user_id, type: Integer 
 field :story_id, type: Integer 
-field :content, type: string 
+field :content, type: String 
 
-add_index "comments", ["user_id", "story_id"], :name => "index_comments_on_user_id_and_story_id"
+	index({ user_id: 1 , story_id: 1 }, { name: "index_comments_on_user_id_and_story_id" })
+
   attr_accessible :content
   belongs_to :user
   belongs_to :story

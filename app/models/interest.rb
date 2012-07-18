@@ -1,4 +1,4 @@
-class Interest < ActiveRecord::Base
+class Interest
 #Author: jailan ---------- Mongo-----------
 
 
@@ -15,7 +15,7 @@ class Interest < ActiveRecord::Base
  
   attr_accessible :description, :name, :deleted, :photo  
   has_many :stories
-  has_many :feeds, :dependent => :destroy
+  has_many :feeds#, :dependent => :destroy
 
 #the attached file we migrated with the interest to upload the interest's image from the Admin's computer
   #has_attached_file :photo, :styles => { :small => "150x150>" },
@@ -36,9 +36,9 @@ class Interest < ActiveRecord::Base
                  
 
   has_many :block_interests
-  has_many :blockers, class_name: "User", :through => :block_interests
+  has_many :blockers, class_name: "User"#, :through => :block_interests
   has_many :user_add_interests
-  has_many :adding_users, class_name:"User", :through => :user_add_interests
+  has_many :adding_users, class_name:"User"#, :through => :user_add_interests
 
 #description can never exceed 240 characters .
   validates :description,  length: { maximum: 100 }

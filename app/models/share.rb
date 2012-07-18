@@ -1,4 +1,6 @@
-class Share < ActiveRecord::Base
+class Share
+    include Mongoid::Document
+    include Mongoid::Timestamps
   attr_accessible :story_id, :user_id
 
   belongs_to :shared_story, class_name: "Story", foreign_key: "story_id"
