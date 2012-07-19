@@ -14,8 +14,8 @@ class Interest
 
  
   attr_accessible :description, :name, :deleted, :photo  
-  has_many :stories
-  has_many :feeds#, :dependent => :destroy
+  #has_many :stories
+  has_many :feeds
 
 #the attached file we migrated with the interest to upload the interest's image from the Admin's computer
   #has_attached_file :photo, :styles => { :small => "150x150>" },
