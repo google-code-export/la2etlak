@@ -1,4 +1,8 @@
 class UserAddInterest
+
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
   attr_accessible :interest_id, :user_id
   
   belongs_to :added_interest, class_name: "Interest", :foreign_key => "interest_id"
