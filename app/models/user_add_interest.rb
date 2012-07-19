@@ -1,8 +1,15 @@
-class UserAddInterest < ActiveRecord::Base
+class UserAddInterest
+
+  include Mongoid::Document
+  include Mongoid::Timestamps
+
   attr_accessible :interest_id, :user_id
   
-  belongs_to :added_interest, class_name: "Interest", :foreign_key => "interest_id"
-  belongs_to :adding_user, class_name: "User", :foreign_key => "user_id"
+  field :user_id, type: Integer
+  field :interest_id, type: Integer
+  
+  belongs_to :added_interest, class_name: "Interest"#, :foreign_key => "interest_id"
+  belongs_to :adding_user, class_name: "User"#, :foreign_key => "user_id"
   
 
 	validates_presence_of :interest_id

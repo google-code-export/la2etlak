@@ -15,9 +15,9 @@ include StoriesHelper
   has_many :likedislikes
   has_many :likedislikers, :class_name => "User", :through => :likedislikes
   has_many :flags
-  has_many :flagers, :class_name => "User", :through => :flags
+  #has_many :flagers, :class_name => "User", :through => :flags
   has_many :block_stories
-  has_many :blockers, :class_name => "User", :through => :block_stories 
+  #has_many :blockers, :class_name => "User", :through => :block_stories 
   
   #def initialize(title, date, body)
    # @title = title
@@ -39,6 +39,21 @@ include StoriesHelper
       return Story.find(story_id)
   end
 
+  #returns Array of Users who Flagged a story
+  #Kareem - new
+  def flagers 
+    i = self.id
+    tmp = Flag.where(:story_id => i).select(:user_id)
+    return flagers = User.where(:id => tmp)
+   end
+   
+   #returns Array of Users who Blocked a story
+   #Kareem -new
+   def blockers
+      i = self.id
+      tmp = BlockStory.where(:story_id => i).select(:user_id)
+      return blockers = User.where(:id => tmp)
+    end 
 
   '''
   This method gets the number of a certain activity (shares, likes, dislikes, 
