@@ -1,8 +1,11 @@
-class Feed < ActiveRecord::Base
+class Feed
+	include Mongoid::Document
+	field :link, type: String
+	belongs_to :interest_id
 
 #attributes  that can be modified automatically by outside users
-  attr_accessible  :link, :interest_id
-  belongs_to :interest
+  #attr_accessible  :link, :interest_id
+  #belongs_to :interest
  # RSS feed link has to be of the form "http://www.abc.com"
   LINK_regex = /^(http|https):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?$/ix
     # link ignores upper/lower cas issue
@@ -22,6 +25,15 @@ class Feed < ActiveRecord::Base
       return Feed.find(feed_id)
   end
 
+# A method that gets all the stories of a certain interest
+  def self.get_feeds_by_interest (interest_id)
+    return Feed.find_all_by_interest_id (interest_id)
+  end
+
+# A method that gets the feed by the interest_id
+def self.get_feed_by_interest (interest_id)
+  return Feed.find_by_interest_id(interest_id)
+end
 # author : Mouaz			 
 # get_feed is a method that takes a specific feed_link as an input  and searches the database 
 # for the feed with this id and returns #this feed to the caller

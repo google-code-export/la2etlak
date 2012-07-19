@@ -5,11 +5,11 @@
     <%= Random.paragraphs%>
 </div>
 <div style="float:right; margin:3px;">
-    <h7 style="color:#3a87ad"><%= Share.find_all_by_story_id(@story.id).length%> shares</h7>
+    <h7 style="color:#3a87ad"><%= Share.get_shares_of_story(@story.id).length%> shares</h7>
 
-    <h7 style="color:#468847"><%= Likedislike.find_all_by_story_id_and_action(@story.id,1).length%> Ups</h7>
+    <h7 style="color:#468847"><%= Likedislike.get_likes_dislikes_of_story(@story.id,1).length%> Ups</h7>
 
-    <h7 style="color:#b94a48"><%= Likedislike.find_all_by_story_id_and_action(@story.id,2).length%> Downs</h7>
+    <h7 style="color:#b94a48"><%= Likedislike.get_likes_dislikes_of_story(@story.id,2).length%> Downs</h7>
 </div>
 <br>
 <div style="padding-left:3px;float:left;">
@@ -18,7 +18,7 @@
 <br>
 <br>
 <div style="width:95%;">
-    <% comments = Comment.find_all_by_story_id(@story.id) %>
+    <% comments = Comment.get_comments_of_story(@story.id) %>
     <% comments.each do |comment| %>
 
     <div class="story-comment-box-mobile well" style="float:left;clear:both;width:90%;margin:0.5%">

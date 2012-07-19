@@ -120,17 +120,17 @@
 				  <td class="logs-table-row"><%= l.created_at %></td>
 				  <td><%=  l.message %></td>
 					<td><%=  if(l.user_id_1 != nil)
-								link_to User.find(l.user_id_1).email,{:controller => 'users', :action => 'show', :id => l.user_id_1 },  class: " btn btn-primary btn-danger" 	
+								link_to User.get_user(l.user_id_1).email,{:controller => 'users', :action => 'show', :id => l.user_id_1 },  class: " btn btn-primary btn-danger" 	
 							end%>
 						<%=	if(l.user_id_2 != nil)
-										link_to User.find(l.user_id_2).email,{:controller => 'users', :action => 'show', :id => l.user_id_2 }, class: "btn btn-primary  btn-danger" 	
+										link_to User.get_user(l.user_id_2).email,{:controller => 'users', :action => 'show', :id => l.user_id_2 }, class: "btn btn-primary  btn-danger" 	
 									end%>
 							
 												<%=	if(l.story_id != nil)
-																link_to Story.find(l.story_id).title,{:controller => 'stories', :action => 'show', :id => l.story_id },class: "btn btn-primary  btn-warning" 	
+																link_to Story.get_story(l.story_id).title,{:controller => 'stories', :action => 'show', :id => l.story_id },class: "btn btn-primary  btn-warning" 	
 															end%>
 															<%=	if(l.interest_id != nil)
-																			link_to Interest.find(l.interest_id).name,{:controller => 'interests', :action => 'show', :id => l.interest_id },  class: "btn btn-primary  btn-success" 	
+																			link_to Interest.get_interest(l.interest_id).name,{:controller => 'interests', :action => 'show', :id => l.interest_id },  class: "btn btn-primary  btn-success" 	
 																		end%>
 						 </td>
 				  </tr>
