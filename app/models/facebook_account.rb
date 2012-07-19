@@ -1,4 +1,4 @@
-class FacebookAccount < ActiveRecord::Base
+class FacebookAccount 
 
   field :user_id, type: Integer
   field :facebook_id, type: Integer

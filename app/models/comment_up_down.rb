@@ -1,4 +1,4 @@
-class CommentUpDown < ActiveRecord::Base
+class CommentUpDown
   
 include Mongoid::Document
 include Mongoid::Timestamps

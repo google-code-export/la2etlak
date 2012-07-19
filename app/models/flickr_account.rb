@@ -1,6 +1,6 @@
 require 'flickraw'
 
-class FlickrAccount < ActiveRecord::Base
+class FlickrAccount 
 
   include Mongoid::Document
   include Mongoid::Timestamps

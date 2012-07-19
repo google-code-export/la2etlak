@@ -1,4 +1,4 @@
-class BlockInterest < ActiveRecord::Base
+class BlockInterest
 
  #Author: jailan ---------- Mongo-----------
 

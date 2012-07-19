@@ -1,4 +1,4 @@
-class VerificationCode < ActiveRecord::Base
+class VerificationCode
   attr_accessible :code, :account_id, :verified, :user_id
   
   belongs_to :user, {:foreign_key => "user_id"}

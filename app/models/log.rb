@@ -1,4 +1,4 @@
-class Log < ActiveRecord::Base
+class Log 
   #Author:Diab  ((Mongoid))
   include Mongoid::Document
   include Mongoid::Timestamps

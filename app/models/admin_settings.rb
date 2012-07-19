@@ -1,4 +1,4 @@
-class Admin_Settings < ActiveRecord::Base
+class Admin_Settings 
   #Author:Diab  ((Mongoid))
   include Mongoid::Document
   include Mongoid::Timestamps

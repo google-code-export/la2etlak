@@ -1,4 +1,4 @@
-class UserAddInterest < ActiveRecord::Base
+class UserAddInterest
   attr_accessible :interest_id, :user_id
   
   belongs_to :added_interest, class_name: "Interest", :foreign_key => "interest_id"

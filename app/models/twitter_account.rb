@@ -1,6 +1,6 @@
 require 'twitter'
 
-class TwitterAccount < ActiveRecord::Base
+class TwitterAccount
 
   include Mongoid::Document
   include Mongoid::Timestamps

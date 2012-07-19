@@ -1,4 +1,4 @@
-class TumblrAccount < ActiveRecord::Base
+class TumblrAccount
   belongs_to :user, class_name: "User" 
   require 'tumblr'
   #CONSUMER_KEY  = 'QQQxBUYP17iv7ByUdfP1jNfuAoSBwA3NxMoH7jlvo3ImjjVCNU '
