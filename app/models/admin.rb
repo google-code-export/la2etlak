@@ -10,9 +10,15 @@ class Admin
 	field :password, type: String
 	field :password_confirmation, type: String
 	belongs_to :interest_id
+<<<<<<< HEAD
+=======
 
   #attr_accessible :first_name, :last_name,:email, :password, :password_confirmation
+<<<<<<< HEAD
+ 
+=======
 
+>>>>>>> bd81fa3bf0fad334becbc21ea4c74c34d18e4941
  def send_forgot_password!
   deactivate!
   reset_perishable_token!
@@ -25,6 +31,11 @@ require "net/http"
   $EMAIL = /((?:\w+\.)*\w+@(?:[a-z\d]+[.-])*[a-z\d]+\.[a-z\d]+)(.*)/
   $WORD = /(\w+)(.*)/
   $FULLNAME = /(\w+)\s+(\w+)(.*)/
+<<<<<<< HEAD
+>>>>>>> df966192cdaa5c71992d6b5d5be1160e562c610f
+
+  #attr_accessible :first_name, :last_name,:email, :password, :password_confirmation
+=======
 
   def self.search(query)
 =begin
@@ -275,4 +286,5 @@ No arguments
    return Admin.find_by{email = emailo}
   end
 
+>>>>>>> bd81fa3bf0fad334becbc21ea4c74c34d18e4941
 end
