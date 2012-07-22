@@ -5,7 +5,6 @@ class Interest
   include Mongoid::Document
   include Mongoid::Timestamps
 
-
   #Fields:
 
   field :name, type: String
@@ -15,7 +14,7 @@ class Interest
 
  
   attr_accessible :description, :name, :deleted, :photo  
-  has_many :stories
+  #has_many :stories
   has_many :feeds
 
 #the attached file we migrated with the interest to upload the interest's image from the Admin's computer
@@ -39,10 +38,19 @@ class Interest
   has_many :block_interests
   has_many :blockers, class_name: "User"#, :through => :block_interests
   has_many :user_add_interests
-  #has_many :adding_users, class_name:"User"#, :through => :user_add_interests
+  has_many :adding_users, class_name:"User"#, :through => :user_add_interests
 
 #description can never exceed 240 characters .
   validates :description,  length: { maximum: 100 }
+
+<<<<<<< HEAD
+
+    def self.get_all_interests
+Interest.all.entries
+end
+
+
+
 
 # A method that gets the interest with this id.
 def self.get_interest(id)
@@ -65,6 +73,28 @@ end
 # querying the related stories to the passed interest and take only the number given in the method
     self.stories [0..stories_number-1]
   end
+
+
+=begin
+ a Method to get the users who added this interest
+ Author:Diab/jailan 
+=end
+def adding_users
+ #i = self.id
+ #tmp = UserAddInterest.where(:interest_id => i).select{:user_id}.entries
+ adding_users = UserAddInterest.all.entries.map{|adder| User.find(adder.user_id) }
+end
+
+=begin
+ a Method to get the users who blocked this interest
+ Author:Diab/jailan 
+=end
+def blockers
+ #i = self.id
+ #tmp = UserAddInterest.where(:interest_id => i).select{:user_id}.entries
+ blockers = BlockInterest.all.entries.map{|blocker| User.find(blocker.user_id) }
+end
+
 
 =begin 
   This method when called will return the difference between today and the day
@@ -189,6 +219,7 @@ end
         interest_create_date < 30.days.ago.to_date
   
           stories_per_day = []  
+<<<<<<< HEAD
   
 
   elsif interest_create_date < 30.days.ago.to_date
@@ -416,14 +447,85 @@ end
  
  end
 
-  '''def self.test
-    if (Interest.first.deleted)
-      puts "a"
+=begin
+#Author: jailan
+Create Method after moving it from controller to Model descriptlion)
+It makes a new interest and saves it
+=end
+  def self.model_create(interest)
+    @interests = Interest.get_all_interests
+    @interest = Interest.new(interest)
+    @interest.save
+    #if @interest
+     
+     # Log.create!(loggingtype: 1,user_id_1: nil,user_id_2: nil,admin_id: nil,story_id: nil,interest_id: @interest.id,message: "Admin added an interest")
+    #end 
+    return @interest
+  end
+
+#Author: jailan
+#is_deleted Method 
+#takes the id of the interest and returns the value of deleted attribute to use it in the controller
+
+    def self.is_deleted(id)
+    @interest = Interest.find(id)
+    return @interest.deleted
+  end
+
+
+  #Author: jailan
+  #Update Method after moving it from controller to Model
+  #takes as argument the id of the interest and the new values we want to update with and returns the interest after updating the deleted column in it
+  #It gets the interest using the id and call the method Update_Attribute that takes the input in the form of "Show.html.erb" and adjust changes
+
+
+    def self.model_update(id,interest)
+    @interest= Interest.find(id)
+    @interests = Interest.all.entries
+    @deleted = Interest.is_deleted(id)
+    if (@deleted == false || @deleted.nil?) 
+      @interest.save 
+      #if @interest
+       
+       # Log.create!(loggingtype: 1,user_id_1: nil,user_id_2: nil,admin_id: nil,story_id: nil,interest_id: @interest.id,message: "Admin Updated an interest")
+      #end
+      return   @interest.update_attributes(interest)           
+    else
+      return @interest
     end
-  end'''
-  def adding_users
-i = self.id
-tmp = UserAddInterest.where(:interest_id => i).select{:user_id}.entries
-blockers = User.where(:id => tmp).entries
-end
+  end
+
+
+=begin
+#Author: jailan
+model_toggle method used to block/unblock the interest according to its state 
+takes as argument the id of the interest and returns the interest after updating the deleted column in it
+=end
+
+  def self.model_toggle(id)
+    @interest= Interest.find(id)
+    @interests = Interest.all 
+# if the interest was blocked the we restore it and save
+    if @interest.deleted 
+      @interest.deleted = nil
+      @interest.save
+      #if @interest
+        #Log.create!(loggingtype: 1,user_id_1: nil,user_id_2: nil,admin_id: nil,story_id: nil,interest_id: @interest.id,message: "Admin Restored an interest")
+      #end
+    else
+# if the interest wasn't blocked the we block it and save
+      @interest.deleted = true
+      @interest.save
+      #if @interest
+       # Log.create!(loggingtype: 1,user_id_1: nil,user_id_2: nil,admin_id: nil,story_id: nil,interest_id: @interest.id,message: "Admin Blocked an interest")
+      #end
+    end
+    return @interest
+  end
+
+=======
+>>>>>>> bd81fa3bf0fad334becbc21ea4c74c34d18e4941
+=======
+>>>>>>> parent of b626b04... Adding Statistics Methods to Interest Model with Mongoid syntax
+  
 end

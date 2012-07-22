@@ -1,9 +1,14 @@
 class Feed
 	include Mongoid::Document
+<<<<<<< HEAD
   include Mongoid::Timestamps
 
   field :link, type: String
 	belongs_to :interest
+=======
+	field :link, type: String
+	belongs_to :interest_id
+>>>>>>> df966192cdaa5c71992d6b5d5be1160e562c610f
 
 #attributes  that can be modified automatically by outside users
   #attr_accessible  :link, :interest_id
