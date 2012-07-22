@@ -500,7 +500,7 @@ It makes a new interest and saves it
 model_toggle method used to block/unblock the interest according to its state 
 takes as argument the id of the interest and returns the interest after updating the deleted column in it
 =end
-
+=begin
   def self.model_toggle(id)
     @interest= Interest.find(id)
     @interests = Interest.all 
@@ -540,7 +540,8 @@ takes as argument the id of the interest and returns the interest after updating
            end
           return stories_per_day
   end
- end 
+ end
+ =end 
 
 =begin
   this method when called will get the number of users who added an interest
