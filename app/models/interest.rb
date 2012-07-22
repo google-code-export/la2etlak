@@ -5,6 +5,7 @@ class Interest
   include Mongoid::Document
   include Mongoid::Timestamps
 
+
   #Fields:
 
   field :name, type: String
@@ -14,7 +15,7 @@ class Interest
 
  
   attr_accessible :description, :name, :deleted, :photo  
-  #has_many :stories
+  has_many :stories
   has_many :feeds
 
 #the attached file we migrated with the interest to upload the interest's image from the Admin's computer
@@ -38,10 +39,11 @@ class Interest
   has_many :block_interests
   has_many :blockers, class_name: "User"#, :through => :block_interests
   has_many :user_add_interests
-  has_many :adding_users, class_name:"User"#, :through => :user_add_interests
+  #has_many :adding_users, class_name:"User"#, :through => :user_add_interests
 
 #description can never exceed 240 characters .
   validates :description,  length: { maximum: 100 }
+
 
     def self.get_all_interests
 Interest.all.entries
@@ -72,6 +74,7 @@ end
     self.stories [0..stories_number-1]
   end
 
+
 =begin
  a Method to get the users who added this interest
  Author:Diab/jailan 
@@ -91,6 +94,7 @@ def blockers
  #tmp = UserAddInterest.where(:interest_id => i).select{:user_id}.entries
  blockers = BlockInterest.all.entries.map{|blocker| User.find(blocker.user_id) }
 end
+
 
 =begin 
   This method when called will return the difference between today and the day
@@ -215,6 +219,7 @@ end
         interest_create_date < 30.days.ago.to_date
   
           stories_per_day = []  
+<<<<<<< HEAD
   
 
   elsif interest_create_date < 30.days.ago.to_date
@@ -518,5 +523,243 @@ takes as argument the id of the interest and returns the interest after updating
     return @interest
   end
 
+=======
+>>>>>>> bd81fa3bf0fad334becbc21ea4c74c34d18e4941
   
+
+  elsif interest_create_date < 30.days.ago.to_date
+
+        (30.downto(0)).each do |i|
+            stories_per_day<<Story.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day, :interest_id =>interest_id).count
+           end
+          return stories_per_day
+
+  else
+
+    days= (Time.zone.now.to_date - interest_create_date.to_date).to_i
+        (days.downto(0)).each do |i|
+            stories_per_day<<Story.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day, :interest_id =>interest_id).count
+           end
+          return stories_per_day
+  end
+ end 
+
+=begin
+  this method when called will get the number of users who added an interest
+  for each day.
+  first to get when the interest was created
+  then to get when the interest was updated last time
+  then check if the interest is deleted or not
+  
+  the cases are
+  
+  case 1 if the interest is deleted and it is created within the last 30 day:
+  but its last update was within the last 30 days
+  get all the users within the creation and deletion of the interest and 
+  group by the date of creation then get the count of the users added the 
+  interest per day and 0 if no users added it
+  
+  case 2 if the interest is deleted and its created before the last 30 days:
+  first get all the users within the last 30 days and the last update of the 
+  interest and group by the date of creation.
+  then get the count of the users added the interest per day and 0 if
+  no users added it
+
+  case 3 if the interest is deleted and its created before the last 30 days
+  and its last update was before the last 30 days:
+  return 0 as there are no users added the interest within the last 30 days
+
+  case 4 if the interest is not deleted and its created before the last 30 days:
+  get all the users within the creation of the interest until the current date
+  and group by the date of creation.
+  then get the count of the users added the interest per day and 0 
+  if no user added it
+
+  case 5 if the interest is not deleted and its created within the last 30 days:
+  get all the users within interest creation date until the current date and
+  group by the date of creation.
+  then get the count of the users added the interest per day and 0 if 
+  no user added it
+  ##########Author: Diab ############
+=end  
+  def self.get_num_users_added_interest_day(interest_id)
+
+    interest_create_date = Interest.find(interest_id).created_at 
+    interest_last_update_date = Interest.find(interest_id).updated_at
+    deleted = Interest.find(interest_id).deleted
+    users_per_day=[]
+    if deleted && interest_create_date >= 30.days.ago.to_date && 
+     interest_last_update_date >= 30.days.ago.to_date
+
+       days= (Time.zone.now.to_date - interest_create_date.to_date).to_i
+        days2= (Time.zone.now.to_date - interest_last_update_date.to_date).to_i
+        (days.downto(days2)).each do |i|
+            users_per_day<<UserAddInterest.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day, :interest_id =>interest_id).count
+           end
+          return users_per_day
+  
+
+  elsif deleted && interest_create_date < 30.days.ago.to_date && 
+        interest_last_update_date >= 30.days.ago.to_date
+        days2= (Time.zone.now.to_date - interest_last_update_date.to_date).to_i
+        (30.downto(days2)).each do |i|
+            users_per_day<<UserAddInterest.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day, :interest_id =>interest_id).count
+           end
+          return users_per_day
+         
+
+  elsif deleted && interest_create_date < 30.days.ago.to_date && 
+        interest_create_date < 30.days.ago.to_date
+  
+          users_per_day = []  
+  
+
+  elsif interest_create_date < 30.days.ago.to_date
+
+        (30.downto(0)).each do |i|
+            users_per_day<<UserAddInterest.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day, :interest_id =>interest_id).count
+           end
+          return users_per_day
+
+  else
+
+    days= (Time.zone.now.to_date - interest_create_date.to_date).to_i
+        (days.downto(0)).each do |i|
+            users_per_day<<UserAddInterest.where(:created_at=> i.days.ago.beginning_of_day..i.days.ago.end_of_day, :interest_id =>interest_id).count
+           end
+          return users_per_day
+  end
+ end
+
+=begin
+  these methods are to get all the general info regarding the statistics of 
+  the interest from the database , given its id as a parameter
+=end
+ #to get the count of the stories inside the given interest
+ ##########Author: Diab ############
+ def self.get_interest_num_stories(interestId) 
+
+ num_stories_in_interest = Story.where(:interest_id => interestId).count
+ 
+ end
+ 
+ #to get the count of the users who added this interest
+ ##########Author: Diab ############
+ def self.get_total_num_user_added_interest(interestId)
+
+ num_users_added_interest = UserAddInterest.where(:interest_id => interestId).count 
+ 
+ end
+
+=begin
+  This is the method that should return the data of statistics of an interest
+ with this format first element in the data arrays is ARRAY OF "No Of Users",
+ second one is "No Of stories"
+ ##########Author: Diab ############
+=end
+ def self.get_interest_stat(interest_id)
+ sto = get_num_stories_in_interest_day(interest_id)
+ usr = get_num_users_added_interest_day(interest_id)
+ data ="[#{usr} , #{sto}]"
+ end
+
+=begin 
+    This method is to rank an interest according to the scheme we agreed on
+    2 points for each story added to it and 5 points for each user who added 
+    this interest 
+    ##########Author: Diab ############
+=end
+    
+ def get_interest_rank
+ 
+  rank =  (self.stories.count * 2) + (self.adding_users.count * 5)
+
+ end 
+
+=begin to get a list of hashes with all the interests and all of their ranks by 
+ calling the method get_interest_rank on 3ach one of the interests in the system'''
+ ##########Author: Diab ############
+=end
+
+ def self.rank_all_interests
+
+   interests=[]
+
+   Interest.all.each do |interest|
+
+     interests<< {:rank => interest.get_interest_rank, :theinterest => interest}
+  
+   end
+
+  ranked_interests =  interests
+
+end 
+
+=begin this method returns a list of the top ranked interests in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_interests
+
+    ranked_interests = rank_all_interests
+    interests=[]
+
+    (ranked_interests.sort_by {|element| element[:rank]}).each do |hsh|
+
+      interests << hsh[:theinterest]
+    
+    end
+    
+    top_interests =  interests.reverse
+ 
+ end
+
+=begin this method returns a list of names of the top ranked interests in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_interests_names
+
+    ranked_interests = rank_all_interests
+    interests=[]
+
+    (ranked_interests.sort_by {|element| element[:rank]}).each do |hsh|
+
+      interests << hsh[:theinterest].name.to_s
+
+    end
+
+    top_interests_names =  interests.reverse
+ 
+ end
+
+=begin this method returns a list of ranks of the top ranked interests in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_interests_ranks
+
+    ranked_interests = rank_all_interests
+    interests=[]
+
+    (ranked_interests.sort_by {|element| element[:rank]}).each do |hsh|
+
+      interests << hsh[:rank]
+
+    end
+
+    top_interests_ranks = interests.reverse
+ 
+ end
+
+  '''def self.test
+    if (Interest.first.deleted)
+      puts "a"
+    end
+  end'''
+  def adding_users
+i = self.id
+tmp = UserAddInterest.where(:interest_id => i).select{:user_id}.entries
+blockers = User.where(:id => tmp).entries
+end
 end
