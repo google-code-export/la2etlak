@@ -619,4 +619,39 @@ class UsersControllerTest < ActionController::TestCase
 
 	end
 
+  #Author: Kiro
+  test "test not-verified user should be redirected to verification page after 10 days RED" do
+
+    ben = users(:ben)
+    ben.created_at = 10.days.ago
+    ben.save
+    ben.generateVerificationCode?
+    UserSession.create(ben)
+
+    get :feed
+    assert_redirected_to :controller => 'users', :action => 'force_verify'
+
+    get :toggle
+    assert_redirected_to :controller => 'users', :action => 'force_verify'
+
+    get :settings
+    assert_redirected_to :controller => 'users', :action => 'force_verify'
+
+  end
+
+  test "test verified should not be directed to the verification page after 10 days RED" do
+
+    ben = users(:ben)
+    ben.created_at = 10.days.ago
+    ben.save
+    ben.generateVerificationCode?
+    ben.verification_code.verified = true
+    ben.verification_code.save
+    ben.save
+    UserSession.create(ben)
+
+    get :settings
+    assert_response(:success, "redirect failed to settings")
+
+  end
 end
