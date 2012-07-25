@@ -2,104 +2,104 @@ require 'test_helper'
 
 class StoryTest < ActiveSupport::TestCase
 
-  #test "the truth" do
-  #  assert true
-  #end
-  
-   #Author: Lydia
-  test "no likes should return an empty list" do
-    int = Interest.create!(name: "Test Interest", description: "Description
-    of Test Interest")
-    story = Story.new
-    story.title = "Test Story"
-    story.interest = int
-    story.content = "Test content"
-    story.save
-    assert_equal(story.liked.count, 0)
-  end
-  
-  #Author: Lydia
-  test "no dislikes should return an empty list" do
-    int = Interest.create!(name: "Test Interest", description: "Description
-    of Test Interest")
-    story = Story.new
-    story.title = "Test Story"
-    story.interest = int
-    story.content = "Test content"
-    story.save
-    assert_equal(story.disliked.count, 0)
-  end
-  
-  #Author: Lydia
-  test "some likes should return 3" do
-    int = Interest.create!(name: "Test Interest", description: "Description
-    of Test Interest")
-    story = Story.new
-    story.title = "Test Story"
-    story.interest = int
-    story.content = "Test content"
-    story.save
-    user1 = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
-    user2 = User.create!(name: "Test user2",email: "test2@user.com",password: "123456",password_confirmation: "123456")
-    user3 = User.create!(name: "Test user3",email: "test3@user.com",password: "123456",password_confirmation: "123456")
-    user1.thumb_story(story,1)
-    user2.thumb_story(story,1)
-    user3.thumb_story(story,1)
-    assert_equal(story.liked.count, 3)
-  end
-  
-  #Author: Lydia
-  test "some dislikes should return 3" do
-    int = Interest.create!(name: "Test Interest", description: "Description
-    of Test Interest")
-    story = Story.new
-    story.title = "Test Story"
-    story.interest = int
-    story.content = "Test content"
-    story.save
-    user1 = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
-    user2 = User.create!(name: "Test user2",email: "test2@user.com",password: "123456",password_confirmation: "123456")
-    user3 = User.create!(name: "Test user3",email: "test3@user.com",password: "123456",password_confirmation: "123456")
-    user1.thumb_story(story,-1)
-    user2.thumb_story(story,-1)
-    user3.thumb_story(story,-1)
-    assert_equal(story.disliked.count, 3)
-  end
-  
-  #Author: Lydia
-  test "user likes then dislikes" do
-    int = Interest.create!(name: "Test Interest", description: "Description
-    of Test Interest")
-    story = Story.new
-    story.title = "Test Story"
-    story.interest = int
-    story.content = "Test content"
-    story.save
-    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
-    user.thumb_story(story,1)
-    assert_equal(story.liked.count, 1)
-    user.thumb_story(story,-1)
-    assert_equal(story.liked.count, 0)
-  end
-  
-  #Author: Lydia
-  test "user dislikes then likes" do
-    int = Interest.create!(name: "Test Interest", description: "Description
-    of Test Interest")
-    story = Story.new
-    story.title = "Test Story"
-    story.interest = int
-    story.content = "Test content"
-    story.save
-    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
-    user.thumb_story(story,-1)
-    assert_equal(story.disliked.count, 1)
-    user.thumb_story(story,1)
-    assert_equal(story.disliked.count, 0)
-  end
+	#test "the truth" do
+	#  assert true
+	#end
+	
+	 #Author: Lydia
+	test "no likes should return an empty list" do
+		int = Interest.create!(name: "Test Interest", description: "Description
+		of Test Interest")
+		story = Story.new
+		story.title = "Test Story"
+		story.interest = int
+		story.content = "Test content"
+		story.save
+		assert_equal(story.liked.count, 0)
+	end
+	
+	#Author: Lydia
+	test "no dislikes should return an empty list" do
+		int = Interest.create!(name: "Test Interest", description: "Description
+		of Test Interest")
+		story = Story.new
+		story.title = "Test Story"
+		story.interest = int
+		story.content = "Test content"
+		story.save
+		assert_equal(story.disliked.count, 0)
+	end
+	
+	#Author: Lydia
+	test "some likes should return 3" do
+		int = Interest.create!(name: "Test Interest", description: "Description
+		of Test Interest")
+		story = Story.new
+		story.title = "Test Story"
+		story.interest = int
+		story.content = "Test content"
+		story.save
+		user1 = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+		user2 = User.create!(name: "Test user2",email: "test2@user.com",password: "123456",password_confirmation: "123456")
+		user3 = User.create!(name: "Test user3",email: "test3@user.com",password: "123456",password_confirmation: "123456")
+		user1.thumb_story(story,1)
+		user2.thumb_story(story,1)
+		user3.thumb_story(story,1)
+		assert_equal(story.liked.count, 3)
+	end
+	
+	#Author: Lydia
+	test "some dislikes should return 3" do
+		int = Interest.create!(name: "Test Interest", description: "Description
+		of Test Interest")
+		story = Story.new
+		story.title = "Test Story"
+		story.interest = int
+		story.content = "Test content"
+		story.save
+		user1 = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+		user2 = User.create!(name: "Test user2",email: "test2@user.com",password: "123456",password_confirmation: "123456")
+		user3 = User.create!(name: "Test user3",email: "test3@user.com",password: "123456",password_confirmation: "123456")
+		user1.thumb_story(story,-1)
+		user2.thumb_story(story,-1)
+		user3.thumb_story(story,-1)
+		assert_equal(story.disliked.count, 3)
+	end
+	
+	#Author: Lydia
+	test "user likes then dislikes" do
+		int = Interest.create!(name: "Test Interest", description: "Description
+		of Test Interest")
+		story = Story.new
+		story.title = "Test Story"
+		story.interest = int
+		story.content = "Test content"
+		story.save
+		user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+		user.thumb_story(story,1)
+		assert_equal(story.liked.count, 1)
+		user.thumb_story(story,-1)
+		assert_equal(story.liked.count, 0)
+	end
+	
+	#Author: Lydia
+	test "user dislikes then likes" do
+		int = Interest.create!(name: "Test Interest", description: "Description
+		of Test Interest")
+		story = Story.new
+		story.title = "Test Story"
+		story.interest = int
+		story.content = "Test content"
+		story.save
+		user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+		user.thumb_story(story,-1)
+		assert_equal(story.disliked.count, 1)
+		user.thumb_story(story,1)
+		assert_equal(story.disliked.count, 0)
+	end
 
 #Author : Shafei
-    test "story get rank all time" do
+		test "story get rank all time" do
 		user = users(:one)
 		story = stories(:one)
 		comment = comments(:one)
@@ -110,7 +110,7 @@ class StoryTest < ActiveSupport::TestCase
 	end
 	
 #Author : Shafei
-    test "story get rank last 30 days" do
+		test "story get rank last 30 days" do
 		user = users(:one)
 		story = stories(:one)
 		comment = comments(:two)
@@ -150,5 +150,13 @@ class StoryTest < ActiveSupport::TestCase
 		for i in 0...5
 			assert_equal(top_stories[i].id, Story.get_stories_ranking_last_30_days[i].id, "Ranking not correct")
 		end
+	end
+#Author : Gasser
+	test "stories should have loksha_id once it was fetched RED"
+		StoriesHelper.fetch_rss (http://xkcd.com/rss.xml)
+		s1=Story.first
+		StoriesHelper.fetch_rss (http://feeds.bbci.co.uk/news/politics/rss.xml)
+		s2=Story.last
+		assert_not_equals (s1.loksha_id, s2.loksha_id, "Loksha_id was not assigned correctly")
 	end
 end
