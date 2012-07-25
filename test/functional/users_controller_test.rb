@@ -639,7 +639,7 @@ class UsersControllerTest < ActionController::TestCase
 
   end
 
-  test "test verified should not be directed to the verification page after 10 days RED" do
+  test "test verified should not be directed to the verification page after 10 days" do
 
     ben = users(:ben)
     ben.created_at = 10.days.ago
