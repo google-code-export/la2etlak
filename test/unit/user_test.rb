@@ -490,4 +490,11 @@ end
     assert_not_nil flag , "User Feedback should be added to Feedback table"
 end
 
+####Mazmoz#
+  test "user has a gender" do
+    count=User.get_no_of_users_signed_in_today
+     usr=User.new(:email=>"example@gmail.com", :password => "1234567", :password_confirmation => "1234567")
+     usr.gender = 0
+    assert usr.save
+  end
 end
