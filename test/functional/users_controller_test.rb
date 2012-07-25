@@ -654,4 +654,36 @@ class UsersControllerTest < ActionController::TestCase
     assert_response(:success, "redirect failed to settings")
 
   end
+
+  test "test user can access feedback view RED" do
+
+    ben = users(:ben)
+    UserSession.create(ben)
+
+    get :feedback
+    assert_response(:success, "Failed accessing the feedback page")
+
+  end
+
+  test "test users feedback is sent via email" do
+
+    ben = users(:ben)
+    UserSession.create(ben)
+
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      post :submit_feedback, :feedback => "This is ben's feedback"
+    end
+
+    registration_email = ActionMailer::Base.deliveries.last
+    assert_equal "User's Feedback", registration_email.subject, "wrong subject"
+    assert_equal "feedback.la2etlak@gmail.com", registration_email.to[0], "wrong reciever"
+
+  end
+
+  test "test correct flash after sending feedback" do
+
+    post :submit_feedback, :message => "This is ben's feedback"
+    assert_equal flash[:notice], "Your feedback has been sent, thanks for your co-operation"
+
+  end
 end
