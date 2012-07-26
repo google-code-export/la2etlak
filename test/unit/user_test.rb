@@ -490,4 +490,104 @@ end
     assert_not_nil flag , "User Feedback should be added to Feedback table"
 end
 
+####Mazmoz#
+  test "user has a gender" do
+    count=User.get_no_of_users_signed_in_today
+     usr=User.new(:email=>"example@gmail.com", :password => "1234567", :password_confirmation => "1234567")
+     usr.gender = "male"
+    assert usr.save
+  end
+<<<<<<< HEAD
+
+#Kareem
+test "query should return friend" do
+  	toti =User.create(:email=>"toti@test.com" , :password => "12345678" , :password_confirmation => "12345678")
+  	hseen = User.create(:email => "se7s@test.com", :password => "123456",:password_confirmation => "123456")
+  	Friendship.create(:user_id => toti.id , :friend_id => hseen.id)
+  	list = toti.search_friends("se7s")
+  	flag = false
+  	list.each do |friend|
+  		if (friend == hseen)
+  			flag = true
+  		end
+  	end
+  	assert flag , "Method should return the Friends i searched for by Email Prefix or name"
+  	assert_equal lists[0].class.name , "User" , "should return Objects of class User"
+
+end
+=======
+  
+  
+    # Omar  
+#########################################################
+  
+  test "friend request notification RED" do
+        ben = users(:ben)
+	UserSession.create(ben)
+        ahmed = users(:ahmed)
+        UserSession.create(ahmed)
+        	     
+        assert_equal(Noitification.last.type,1,"friendship request sent notification entered database correctly")
+        end
+  
+  test "friend request accepeted notification RED" do
+	ben = users(:ben)
+	UserSession.create(ben)
+        ahmed = users(:ahmed)
+        UserSession.create(ahmed)
+        
+        assert_equal(Noitification.last.type,2,"friendship accepted notification entered database correctly")  	
+  end  
+
+  test "recommend story notification RED" do
+  	ben = users(:ben)
+	UserSession.create(ben)
+        ahmed = users(:ahmed)
+        UserSession.create(ahmed)
+        
+        assert_equal(Noitification.last.type,3,"friend recommend a story notification entered database correctly")  	
+
+  end
+  
+  test "comment on friend comment notification RED" do
+	ben = users(:ben)
+	UserSession.create(ben)
+        ahmed = users(:ahmed)
+        UserSession.create(ahmed)
+        interest  = Interest.create(name:"interest 1")
+        story = Story.create(interest_id: interest.id , title:"story title" , media_link:"http://www.omar.com")
+        comment1 = Comment.create(user_id: ben.id ,story_id: story.id , content:"1")
+        comment2 = Comment.create(user_id: ahmed.id ,story_id: story.id , content:"2")
+        assert_equal(Noitification.last.type,4,"friend comment on story i commented on notification entered database correctly")  	
+  
+  end
+  
+  test "like comment notification RED" do
+	ben = users(:ben)
+	UserSession.create(ben)
+        ahmed = users(:ahmed)
+        UserSession.create(ahmed)
+        interest  = Interest.create(name:"interest 1")
+        story = Story.create(interest_id: interest.id , title:"story title" , media_link:"http://www.omar.com")
+        comment1 = Comment.create(user_id: ben.id ,story_id: story.id , content:"1")
+        CommentUpDown.create(action: 1 , user_id: ben.id , comment_id: comment1.id)
+        assert_equal(Noitification.last.type,5,"friend like comment notification entered database correctly")  	
+  
+  end    
+
+  test "dislike your notification RED" do
+  	ben = users(:ben)
+	UserSession.create(ben)
+        ahmed = users(:ahmed)
+        UserSession.create(ahmed)
+        interest  = Interest.create(name:"interest 1")
+        story = Story.create(interest_id: interest.id , title:"story title" , media_link:"http://www.omar.com")
+        comment1 = Comment.create(user_id: ben.id ,story_id: story.id , content:"1")
+	CommentUpDown.create(action: 2 , user_id: ben.id , comment_id: comment1.id)
+        assert_equal(Noitification.last.type,6,"friend dislike comment notification entered database correctly")
+  end
+#########################################################
+  
+  
+>>>>>>> b3925240852892f2d8431399fc0f2d5bafeefb2d
 end

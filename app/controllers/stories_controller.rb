@@ -39,6 +39,9 @@ Author: Omar
    def get
 	id = params[:id]
 	@user = current_user
+	#------Kareem---
+	@pp = current_user.get_profile_pic
+	#-------
 	@story = Story.find(id)
 	@likes = @story.liked
 	@dislikes = @story.disliked

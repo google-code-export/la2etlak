@@ -25,6 +25,16 @@
     <%= f.label :Last_Name %>
     <%= f.text_field :last_name,:style => "height:40px; width:95%" %>
   </div>
+     <div class="field" align="center">
+    <%= f.label :Image_URL %>
+    <% if @user.image != nil %>
+    <%= f.text_field :image,
+    :style => "height:40px; width:95%" %>
+    <%else%>
+    <%= f.text_field :image,
+    :style => "height:40px; width:95%" , :value => "http://" %>
+    <%end%>
+  </div>
 </br>
 <div><h4>Change Password<h4></div>
 </br>
