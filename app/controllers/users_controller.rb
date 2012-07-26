@@ -753,4 +753,10 @@ feed and renders the view.
 			redirect_to :controller => 'users', :action => 'feed'
 		end
 	end
+
+  def notifications
+
+    render :layout => 'mobile_template'
+    
+  end
 end

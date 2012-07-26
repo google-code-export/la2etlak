@@ -572,6 +572,8 @@ class UsersControllerTest < ActionController::TestCase
 		assert_equal user.email, "ben@gmail.com", "user is not ben"
 
 	end
+
+
 	
 	#Author: Kiro
 	test "the user should recieve the registration mail" do
@@ -686,4 +688,30 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal flash[:notice], "Your feedback has been sent, thanks for your co-operation"
 
   end
+  #############Author : Jailan ( logged_in_user ) ##############
+
+
+
+    test "Page should contain the logged in user name" do
+ 
+    usr=User.create!(:email=>"jolly@gmail.com", :password => "123456", :password_confirmation => "123456" , :first_name => "jolly" , :last_name =>"salah")
+    UserSession.create usr
+
+    get :toggle
+    assert_select "div[class=logged_in_name]" 
+    end
+
+        test "If there is no name , the correct logged in mail appears" do
+
+    usr=User.create!(:email=>"karen@gmail.com", :password => "123456", :password_confirmation => "123456")
+    UserSession.create usr
+    get :toggle
+    user = assigns(:user)
+    puts user.email
+    assert_not_nil user, "user is nil"
+    assert_equal user.email, "karen@gmail.com", "user is not karen"
+    assert_select "div[class=logged_in_name]" 
+
+  end
+
 end
