@@ -755,7 +755,9 @@ feed and renders the view.
 	end
 
   def notifications
-
+    @user = current_user
+    @notifications = UserNotification.find_all_by_owner(@user.id)
+    @new = @notifications.find_all_by_new(true)
     render :layout => 'mobile_template'
     
   end
