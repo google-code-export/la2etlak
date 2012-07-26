@@ -257,9 +257,16 @@
     <% comments.each do |comment| %>
 
     <div class="story-comment-box-mobile well-large" style="float:left;clear:both;width:90%;margin:0.5%;">
-        <h5 style="padding-top:1px;">    <%= comment.user.name || comment.user.email.split("@")[0] %> says:</h5>
+        <h5 style="padding-top:1px;padding-left:1%;">    <%= comment.user.name || comment.user.email.split("@")[0] %> says:</h5>
         <div style="clear:both;padding:1px;">
-            <div style="padding-top:0px;padding-bottom:5px;padding-left:10px;">
+            <!-- Kareem -->
+            <a  style="float:left;padding-right:5px;padding-left:3px;padding-top:10px; width:50px; height:50px;" align="top"> 
+
+              <%= image_tag (@pp)%>
+
+            </a>
+            <!-- Kareem -->
+            <div style="padding-top:10px;padding-bottom:5px;">
                 <%= comment.content %>
             </div>
         </div>
