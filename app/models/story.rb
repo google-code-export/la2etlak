@@ -5,7 +5,7 @@ include StoriesHelper
 # :rank==>hottness of a story, :interest_id==>id of the related interest,
 # :type==> 1 (Article) 2 (Image) 3 (video)
   attr_accessible :interest_id, :title, :date, :rank, 
-		  :media_link, :category, :content, :deleted, :hidden
+		  :media_link, :category, :content, :deleted, :hidden,:loksha_id
   belongs_to :interest
   has_many   :comments
   

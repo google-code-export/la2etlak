@@ -127,7 +127,7 @@ class StoryTest < ActiveSupport::TestCase
 	
 #Author : Shafei
 	test "stories get rank all time" do
-		top_stories = Array.new#
+		top_stories = Array.new
 		top_stories << stories(:two)
 		top_stories << stories(:one)
 		top_stories << stories(:three)
@@ -141,7 +141,7 @@ class StoryTest < ActiveSupport::TestCase
 	
 #Author : Shafei
 	test "stories get rank last 30 days" do
-		top_stories = Array.new#
+		top_stories = Array.new
 		top_stories << stories(:two)
 		top_stories << stories(:one)
 		top_stories << stories(:three)
@@ -152,11 +152,13 @@ class StoryTest < ActiveSupport::TestCase
 		end
 	end
 #Author : Gasser
-	test "stories should have loksha_id once it was fetched RED"
-		StoriesHelper.fetch_rss (http://xkcd.com/rss.xml)
-		s1=Story.first
-		StoriesHelper.fetch_rss (http://feeds.bbci.co.uk/news/politics/rss.xml)
-		s2=Story.last
-		assert_not_equals (s1.loksha_id, s2.loksha_id, "Loksha_id was not assigned correctly")
+	test "stories should have loksha_id once it was fetched" do
+		int = Interest.create!(name: "Test Interest", description: "Description")
+		feed=Feed.new(:link=> "http://xkcd.com/rss.xml")
+		feed.interest = int
+		feed.save
+		StoriesHelper.fetch_rss ('http://xkcd.com/rss.xml')
+		s1=Story.last
+		assert_not_nil s1.loksha_id, "loksha_id must be assigned to a value"
 	end
 end
