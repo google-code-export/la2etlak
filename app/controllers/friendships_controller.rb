@@ -50,7 +50,7 @@ class FriendshipsController < ApplicationController
       l.save
       # Author: Omar
       #adding the notification to the database on sending a friendship request
-      UserNotification.create(owner: @friend , user: @user, story: nil , comment: nil , notify_type: 1 , new: true)
+      UserNotification.create(owner: @friend.id , user: @user.id, story: nil , comment: nil , notify_type: 1 , new: true)
     else 
       flash[:request_not_sent] = 'Frindship request was not sent $red'
     end  
@@ -83,7 +83,7 @@ class FriendshipsController < ApplicationController
     l.save
     # Author: Omar
     #adding the notification to the database on accepting a friendship request
-    UserNotification.create(owner:@friend , user:@user, story:nil , comment:nil , notify_type:2 , new:true)
+    UserNotification.create(owner:@friend.id , user:@user.id, story:nil , comment:nil , notify_type:2 , new:true)
     flash[:freindship_accept] = "You and #{name_2.humanize} are now friends $green"
     redirect_to action: 'pending'
   end
