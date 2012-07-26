@@ -1,4 +1,13 @@
 <h3 style="color:#555;">Notifications</h3>
+
+<% @new.each do |n| %>
+	<% if n.notify_type == 5 %>
+	<div class="notification notification-new">
+	<b><%= User.find(n.user).name %></b> liked your comment "<%=Comment.find(n.comment).content %>" on the story <a><%= Story.find(n.story).title %></a>
+	</div>
+	<% end %>
+
+<% end %>
 <div class="notification notification-new">
 	Ahmed commented on "ahmed yahalahwy"
 </div>
