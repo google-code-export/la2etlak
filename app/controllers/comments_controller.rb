@@ -46,6 +46,18 @@ class CommentsController < ApplicationController
     @comment.user = User.find(params[:comment][:user_id])
     if @comment.save
       @comment.add_to_log
+        #Author: Omar 
+        #getting all commenters on certian story to send them all notification when another user comment on the same story
+  commenters = Array.new
+  for c in @comment.story.comments
+  	if User.find_by_id(c.user_id) != current_user
+	commenters << User.find_by_id(c.user_id)
+	end
+  end
+  commenters = commenters.uniq
+  for f in commenters
+	   UserNotification.create(owner: f.id , user: @comment.user.id , story:@comment.story.id , comment:@comment.id , notify_type: 4 , new: true)
+	end   
       redirect_to :controller => "stories", :action => "get" , :id => @comment.story.id
     else
       flash[:empty_comment_danger] = "Please enter something to comment. $red"
