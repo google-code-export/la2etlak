@@ -2,11 +2,33 @@
 <html>
 	<body>
 		<div>
-			<ul class="nav nav-list">
-				<li><h3 style="color:#555;">Settings</h3></li>
-				<li class="divider"></li>
+			<div id = "logged_in_name">
+
+			          <nav>
+            <ul class="nav pull-right">
+
+			  <li class="divider-vertical"></li>
+			     </ul>	
+						<ul class="nav pull-right" >				 
+			                 <% if current_user == nil %> [User_name] <% else %> <%= current_user.email %><% end%> </br>
+			             </ul>    
+			                   
+
+			                    
+			      
 				
-		<li><%= link_to "Social accounts", {:controller => 'users', :action => 'connect_social_accounts'}, class: "btn", style: "margin:2%; height:30px;"%></li>
+			
+          </nav>
+
+         </div>
+
+			<ul class="nav nav-list">
+
+				<li><h3 style="color:#555;">Settings</h3></li>
+				&nbsp;<li class="divider"></li>
+			
+				
+		<li>  <%= link_to "Social accounts", {:controller => 'users', :action => 'connect_social_accounts'}, class: "btn", style: "margin:2%; height:30px;"%></li>
 			<li>	<%= link_to "Friends", {:controller => 'friendships', :action => 'index'}, class: "btn", style: "margin:2%; height:30px;" %>	</li>
 
 				<li><%= link_to "Main feed", {:controller => 'users', :action => 'feed'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
