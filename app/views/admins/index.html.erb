@@ -127,13 +127,14 @@ $j(function() {
 								</tr>
 							</table>
 							<%@comments = story.comments%>
+							<div id="all-comments">
 							<h2 class="story-identation story-page-text">Comments</h2>
 							<% if !(@comments.nil? || @comments.empty?) %>
 									<% @comments.each do |comment| %>
 						<div class="well" style="margin-left:7%">
 							<h3><%= User.find(comment.user_id).email %></h3>
 							<div class="comment-component-well">
-								<p><font size="2"><%= comment.content %></p></font>
+								<p><font size="2"><%= comment.content %></font></p>
 							</div>
 										<span class="pull-right redbadge">Downs(<%=comment.get_num_downs%>)</span>
 							<span class="pull-right greenbadge">  Ups  (<%=comment.get_num_ups%>)</span>
@@ -141,8 +142,9 @@ $j(function() {
 						</div>
 							<%end%>
 							<%else%>
-							<p><font size="3">No comments</p></font>
+							<p><font size="3">No comments</font></p>
 							<%end%>
+						</div>
 							</div>
 					<%end%>
 					</div>

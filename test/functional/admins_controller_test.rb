@@ -301,4 +301,33 @@ class AdminsControllerTest < ActionController::TestCase
         assert_select "div[class=apple_pagination]"
       end
   end
+
+
+  #Author: Lydia
+  test "admin can delete any comment from main feed RED" do
+    int = Interest.create!(name: "Test Interest", description: "Description
+    of Test Interest")
+    story = Story.new
+    story.title = "Test Story"
+    story.interest = int
+    story.content = "Test content"
+    story.save
+    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+    comment = Comment.new(:content => "Test content")
+    comment.story = story
+    comment.user = user
+    comment.save
+    admin = Admin.create!(email:"lydia@gmail.com", password:"123456", password_confirmation:"123456")
+    AdminSession.create(admin)
+    get(:index)
+    assert_select "div[class=all-comments]" do
+        assert_select "div[class=well]" , 1
+        assert_select "div[id=delete]" , 1
+    end
+    comment.delete_comment
+    get(:index)
+    assert_select "div[class=all-comments]" do
+        assert_select "div[class=well]" , 0
+    end
+  end
 end
