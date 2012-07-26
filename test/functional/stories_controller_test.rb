@@ -190,4 +190,115 @@ Author : Omar
     end
     
   end
+
+   #Author: Lydia
+  test "user can delete his comment RED" do
+    int = Interest.create!(name: "Test Interest", description: "Description
+    of Test Interest")
+    story = Story.new
+    story.title = "Test Story"
+    story.interest = int
+    story.content = "Test content"
+    story.save
+    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+    comment = Comment.new(:content => "Test content")
+    comment.story = story
+    comment.user = user
+    comment.save
+    UserSession.create(user)
+    get(:get , {'id' => story.id })
+    assert_select "div[id=all-comments]" do
+        assert_select "div[id=delete]"
+        assert_select "div[class=story-comment-box-mobile well-large]" , 1
+    end
+    comment.delete_comment
+    get(:get , {'id' => story.id })
+    assert_select "div[id=all-comments]" do
+        assert_select "div[class=story-comment-box-mobile well-large]" , 0
+    end
+  end
+
+  #Author: Lydia
+  test "user can not delete comments by others RED" do
+    int = Interest.create!(name: "Test Interest", description: "Description
+    of Test Interest")
+    story = Story.new
+    story.title = "Test Story"
+    story.interest = int
+    story.content = "Test content"
+    story.save
+    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+    user2 = User.create!(name: "Test user2",email: "test2@user.com",password: "123456",password_confirmation: "123456")
+    comment = Comment.new(:content => "Test content")
+    comment.story = story
+    comment.user = user
+    comment.save
+    UserSession.create(user2)
+    get(:get , {'id' => story.id })
+    assert_select "div[id=all-comments]" do
+        assert_select "div[id=delete]" , 0
+        assert_select "div[class=story-comment-box-mobile well-large]" , 1
+    end
+  end
+
+  #Author: Lydia
+  test "admin can delete any comment from story's page RED" do
+    int = Interest.create!(name: "Test Interest", description: "Description
+    of Test Interest")
+    story = Story.new
+    story.title = "Test Story"
+    story.interest = int
+    story.content = "Test content"
+    story.save
+    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+    comment = Comment.new(:content => "Test content")
+    comment.story = story
+    comment.user = user
+    comment.save
+    admin = Admin.create!(email:"lydia@gmail.com", password:"123456", password_confirmation:"123456")
+    AdminSession.create(admin)
+    get(:show , {'id' => story.id })
+    assert_select "div[class=story-comments]" do
+        assert_select "div[class=well-comment-component]" , 1
+        assert_select "div[id=delete]" , 1
+    end
+    comment.delete_comment
+    get(:show , {'id' => story.id })
+    assert_select "div[class=story-comments]" do
+        assert_select "div[class=well-comment-component]" , 0
+    end
+  end
+
+  #Author: Lydia
+  test "admin can delete any comment from stories list RED" do
+    int = Interest.create!(name: "Test Interest", description: "Description
+    of Test Interest")
+    story = Story.new
+    story.title = "Test Story"
+    story.interest = int
+    story.content = "Test content"
+    story.save
+    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+    comment = Comment.new(:content => "Test content")
+    comment.story = story
+    comment.user = user
+    comment.save
+    admin = Admin.create!(email:"lydia@gmail.com", password:"123456", password_confirmation:"123456")
+    AdminSession.create(admin)
+    get(:index)
+    assert_select "div[class=all-comments]" do
+        assert_select "div[class=well]" , 1
+        assert_select "div[id=delete]" , 1
+    end
+    comment.delete_comment
+    get(:index)
+    assert_select "div[class=all-comments]" do
+        assert_select "div[class=well]" , 0
+    end
+  end
+
+  #Author: Lydia
+  test "admin can delete any comment from main feed RED" do
+
+  end
 end
