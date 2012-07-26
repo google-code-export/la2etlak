@@ -20,12 +20,13 @@ class FacebookAccount < ActiveRecord::Base
   def get_feed
   	begin
       self.auth_secret = self.auth_secret.to_i+1
-      new_token = Koala::Facebook::OAuth.new(IP).exchange_access_token(self.auth_token.to_s)
+      new_token = Koala::Facebook::OAuth.new('http://localhost:3000').exchange_access_token(self.auth_token.to_s)
       self.auth_token = new_token.to_s
       self.auth_secret = self.auth_secret.to_i+1
       self.save!
       graph = Koala::Facebook::API.new(new_token)
       g = graph.get_connections("me","home")
+      #$facebook_pp	= graph.get_object(current_user.facebook_account.facebook_id)["picture"]
       feed = Array.new
       pic = ""
       content = ""

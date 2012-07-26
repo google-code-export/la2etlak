@@ -994,5 +994,18 @@ Author: Kareem
     data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
   end
 
+#Kareem
+  def get_profile_pic
+
+      image = "http://www.google.com"
+      if self.image != nil
+          image = self.image
+      elsif self.facebook_account != nil
+         image = "http://graph.facebook.com/#{self.facebook_account.facebook_id}/picture"
+      else
+         image = "test.png"  
+       end
+      return image    
+  end
 
 end
