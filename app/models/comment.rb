@@ -90,6 +90,8 @@ class Comment < ActiveRecord::Base
       #adding the notification to the database for liking a comment 
       if user != self.user
     UserNotification.create(owner:self.user_id , user:user.id, story:self.story_id , comment:self.id , notify_type:5 , new:true)
+    self.user.notifications =  self.user.notifications.to_i + 1
+    self.user.save
       end
     #############################
       return true
@@ -104,6 +106,8 @@ class Comment < ActiveRecord::Base
       #adding the notification to the database for liking a comment 
       if comment.user != self.user
         UserNotification.create(owner:self.user_id , user:user.id, story:self.story_id , comment:self.id , notify_type:5 , new:true)
+        self.user.notifications =  self.user.notifications.to_i + 1
+        self.user.save
       end
     #############################
       return true
@@ -136,6 +140,8 @@ class Comment < ActiveRecord::Base
       #adding the notification to the database for disliking a comment 
       if comment.user != self.user
        UserNotification.create(owner:self.user_id , user:user.id, story:self.story_id , comment:self.id , notify_type:6 , new:true)
+       self.user.notifications =  self.user.notifications.to_i + 1
+       self.user.save
       end
     ###################################
       return true
@@ -150,6 +156,8 @@ class Comment < ActiveRecord::Base
       #adding the notification to the database for disliking a comment 
       if user != self.user
        UserNotification.create(owner:self.user_id , user:user.id, story:self.story_id , comment:self.id , notify_type:6 , new:true)
+       self.user.notifications =  self.user.notifications.to_i + 1
+       self.user.save
       end
     ###################################
       return true

@@ -57,6 +57,8 @@ class CommentsController < ApplicationController
   commenters = commenters.uniq
   for f in commenters
 	   UserNotification.create(owner: f.id , user: @comment.user.id , story:@comment.story.id , comment:@comment.id , notify_type: 4 , new: true)
+     f.notifications =  f.notifications.to_i + 1
+     f.save
 	end   
       redirect_to :controller => "stories", :action => "get" , :id => @comment.story.id
     else
