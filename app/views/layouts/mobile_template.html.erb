@@ -25,12 +25,13 @@
         </div>
       </div>
 </header>
+<!--
 <% if current_user %>
-  <% if current_user.get_notifications %>
+  <% if current_user.get_notifications %> -->
    <!-- if user has notification display this active div which
         redirects to pending requests page
         Author: Menisy -->
-   <a href="<%= url_for(controller: "friendships", action: "pending") %>" >
+   <!--<a href="<%= url_for(controller: "friendships", action: "pending") %>" >
     <div id="notification" class="flash-yellow well">
       <% n = current_user.get_notifications.length %>
     You have <%= n %> pending friendship <%= "request".pluralize(n) %>!
@@ -38,6 +39,7 @@
    </a>
   <% end %>
 <% end %>
+-->
 <!-- If a flash notice has been set, display it with the proper
     color
     Author: Menisy -->

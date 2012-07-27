@@ -756,9 +756,12 @@ feed and renders the view.
 
   def notifications
     @user = current_user
-    @notifications = UserNotification.find_all_by_owner(@user.id)
-    @new = @notifications.select {|t| t.new == true}
-    @old = @notifications - @new
+    notifications = UserNotification.find_all_by_owner(@user.id)
+    notifications.sort! {|b, a| a.created_at <=> b.created_at}
+    @notifications=notifications.paginate(:per_page => 10, :page=> params[:page])
+
+    #@new = @notifications.select {|t| t.new == true}
+    #@old = @notifications - @new
     render :layout => 'mobile_template'
     
   end
