@@ -312,6 +312,18 @@ Author: Omar
 	
  end
 
-
+=begin
+  Description: This story is mainly used in the notification system to summarize the
+               title of a story to fit within a certain length
+        input: char_num:Int  which is the number of chars it will be summarized to
+       output: String -> The summarized String
+       Author: Kiro
+=end  
+  def summarize_title (char_num)
+    if self.title.length <= char_num
+      return self.title
+    else return self.title[0..(char_num-1)] + "..."
+    end
+  end
 
 end

@@ -1008,4 +1008,18 @@ Author: Kareem
       return image    
   end
 
+=begin
+  Description: This story is mainly used in the notification system to summarize the
+               name of the user to fit within a certain length
+        input: char_num:Int  which is the number of chars it will be summarized to
+       output: String -> The summarized String
+       Author: Kiro
+=end  
+  def summarize_name (char_num)
+    if self.name.length <= char_num
+      return self.name
+    else return self.name[0..(char_num-1)] + "..."
+    end
+  end
+
 end

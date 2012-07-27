@@ -3,7 +3,7 @@
 <% @new.each do |n| %>
 	<% if n.notify_type == 5 %>
 	<div class="notification notification-new">
-	<b><%= User.find(n.user).name %></b> liked your comment "<%=Comment.find(n.comment).content %>" on the story <a><%= Story.find(n.story).title %></a>
+	<b><%= User.find(n.user).summarize_name(20).capitalize %></b> liked your comment: "<%=Comment.find(n.comment).summarize_content(30) %>" on the story <a><%= Story.find(n.story).summarize_title(40) %></a>
 	</div>
 	<% end %>
 
