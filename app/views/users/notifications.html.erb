@@ -1,11 +1,13 @@
 <h3 style="color:#555;">Notifications</h3>
-<% unless @notifications.nil? %>
+<% unless @notifications == [] || @notifications.nil? %>
 	<% @notifications.each do |n| %>
 
 		<% if n.new == true %>
 			<% classtype = "notification notification-new" %>
 			<% n.new = false %>
 			<% n.save %>
+			<% @user.notifications -= 1 %>
+			<% @user.save %>
 		<% else %>
 			<% classtype = "notification" %>
 		<% end %>
@@ -41,10 +43,11 @@
 		<% end %>
 
 	<% end %>
-	
+	<% if @count > 10 %>
 	<div class="apple_pagination">
 		<%= will_paginate @notifications, :container => false %>
 	</div>
+	<% end %>
 <% else %>
 	<!--if nil, an error message of sorts appears -->
 	<div id="Emptiness_Alert" class="story-component-box-mobile">

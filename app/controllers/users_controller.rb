@@ -758,6 +758,7 @@ feed and renders the view.
     @user = current_user
     notifications = UserNotification.find_all_by_owner(@user.id)
     notifications.sort! {|b, a| a.created_at <=> b.created_at}
+    @count = notifications.count
     @notifications=notifications.paginate(:per_page => 10, :page=> params[:page])
 
     #@new = @notifications.select {|t| t.new == true}
