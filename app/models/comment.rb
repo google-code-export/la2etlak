@@ -170,4 +170,19 @@ class Comment < ActiveRecord::Base
       return false
     end
   end   
+
+=begin
+  Description: This story is mainly used in the notification system to summarize the
+               content of the comment to fit within a certain length
+        input: char_num:Int  which is the number of chars it will be summarized to
+       output: String -> The summarized String
+       Author: Kiro
+=end  
+  def summarize_content (char_num)
+    if self.content.length <= char_num
+      return self.content
+    else return self.content[0..(char_num-1)] + "..."
+    end
+  end
+
 end
