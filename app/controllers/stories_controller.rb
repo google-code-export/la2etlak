@@ -39,6 +39,9 @@ Author: Omar
    def get
 	id = params[:id]
 	@user = current_user
+	#------Kareem---
+	@pp = current_user.get_profile_pic
+	#-------
 	@story = Story.find(id)
 	@likes = @story.liked
 	@dislikes = @story.disliked
@@ -184,7 +187,13 @@ Author: Omar
 			   @successflag=false
          flash[:notice]="Please choose an email from the list or write down one $red" 
 			else
-			 Emailer.recommend_story(@useremail, @listemail, @message, @storytit, @story_url).deliver
+        #Author Omar
+        # adding notification to the database if story was recommend to another user in the db and incrementing the user notifications by 1
+        owner = User.find_by_email(@listemail)
+			 UserNotification.create(owner: owner.id , user: @user.id , story:@storyid , comment: nil , notify_type: 3 , new: true)
+       owner.notifications =  owner.notifications.to_i + 1
+       owner.save
+       Emailer.recommend_story(@useremail, @listemail, @message, @storytit, @story_url).deliver
 			 Log.create!(loggingtype: 2,user_id_1: @user.id,user_id_2: nil,admin_id: nil, 
 				story_id: @storyid,interest_id: @interest_id,message: @logmessage )
         flash[:notice]="Recommendation sent $green"

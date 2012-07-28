@@ -29,7 +29,7 @@
 						:action => 'remove', 
 						:friend_id => member.id, 
 						:query_forward => @query}, 
-						class: "btn btn-danger btn-small",
+						class: "btn btn-danger btn-small"
 						  	
 
 				elsif @user.invited_by? member  
@@ -41,7 +41,7 @@
 						:friend_id => member.id,
 						:query_forward => @query
 						}, 
-						class: "btn btn-warning btn-small",  	
+						class: "btn btn-warning btn-small"
 
 				else 
 					link_to 'Request friendship',{:controller => 'friendships',
@@ -49,7 +49,7 @@
 							:friend_id => member.id, 
 							:query_forward => @query
 							},
-						class: "btn btn-success btn-small", style: "margin:", 
+						class: "btn btn-success btn-small", style: "margin:"
 						
 
 				end %>

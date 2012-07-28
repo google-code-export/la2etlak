@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  owner: 1
+  user: 1
+  story: 1
+  comment: 1
+  notify_type: 1
+  new: false
+
+two:
+  owner: 1
+  user: 1
+  story: 1
+  comment: 1
+  notify_type: 1
+  new: false

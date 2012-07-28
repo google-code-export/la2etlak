@@ -753,4 +753,17 @@ feed and renders the view.
 			redirect_to :controller => 'users', :action => 'feed'
 		end
 	end
+
+  def notifications
+    @user = current_user
+    notifications = UserNotification.find_all_by_owner(@user.id)
+    notifications.sort! {|b, a| a.created_at <=> b.created_at}
+    @count = notifications.count
+    @notifications=notifications.paginate(:per_page => 10, :page=> params[:page])
+
+    #@new = @notifications.select {|t| t.new == true}
+    #@old = @notifications - @new
+    render :layout => 'mobile_template'
+    
+  end
 end

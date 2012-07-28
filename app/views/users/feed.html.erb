@@ -9,7 +9,7 @@
 	
 	<% @stories.each do |f| %>
 		<% if f.is_a?(Story) %>
-		<div class="story-component-box-mobile">
+		<div>
 			<% if f.id.nil? %>
 				<% if f.category.nil? %>
 					<div class="well" style="border-right:5px solid #f89406;">

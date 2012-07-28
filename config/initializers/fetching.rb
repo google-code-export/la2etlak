@@ -6,7 +6,10 @@ require 'chronic'
   scheduler = Rufus::Scheduler.start_new
   #scheduler.every '24h', :first_at => Chronic.parse('today 23:59') do
   scheduler.every '3h' do
-  	puts '%%%%%%%%%%%%%%% FETCHING NEW RSS %%%%%%%%%%%%%%%%%%'
+    #Author: Gasser
+    #Increment the $loksha before each fetch for the feeds in the system
+    $loksha = $loksha + 1
+  	puts '%%%%%%%%%%%%%%% FETCHING NEW RSS '+$loksha +'%%%%%%%%%%%%%%%%%%'
     Interest.all.each do |interest|
       if interest.deleted.nil?
         interest.feeds.each do |feed|
