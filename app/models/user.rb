@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   include UsersHelper
 
   # attr_accessible :title, :body
-  attr_accessible :name, :first_name, :last_name, :date_of_birth, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password
+  attr_accessible :name, :first_name, :last_name, :birth_date, :gender, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password
   has_many :comments
   has_many :comment_up_downs
   # stat 0 pending

@@ -679,6 +679,9 @@ feed and renders the view.
     elsif @user.name.nil?
       flash[:notice] = "Please try again $yellow"
       redirect_to action:"edit"
+    elsif @user.gender.include? "male"
+      flash[:notice] = "Please try again $yellow"
+      redirect_to action:"edit"
     elsif @user.first_name.nil?
       flash[:notice] = "Please try again $yellow"
       redirect_to action:"edit"
