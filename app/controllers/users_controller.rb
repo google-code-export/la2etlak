@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 	before_filter :admin_authenticated?, :only => [:force_reset_password, :index, :show, :activate, :deactivate ]
 	before_filter :user_authenticated?, :except => [:force_reset_password, :index, :show, :activate, :deactivate, :new, :create, :forgot_password, :resetPassword, :dummyLogin, :test, :test_2 ]
+  before_filter :user_verified?, :except => [:settings,:resendCode, :verifySettings, :verifyAccount, :force_reset_password, :index, :show, :activate, :deactivate, :new, :create, :forgot_password, :resetPassword, :dummyLogin, :test, :test_2 ]
   respond_to :html,:json
 
 
@@ -753,4 +754,17 @@ feed and renders the view.
 			redirect_to :controller => 'users', :action => 'feed'
 		end
 	end
+
+  def notifications
+    @user = current_user
+    notifications = UserNotification.find_all_by_owner(@user.id)
+    notifications.sort! {|b, a| a.created_at <=> b.created_at}
+    @count = notifications.count
+    @notifications=notifications.paginate(:per_page => 10, :page=> params[:page])
+
+    #@new = @notifications.select {|t| t.new == true}
+    #@old = @notifications - @new
+    render :layout => 'mobile_template'
+    
+  end
 end

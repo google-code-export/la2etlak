@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 	helper_method :current_user
   helper_method :current_admin
   helper_method :nokia_user?
+  helper_method :user_verified?
   
     def nokia_user?
       return true
@@ -31,9 +32,9 @@ class ApplicationController < ActionController::Base
     end 
     if(current_user.nil?)
       redirect_to new_user_session_path
-    return false
-      else 
-    return true
+      return false
+    else
+      return true
     end
   end
 
@@ -79,5 +80,20 @@ class ApplicationController < ActionController::Base
      end 
    end  
            
+  def user_verified?
+    puts (current_user.created_at + 10.days)
+      puts Time.zone.now
+    if current_user.verification_code.verified
+      return true
+    elsif current_user.created_at + 10.days < Time.zone.now
+      flash[:notice] ="Sorry, but in order to continue using La2etlak you must verify your account first $red"
+      redirect_to(:controller => 'users', :action => 'verifySettings')
+      return false
+    else
+      puts (current_user.created_at + 10.days)
+      puts Time.zone.now
+      return true
+    end
+  end
 
 end
