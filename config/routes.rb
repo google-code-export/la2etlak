@@ -124,6 +124,7 @@ NokiaRuby::Application.routes.draw do
   match "likedislikes/thumb" => "likedislikes#thumb"
   match "users/:id/stories" => "users#feed"
   match "flags/flag" => "flags#flag"
+  match "mob/friendship/:sid/search_recomend" => "friendships#search_recomend"
 #-------------------END---------------------------- 
 
 
