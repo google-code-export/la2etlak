@@ -42,7 +42,9 @@ class User < ActiveRecord::Base
 
   has_many :user_add_interests
   has_many :added_interests, :class_name =>"Interest", :through => :user_add_interests 
-
+	
+	
+  URL_regex = /^(?:(?:http|https):\/\/[a-z0-9]+(?:[\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(?::[0-9]{1,5})?(\/.*)?)|(?:^$)$/ix
 
   email_regex = /\A(?:\w+\.)*\w+@(?:[a-z\d]+[.-])*[a-z\d]+\.[a-z\d]+\z/i
   validates :name, :length => { :maximum => 20 }
@@ -52,7 +54,8 @@ class User < ActiveRecord::Base
   :uniqueness => { :case_sensitive => false}
   validates :first_name, :length => { :maximum => 20 }
   validates :last_name,  :length => { :maximum => 20 }
-
+	
+  validates :image, :format=> {:with => URL_regex}
 =begin  
  gets the shared stories of one friend given his/her id
  to get your own shared stories supply your own ID
@@ -998,7 +1001,7 @@ Author: Kareem
   def get_profile_pic
 
       image = "http://www.google.com"
-      if self.image != nil
+      if ((self.image != nil)&& (User.remote_file_exists?(self.image))) 
           image = self.image
       elsif self.facebook_account != nil
          image = "http://graph.facebook.com/#{self.facebook_account.facebook_id}/picture"
@@ -1007,5 +1010,13 @@ Author: Kareem
        end
       return image    
   end
+
+	
+def self.remote_file_exists?(url)
+    url = URI.parse(url)
+    Net::HTTP.start(url.host, url.port) do |http|
+      return http.head(url.request_uri)['Content-Type'].start_with? 'image'
+    end
+end
 
 end
