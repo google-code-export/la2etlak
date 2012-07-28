@@ -3,6 +3,8 @@ class StoriesController < ApplicationController
 
   before_filter :admin_authenticated?, :only => [:show, :index, :new, :create, :destroy, :filter]
   before_filter :user_authenticated?, :except => [:show, :index, :new, :create, :destroy, :filter]
+  before_filter :user_verified?, :except => [:show, :index, :new, :create, :destroy, :filter]
+
 
   respond_to :html,:json
   require 'net/smtp'

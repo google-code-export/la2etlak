@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
   respond_to :html,:json
 =begin
   This controller is solely created by me, Menisy.
