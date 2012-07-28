@@ -33,8 +33,10 @@
  <% if @story.category == "Facebook" %>
   <% if @story.title.index"shared a photo" %>
     <% type = "photo" %>
-  <% else %>
+  <% elsif @story.title.index"shared a video" %>
     <% type = "video" %>
+  <% else %>
+    <% type = "status" %>
   <% end %>
   <div class="story-comment-box-mobile" style="text-align:center">
     <ul class="nav nav-list">
