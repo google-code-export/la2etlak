@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 	before_filter :admin_authenticated?, :only => [:force_reset_password, :index, :show, :activate, :deactivate ]
 	before_filter :user_authenticated?, :except => [:force_reset_password, :index, :show, :activate, :deactivate, :new, :create, :forgot_password, :resetPassword, :dummyLogin, :test, :test_2 ]
+  before_filter :user_verified?, :except => [:settings,:resendCode, :verifySettings, :verifyAccount, :force_reset_password, :index, :show, :activate, :deactivate, :new, :create, :forgot_password, :resetPassword, :dummyLogin, :test, :test_2 ]
   respond_to :html,:json
 
 

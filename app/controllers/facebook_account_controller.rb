@@ -1,6 +1,7 @@
 class FacebookAccountController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
 =begin
    Action to be called from the connect_to_social network view
    which redirects to the facebook api using koala

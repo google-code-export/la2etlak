@@ -1,6 +1,7 @@
 class FriendshipsController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
 
 =begin
   This is the controller responsible of indexing frineds
