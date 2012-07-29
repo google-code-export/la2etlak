@@ -541,7 +541,30 @@ Input : Interest
 Output : String
 Author : Omar 
 =end
- 
+def group_interests(name)
+  @user = self
+  interests = Interest.get_interests(name)
+  @flag = true
+  interests.each do |ii|
+    if !@user.added_interests.include?(ii)
+         @flag = false
+         break
+    end
+  end
+
+  if (@flag == true)
+    interests.each do |i|
+    text = @user.toggle_interests(i) 
+    end   
+ else
+  interests.each do |i|
+      if !(@user.added_interests.include?(i))
+    text = @user.toggle_interests(i) 
+      end    
+   end
+  end
+end 
+
  def toggle_interests(interest)
 	
     id = interest.id
@@ -1010,8 +1033,6 @@ Author: Kareem
        end
       return image    
   end
-
-<<<<<<< HEAD
 	
 def self.remote_file_exists?(url)
     url = URI.parse(url)
@@ -1019,7 +1040,7 @@ def self.remote_file_exists?(url)
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
 end
-=======
+
 =begin
   Description: This story is mainly used in the notification system to summarize the
                name of the user to fit within a certain length
@@ -1033,6 +1054,16 @@ end
     else return self.name[0..(char_num-1)] + "..."
     end
   end
->>>>>>> f47bbcbbcdb3a7c2fa27509ae79ba8620593a9fb
+
+def check_group(name)
+  all = Interest.get_interests(name)
+  all.each do |i|
+    if !(self.added_interests.include?(i))
+      return false
+  else
+    return true
+    end
+  end
+end
 
 end

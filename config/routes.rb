@@ -41,6 +41,7 @@ NokiaRuby::Application.routes.draw do
   match "mob/toggle" => "users#toggle"   
   match "mob/int_toggle" => "users#int_toggle"
   match "mob/story_feed" => "stories#get_story_feed"
+  match "mob/toggle_group/:name" => "users#toggle_group"
 # $$$$$$$$$$$$$$  OMAR $$$$$$$$$$$$$$$$$$$$$$$ 
 
 

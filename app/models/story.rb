@@ -345,3 +345,5 @@ end
 def rss_feed_stories(link)
   return Story.where(:rss_feed => link)
 end
+
+end
