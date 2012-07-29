@@ -50,9 +50,11 @@
   </div>
      <div class="field" align="center">
     <%= f.label :Gender %>
+    <% if @user.image != nil %>
     <% if @user.gender.include? "male" %>
     <%= f.text_field :gender,
     :style => "height:40px; width:95%" %>
+    <%end%>
     <%else%>
     <%= f.text_field :gender,
     :style => "height:40px; width:95%" , :value => "male" %>
