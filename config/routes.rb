@@ -29,6 +29,7 @@ NokiaRuby::Application.routes.draw do
 	match "mob/verifySettings" => "users#verifySettings"
 	match "mob/verifyAccount" => "users#verifyAccount"
 	match "mob/resendCode" => "users#resendCode"
+  match "mob/notifications" => "users#notifications"
   match "mob/" => "users#feed"
 	match 'logout', :controller => 'user_sessions', :action => 'destroy'
 	resources :user_sessions
@@ -135,6 +136,7 @@ NokiaRuby::Application.routes.draw do
   match "likedislikes/thumb" => "likedislikes#thumb"
   match "users/:id/stories" => "users#feed"
   match "flags/flag" => "flags#flag"
+  match "mob/friendship/:sid/search_recomend" => "friendships#search_recomend"
 #-------------------END---------------------------- 
 
 

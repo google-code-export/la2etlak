@@ -20,17 +20,41 @@ class FacebookAccount < ActiveRecord::Base
   def get_feed
   	begin
       self.auth_secret = self.auth_secret.to_i+1
-      new_token = Koala::Facebook::OAuth.new(IP).exchange_access_token(self.auth_token.to_s)
+      new_token = Koala::Facebook::OAuth.new('http://localhost:3000').exchange_access_token(self.auth_token.to_s)
       self.auth_token = new_token.to_s
       self.auth_secret = self.auth_secret.to_i+1
       self.save!
       graph = Koala::Facebook::API.new(new_token)
       g = graph.get_connections("me","home")
+      #$facebook_pp	= graph.get_object(current_user.facebook_account.facebook_id)["picture"]
       feed = Array.new
       pic = ""
       content = ""
       media = ""
       # p g.nil?
+
+puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
+g.each do |x|
+  if x["type"] == "status"
+   # puts x
+
+    i = x["id"]
+    puts i
+    userid = i.split('_')[0]
+    storyid = i.split('_')[1]
+    puts userid
+    puts storyid
+
+    puts "http://www.facebook.com/#{userid}/posts/#{storyid}"
+
+  end
+end
+
+puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
+
+
       if g
         i = 0
         g.each do |s| 
@@ -77,6 +101,23 @@ class FacebookAccount < ActiveRecord::Base
             media = img_link
             content = s["message"] if s["message"]
             content = content + s["description"] if s["description"]
+
+            elsif s["type"] == "status"
+            title = s["from"]["name"]+" changed his"+" status:\n"
+            msg = ""
+            msg = s["message"] if s["message"]
+            if msg.length > 150
+              content = msg + "\n"
+              msg = msg[0,150]+"..."
+            end
+            title = title+"\n"+msg
+            media = "http://graph.facebook.com/#{s["from"]["id"]}/picture"
+            userid = s["id"].split('_')[0]
+            storyid = s["id"].split('_')[1]
+            story_link = "http://www.facebook.com/#{userid}/posts/#{storyid}"
+            if s["caption"]
+              content = content + s["caption"]
+            end
           else
             next
           end
@@ -105,7 +146,7 @@ class FacebookAccount < ActiveRecord::Base
         return feed
       end	
     rescue
-      self.destroy
+      #self.destroy
       return []
     end
   end

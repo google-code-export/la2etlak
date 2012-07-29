@@ -1,6 +1,7 @@
 class FriendshipsController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
 
 =begin
   This is the controller responsible of indexing frineds
@@ -48,6 +49,11 @@ class FriendshipsController < ApplicationController
       l.message = "#{name_1.humanize} requested friendship of #{name_2.humanize}"
       l.loggingtype = 0
       l.save
+      # Author: Omar
+      #adding the notification to the database on sending a friendship request
+      UserNotification.create(owner: @friend.id , user: @user.id, story: nil , comment: nil , notify_type: 1 , new: true)
+      @friend.notifications =  @friend.notifications.to_i + 1
+      @friend.save
     else 
       flash[:request_not_sent] = 'Frindship request was not sent $red'
     end  
@@ -78,6 +84,11 @@ class FriendshipsController < ApplicationController
     l.message = "#{name_1.humanize} accepted friendship of #{name_2.humanize}"
     l.loggingtype = 0
     l.save
+    # Author: Omar
+    #adding the notification to the database on accepting a friendship request
+    UserNotification.create(owner:@friend.id , user:@user.id, story:nil , comment:nil , notify_type:2 , new:true)
+    @friend.notifications =  @friend.notifications.to_i + 1
+    @friend.save
     flash[:freindship_accept] = "You and #{name_2.humanize} are now friends $green"
     redirect_to action: 'pending'
   end
@@ -217,5 +228,17 @@ class FriendshipsController < ApplicationController
       render layout: 'mobile_template'
     end 
   end 
+#Kareem
+  def search_recomend
+    @user = current_user
+    @sid = params[:sid]
+    @query = params[:query]
+    @resulted_users = Admin.search_user(@query.downcase)
+    @resulted_users.delete @user
+    @resulted_users.sort! {|a,b| a.email <=> b.email}
+    tmp = @resulted_users - @user.friends
+    @resulted_users = @resulted_users - tmp
+    render layout: 'mobile_template'
+  end 	
 
 end 

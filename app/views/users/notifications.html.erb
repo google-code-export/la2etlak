@@ -1,0 +1,56 @@
+<h3 style="color:#555;">Notifications</h3>
+<% unless @notifications == [] || @notifications.nil? %>
+	<% @notifications.each do |n| %>
+
+		<% if n.new == true %>
+			<% classtype = "notification notification-new" %>
+			<% n.new = false %>
+			<% n.save %>
+			<% @user.notifications -= 1 %>
+			<% @user.save %>
+		<% else %>
+			<% classtype = "notification" %>
+		<% end %>
+
+		<% if n.notify_type == 1 %> 
+			<div class="<%= classtype %>">
+			<b><%= User.find(n.user).name.capitalize %></b> has sent you a friendship request.
+			</br>
+			<a href="<%= url_for(controller: "friendships", action: "pending") %>" >View pending friendship requests</a>
+			</div>
+		<% elsif n.notify_type == 2 %>
+			<div class="<%= classtype %>">
+			<b><%= User.find(n.user).name.capitalize %></b> has accepted your friendship request.
+			</br>
+			<%= link_to 'View his Feed', {:controller => 'users',:action => 'friends_feed',:id => n.user} %>
+			</div>
+		<% elsif n.notify_type == 3 %>
+			<div class="<%= classtype %>">
+			<b><%= User.find(n.user).name.capitalize %></b> has recommended the story <%= link_to(Story.find(n.story).	summarize_title(50), {:controller => 'stories', :action => 'get', :id => n.story} )%> for you.
+			</div>
+		<% elsif n.notify_type == 4 %>
+			<div class="<%= classtype %>">
+			<b><%= User.find(n.user).name.capitalize %></b> also commented: "<%=Comment.find(n.comment).summarize_content(30) %>" on the story <%= link_to(Story.find(n.story).summarize_title(40), {:controller => 'stories', :action => 'get', :id => n.story} )%>
+			</div>
+		<% elsif n.notify_type == 5 %>
+			<div class="<%= classtype %>">
+			<b><%= User.find(n.user).name.capitalize %></b> liked your comment: "<%=Comment.find(n.comment).summarize_content(30) %>" on the story <%= link_to(Story.find(n.story).summarize_title(40), {:controller => 'stories', :action => 'get', :id => n.story} )%>
+			</div>
+		<% elsif n.notify_type == 6 %>
+			<div class="<%= classtype %>">
+			<b><%= User.find(n.user).name.capitalize %></b> disliked your comment: "<%=Comment.find(n.comment).summarize_content(30) %>" on the story <%= link_to(Story.find(n.story).summarize_title(40), {:controller => 'stories', :action => 'get', :id => n.story} )%>
+			</div>
+		<% end %>
+
+	<% end %>
+	<% if @count > 10 %>
+	<div class="apple_pagination">
+		<%= will_paginate @notifications, :container => false %>
+	</div>
+	<% end %>
+<% else %>
+	<!--if nil, an error message of sorts appears -->
+	<div id="Emptiness_Alert" class="story-component-box-mobile">
+		You have no notifications yet.
+	</div>
+<% end %>

@@ -1,6 +1,7 @@
 class FacebookAccountController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
 =begin
    Action to be called from the connect_to_social network view
    which redirects to the facebook api using koala
@@ -9,7 +10,7 @@ class FacebookAccountController < ApplicationController
    Author: Menisy
 =end
   def authenticate_facebook_init
-    path = Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => "#{IP}/fb/done/",:permissions => "read_stream")  
+    path = Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => "http://localhost:3000/fb/done/",:permissions => "read_stream")  
     redirect_to path
   end
 
@@ -28,7 +29,7 @@ class FacebookAccountController < ApplicationController
       return
     end
     begin
-    	token = Koala::Facebook::OAuth.new("#{IP}/fb/done/").get_access_token(params[:code]) if params[:code]
+    	token = Koala::Facebook::OAuth.new("http://localhost:3000/fb/done/").get_access_token(params[:code]) if params[:code]
     	fb_account = FacebookAccount.find_or_create_by_user_id(current_user.id)
     	fb_account.auth_token = token
     	fb_account.auth_secret = 1
