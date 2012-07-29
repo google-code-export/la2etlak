@@ -326,4 +326,22 @@ Author: Omar
     end
   end
 
+=begin
+  Description: return rss_link story was fetched from
+  input:
+  output: String -> rss link
+  Author: Omar
+=end  
+def get_rss_feed
+  return self.rss_feed
+end  
+
+=begin
+  Description: return list of stories fetched from certain rss_link
+  input: rss_link
+  output: list of stories
+  Author: Omar
+=end
+def rss_feed_stories(link)
+  return Story.where(:rss_feed => link)
 end

@@ -478,6 +478,7 @@ takes as argument the id of the interest and returns the interest after updating
     end
     return @interest
   end
+ 
 
 end
 

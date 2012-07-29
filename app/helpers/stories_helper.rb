@@ -204,6 +204,7 @@ def fetch_rss(link)
       #Author: Gasser
       #to add the current loksha_id to this new story.
       storynow.loksha_id = $loksha
+      storynow.rss_feed = link
       storynow.save
 
       sid = Story.find_by_title(stitle).id
