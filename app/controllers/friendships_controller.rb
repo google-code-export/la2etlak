@@ -228,5 +228,17 @@ class FriendshipsController < ApplicationController
       render layout: 'mobile_template'
     end 
   end 
+#Kareem
+  def search_recomend
+    @user = current_user
+    @sid = params[:sid]
+    @query = params[:query]
+    @resulted_users = Admin.search_user(@query.downcase)
+    @resulted_users.delete @user
+    @resulted_users.sort! {|a,b| a.email <=> b.email}
+    tmp = @resulted_users - @user.friends
+    @resulted_users = @resulted_users - tmp
+    render layout: 'mobile_template'
+  end 	
 
 end 

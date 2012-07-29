@@ -497,7 +497,7 @@ end
      usr.gender = "male"
     assert usr.save
   end
-<<<<<<< HEAD
+#<<<<<<< HEAD
 
 #Kareem
 test "query should return friend" do
@@ -515,7 +515,13 @@ test "query should return friend" do
   	assert_equal lists[0].class.name , "User" , "should return Objects of class User"
 
 end
-=======
+
+test "should return profile pic" do
+
+ tata = User.create(:email => "tata@tata.com" , :password => "123456" , :password_confirmation => "123456" , :image => "adel.jpg")
+ assert_equal tata.get_profile_pic , "adel.jpg" , "Profile pic should be the same as the uploaded pp"
+end
+
   
   
     # Omar  
@@ -589,5 +595,5 @@ end
 #########################################################
   
   
->>>>>>> b3925240852892f2d8431399fc0f2d5bafeefb2d
+#>>>>>>> b3925240852892f2d8431399fc0f2d5bafeefb2d
 end
