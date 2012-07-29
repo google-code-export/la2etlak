@@ -29,6 +29,7 @@ NokiaRuby::Application.routes.draw do
 	match "mob/verifySettings" => "users#verifySettings"
 	match "mob/verifyAccount" => "users#verifyAccount"
 	match "mob/resendCode" => "users#resendCode"
+  match "mob/notifications" => "users#notifications"
   match "mob/" => "users#feed"
 	match 'logout', :controller => 'user_sessions', :action => 'destroy'
 	resources :user_sessions
@@ -113,17 +114,29 @@ NokiaRuby::Application.routes.draw do
   match "/admins/search" => "admins#search"
   match "/admins/all_results" => "admins#all_results"
   match "/admins/filter" => "admins#filter"
-  ##########################
+
+
+   #Author: jolly############
+
+ match "mob/interests/:id"  => "interests#mob", :as => :mob
+  match "mob/interest/:id"  => "users#toggle_from_interest_page"
+
+    match "mob/interest/block/:id"  => "users#block_interest_from_interest_page"
+
+    match "mob/interest/unblock/:id"  => "users#unblock_interest_from_interest_page"
 
   match "/interests/list"  => "interests#new", :as => :new
 
  match "interests/:id/toggle" => "interests#toggle"
+
+   ##########################
 
 #--------------------Kareem------------------------
   match "user_add_interests/interests" => "user_add_interests#get_interests" 
   match "likedislikes/thumb" => "likedislikes#thumb"
   match "users/:id/stories" => "users#feed"
   match "flags/flag" => "flags#flag"
+  match "mob/friendship/:sid/search_recomend" => "friendships#search_recomend"
 #-------------------END---------------------------- 
 
 

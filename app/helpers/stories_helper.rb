@@ -135,7 +135,9 @@ require 'open-uri'
 require 'rss/1.0'
 require 'rss/2.0'
 require 'open-uri'
-
+#Author: Gasser
+#Initialize the global variable loksha for the balue in the column loksha_id in the story model.
+$loksha = 1
 
 def fetch_rss(link)
 
@@ -180,7 +182,7 @@ def fetch_rss(link)
 
 	#getting the id of the interest
       
-	sinterest = Feed.find_by_link(source).interest_id
+	sinterest = Feed.find_by_link(source).interest
 
     #if it is a new story, it will enter automatically
     if sid == nil
@@ -191,7 +193,7 @@ def fetch_rss(link)
 	
 
     puts '######################################################2'
-      storynow.interest_id = sinterest
+      storynow.interest = sinterest
       storynow.content = sdescription
       storynow.story_link = slink
       #img = "img src="
@@ -199,6 +201,9 @@ def fetch_rss(link)
       	storynow.media_link =  storynow.new_media_link(sdescription)	
       #end
       storynow.mobile_content = storynow.new_content(sdescription)
+      #Author: Gasser
+      #to add the current loksha_id to this new story.
+      storynow.loksha_id = $loksha
       storynow.save
 
       sid = Story.find_by_title(stitle).id

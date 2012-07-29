@@ -1,0 +1,94 @@
+<html>
+
+
+   
+
+
+
+		<div class="main-right-interest">
+			<div class="middle-interest-panel" >
+						<table>			
+   <%if (@user_interests.include? @interest) && (@user.blocked_interests.include? @interest) %> 		 			
+	<span class="yellowbadge"><%=@interest.name.upcase%></span><br>
+	<%else%>
+		<% if @user.added_interests.include? @interest %>
+			<span class="greenbadge"><%=@interest.name.upcase%></span><br>	
+		<%else%>	
+	   		<span class="redbadge"><%=@interest.name.upcase%></span><br>
+	        <%end%>
+   <%end%>
+		</table><br>
+<!-- if the interest's image isn't there  .. the alternative is Nokia Logo image -->
+				<div id="image" align = "center">
+					<h3><% if @interest.photo.file? %>
+      				<img src= "<%= @interest.photo.url(:small) if @interest.photo.file? %>" />
+      				<% else %>
+     				<%= image_tag "logo.jpeg" %> 
+      				<% end %>
+					</h3>
+				</div>
+				<br>
+				<div class="well">
+					<ul class="nav nav-list" >
+						<li class="divider"></li>
+					</ul>
+      			<h3 class="interest-page-text">Description:</h3>
+					<div class="interest-page-well">
+         				<%= @interest.description %>
+					</div>
+					<ul class="nav nav-list" >
+						<li class="divider"></li>
+					</ul>
+					<h3 class="interest-page-text">Sources :</h3>
+					<div class="interest-page-well ">
+						<! .. adding the RSS feeds added to this interest unless the table is empty ..>
+						<table class="table" >
+						<% @feeds.each do |f| %>
+    					<tr >
+      						<td><%= link_to( (f.link.length > 30 ? ('%{sub}...' % {:sub => f.link[0,30]}) : f.link), f.link)	%></td>
+      						
+    					</tr>
+  						<% end %>
+						</table>
+					</div>
+					<ul class="nav nav-list" >
+						<li class="divider"></li>	
+					</ul>	
+				</div>
+			</div>
+			 <div class="well" align="center">
+
+			<table >
+
+			
+		<%if @user_interests.include? @interest%> 		 	
+			<td><span><%= link_to 'Delete', 
+{:controller => 'users', :action => 'toggle_from_interest_page',:id => @interest.id }, 
+class: "btn btn-danger" %></span></td>
+		<%else%>
+   		  	            <td><span><%= link_to 'Add', 
+{:controller => 'users', :action => 'toggle_from_interest_page', :id => @interest.id }, 
+class: "btn btn-success"%></span></td>
+			
+			
+		<%end%>
+
+		 
+	<%if @user.blocked_interests.include? @interest %>	  
+		<td><span><%= link_to 'Unblock', 
+{:controller => 'users', :action => 'unblock_interest_from_interest_page', :id => (@interest.id)} , 
+class: "btn btn-warning"%></span> </td>
+	<%else%>
+	 	<td><span><%= link_to 'Block', 
+{:controller => 'users', :action => 'block_interest_from_interest_page', :id => (@interest.id)} , 
+class: "btn btn-warning"%></span></td>
+		<td><span><%= link_to "Feed", 
+	{:controller => "users", :action => "feed", :interest => @interest.name}, 
+	class: "btn btn-info" %></span></td>
+	<%end%>		
+	</table>
+	</div>
+
+	</div>
+</div>
+</html>

@@ -497,6 +497,31 @@ end
      usr.gender = "male"
     assert usr.save
   end
+#<<<<<<< HEAD
+
+#Kareem
+test "query should return friend" do
+  	toti =User.create(:email=>"toti@test.com" , :password => "12345678" , :password_confirmation => "12345678")
+  	hseen = User.create(:email => "se7s@test.com", :password => "123456",:password_confirmation => "123456")
+  	Friendship.create(:user_id => toti.id , :friend_id => hseen.id)
+  	list = toti.search_friends("se7s")
+  	flag = false
+  	list.each do |friend|
+  		if (friend == hseen)
+  			flag = true
+  		end
+  	end
+  	assert flag , "Method should return the Friends i searched for by Email Prefix or name"
+  	assert_equal lists[0].class.name , "User" , "should return Objects of class User"
+
+end
+
+test "should return profile pic" do
+
+ tata = User.create(:email => "tata@tata.com" , :password => "123456" , :password_confirmation => "123456" , :image => "adel.jpg")
+ assert_equal tata.get_profile_pic , "adel.jpg" , "Profile pic should be the same as the uploaded pp"
+end
+
   
   
     # Omar  
@@ -570,4 +595,5 @@ end
 #########################################################
   
   
+#>>>>>>> b3925240852892f2d8431399fc0f2d5bafeefb2d
 end

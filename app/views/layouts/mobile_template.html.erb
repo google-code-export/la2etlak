@@ -5,30 +5,40 @@
   <title> LA2ETLAK! </title>
   <%= stylesheet_link_tag    "mobile_style"%> 
 </head>
-   <header class="navbar" >
+   <header class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container" >
+        <div class="container" style="padding-left:8%;height:60px"align="center">
+          <ul class="nav">
           <a href="<%= url_for :controller => "users", :action => "feed" %>" id="logo" ><h2 class = "pull-left" style = "float:up;">LA2ETLAK</h2></a>
-
-          <nav>
+        </ul>
+        <% if current_user != nil %>
+          <ul class="nav">
+      			<li><%= link_to (image_tag("gear.png")) , {:controller => "users" , :action =>
+      				"settings"}, {:style => 'width:25px;height:25px;padding-top:15;border-color:white'}%></li>
+          </ul>
+          <% if current_user.notifications <= 0 %>
             <ul class="nav">
-              <li style="width:25px;height:25px"></li>
+            <%= button_to '0' , {:controller => "users" , :action =>
+              "notifications"}, :class => 'btn btn-large' , :style => 'width:40px;height:30px;margin-top:13;'%>
             </ul>
-
+          <% else %>
             <ul class="nav">
-      			  <li><%= link_to (image_tag("gear.png")) , {:controller => "users" , :action =>
-      				"settings"}, {:style => 'width:25px;height:25px;padding-top:15;'}%></li>
+            <%= button_to current_user.notifications , {:controller => "users" , :action =>
+              "notifications"}, :class => 'btn btn-large btn-primary' , :style => 'width:40px;height:30px;margin-top:13;border-color:white'%>
             </ul>
-          </nav>
+          <% end %>
+        <% end %>
+          
         </div>
       </div>
 </header>
+<!--
 <% if current_user %>
-  <% if current_user.get_notifications %>
+  <% if current_user.get_notifications %> -->
    <!-- if user has notification display this active div which
         redirects to pending requests page
         Author: Menisy -->
-   <a href="<%= url_for(controller: "friendships", action: "pending") %>" >
+   <!--<a href="<%= url_for(controller: "friendships", action: "pending") %>" >
     <div id="notification" class="flash-yellow well">
       <% n = current_user.get_notifications.length %>
     You have <%= n %> pending friendship <%= "request".pluralize(n) %>!
@@ -36,6 +46,7 @@
    </a>
   <% end %>
 <% end %>
+-->
 <!-- If a flash notice has been set, display it with the proper
     color
     Author: Menisy -->
