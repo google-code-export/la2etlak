@@ -113,11 +113,22 @@ NokiaRuby::Application.routes.draw do
   match "/admins/search" => "admins#search"
   match "/admins/all_results" => "admins#all_results"
   match "/admins/filter" => "admins#filter"
-  ##########################
+
+
+   #Author: jolly############
+
+ match "mob/interests/:id"  => "interests#mob", :as => :mob
+  match "mob/interest/:id"  => "users#toggle_from_interest_page"
+
+    match "mob/interest/block/:id"  => "users#block_interest_from_interest_page"
+
+    match "mob/interest/unblock/:id"  => "users#unblock_interest_from_interest_page"
 
   match "/interests/list"  => "interests#new", :as => :new
 
  match "interests/:id/toggle" => "interests#toggle"
+
+   ##########################
 
 #--------------------Kareem------------------------
   match "user_add_interests/interests" => "user_add_interests#get_interests" 
