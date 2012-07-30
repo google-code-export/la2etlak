@@ -7,6 +7,65 @@ class UserTest < ActiveSupport::TestCase
 
   setup :activate_authlogic
 
+  ######Author : Diab######
+    test "User Ranking red"
+     interest = Interest.new(:name=>"whatever")
+     interest.save
+     user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
+     user1.save
+     user2 = User.new(:email=>"email2@mail.com", password: "12345678",password_confirmation:"12345678")
+     user2.save
+     user3 = User.new(:email=>"email3@mail.com", password: "12345678",password_confirmation:"12345678")
+     user3.save
+     story1 = Story.new(:title=>"Story1")
+     story1.interest = interest
+     story2 = Story.new(:title=>"Story2")
+     story2.interest = interest
+     assert_difference(user1.rank , 17) do
+     user1.thumb_story(story1,1)
+     user1.thumb_story(story2,-1)
+     user1.share(story1.id)
+     user1.flag_story(story2)
+     c1 = Comment.new(:user_id=> user1.id , :story_id=>story.id , :content=>"LOL")
+     c1.save
+     user1.toggle_interests(interest)
+     UserLogIn.create!(:user_id => user1.id)
+     user1.invite(user2)
+     user2.approve(user1)
+     user3.block(user1)
+     user1.get_user_rank
+     end 
+  end
+  
+
+##########Author: Diab ############ 
+  test "top users red" do
+     
+     interest = Interest.new(:name=>"whatever")
+     interest.save
+     user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name1")
+     user1.save
+     user2 = User.new(:email=>"email2@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name2")
+     user2.save
+     user3 = User.new(:email=>"email3@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name3")
+     user3.save
+     story1 = Story.new(:title=>"Story1")
+     story1.interest = interest
+     story2 = Story.new(:title=>"Story2")
+     story2.interest = interest)
+     c1 = Comment.new(:user_id=> user1.id , :story_id=>story2.id , :content=>"LOL")
+     c1.save
+     user1.invite(user3)
+     user3.approve(user1)
+     user1.share(story1)
+     user2.thumb_story(story2 , 1)
+     User.rank_all_users
+     top_stories_names = User.get_top_users_names
+     top_stories_ranks = User.get_top_users_ranks
+     assert_equal top_users_names , ["name1","name3","name2"]
+     assert_equal top_users_ranks , [9,4,2]
+    end
+
 #Author : Shafei
   test "user get rank" do
 	user = users(:one)
