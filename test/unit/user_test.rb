@@ -497,7 +497,6 @@ end
      usr.gender = "male"
     assert usr.save
   end
-<<<<<<< HEAD
 
 #Kareem
 test "query should return friend" do
@@ -515,7 +514,6 @@ test "query should return friend" do
     assert_equal lists[0].class.name , "User" , "should return Objects of class User"
 
 end
-=======
   
   
     # Omar  
@@ -589,7 +587,6 @@ end
 #########################################################
   
   
->>>>>>> b3925240852892f2d8431399fc0f2d5bafeefb2d
   #Author: Lydia
   test "stories are sorted correctly" do
     int = Interest.create!(name: "Test Interest", description: "Description
@@ -624,9 +621,9 @@ end
     story4.rank = 130
     story4.save
     user.toggle_interests(int)
-    top_rated = user.top_rated
-    top_rated[0] = story3
-    top_rated[1] = story4
+    top = top_rated(user)
+    top[0] = story3
+    top[1] = story4
   end
 
 end

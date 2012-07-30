@@ -993,6 +993,22 @@ Author: Kareem
     comment = get_no_of_activity(comments, creation_date, last_update, deactivated)
     data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
   end
-
-
+  
+  def self.top_rated(user)
+    stories = user.user_add_interests.map {|add| Story.where(:interest_id => add.interest_id)}
+    '''
+    int = user.added_interests
+    all_stories = []
+    int.each {|interest| all_stories<<interest.stories}
+    '''
+    all_stories = []
+    c = stories.count - 1
+    (0..c).each do |i|
+      stories[i].each do |story|
+        all_stories.push(story)
+      end
+    end
+    sorted = all_stories.sort_by { |r| r.rank }
+    return sorted.sort_by(&:rank).reverse
+  end
 end
