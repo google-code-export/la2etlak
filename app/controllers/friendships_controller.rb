@@ -127,9 +127,9 @@ class FriendshipsController < ApplicationController
     l.loggingtype = 0
     l.save
 
-    @user.rank = @user.rank + 4
+    @user.rank = @user.rank - 4
     @user.save
-    @friend.rank = @friend.rank + 4
+    @friend.rank = @friend.rank - 4
     @friend.save
 
     redirect_to action: "index"
