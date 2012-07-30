@@ -997,7 +997,14 @@ Author: Kareem
     data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
   end
 
-#Kareem
+=begin
+Description: This method returns the User Profile picture link , if the user has specified a link for PP the link is returned , 
+else check if he has linked a facebook Account , if yes return his facebook PP link
+else return the Default image.
+Input: None
+Output: String - Profile picture link
+Author: Kareem  
+=end
   def get_profile_pic
 
       image = "http://www.google.com"
@@ -1011,15 +1018,21 @@ Author: Kareem
       return image    
   end
 
-<<<<<<< HEAD
-	
+
+=begin
+Description: This method takes as input an Image URL
+ and checks if its a Valid image link or not
+input: URL
+output: Bool 
+Author: Kareem
+=end
 def self.remote_file_exists?(url)
     url = URI.parse(url)
     Net::HTTP.start(url.host, url.port) do |http|
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
 end
-=======
+
 =begin
   Description: This story is mainly used in the notification system to summarize the
                name of the user to fit within a certain length
@@ -1033,6 +1046,9 @@ end
     else return self.name[0..(char_num-1)] + "..."
     end
   end
->>>>>>> f47bbcbbcdb3a7c2fa27509ae79ba8620593a9fb
+
+
+
+
 
 end

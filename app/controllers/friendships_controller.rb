@@ -228,7 +228,12 @@ class FriendshipsController < ApplicationController
       render layout: 'mobile_template'
     end 
   end 
-#Kareem
+=begin
+Description: this Method takes a search Query from the User as input and passes list of users (@resulted_users) according to the Entered Query.
+Input: query - Search query , sid  - Story to recomend id 
+output: Nothing
+Author: Kareem
+=end
   def search_recomend
     @user = current_user
     @sid = params[:sid]

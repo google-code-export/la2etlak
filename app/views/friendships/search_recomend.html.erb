@@ -32,11 +32,16 @@
 				<li class="divider"></li>
 				<li><b> <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </b></li>
 					<div align="right">
+
+				
 				<%=	
-					link_to 'Recomend Story',{:controller => 'friendships',
-						:action => 'remove', 
-						:friend_id => member.id, 
-						:query_forward => @query}, 
+					link_to 'Recomend Story',{:controller => 'stories',
+						:action => 'recommend_success_mobile_show',
+
+						:sid => @sid ,
+						:lemail => "info@la2etlak.com", 
+						:email => member.email, 
+						:message => "I Recomend you to take a Look at  this Story"},
 						class: "btn btn-warning btn-small"
 				 %>
 				</div>
