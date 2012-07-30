@@ -7,7 +7,7 @@ class StoryTest < ActiveSupport::TestCase
 	#end
 
 	######Author : Diab######
-    test "Story Ranking red"
+    test "Story Ranking red" do
     interest = Interest.new(:name=>"whatever")
      interest.save
     user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
@@ -55,8 +55,7 @@ class StoryTest < ActiveSupport::TestCase
      top_stories_ranks = Story.get_top_stories_ranks
      assert_equal top_stories_names , ["Story1","Story2"]
      assert_equal top_stories_ranks , [7,-2]
-    end
-    
+    	 end
 	 #Author: Lydia
 	test "no likes should return an empty list" do
 		int = Interest.create!(name: "Test Interest", description: "Description

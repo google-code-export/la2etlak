@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
   setup :activate_authlogic
 
   ######Author : Diab######
-    test "User Ranking red"
+    test "User Ranking red" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
@@ -52,7 +52,7 @@ class UserTest < ActiveSupport::TestCase
      story1 = Story.new(:title=>"Story1")
      story1.interest = interest
      story2 = Story.new(:title=>"Story2")
-     story2.interest = interest)
+     story2.interest = interest
      c1 = Comment.new(:user_id=> user1.id , :story_id=>story2.id , :content=>"LOL")
      c1.save
      user1.invite(user3)
