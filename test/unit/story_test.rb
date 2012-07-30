@@ -5,7 +5,57 @@ class StoryTest < ActiveSupport::TestCase
 	#test "the truth" do
 	#  assert true
 	#end
-	
+
+	######Author : Diab######
+    test "Story Ranking red" do
+    interest = Interest.new(:name=>"whatever")
+     interest.save
+    user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
+     user1.save
+    user2 = User.new(:email=>"email2@mail.com", password: "12345678",password_confirmation:"12345678")
+     user2.save
+    story = Story.new(:title=>"Story")
+     story.interest = interest
+    assert_difference(story.rank , 2) do
+     user1.thumb_story(story,1)
+     user2.thumb_story(story,-1)
+     user1.share(story.id)
+     user1.flag_story(story)
+     c1 = Comment.new(:user_id=> user1.id , :story_id=>story.id , :content=>"LOL")
+     c1.save
+     c2 = Comment.new(:user_id=> user2.id , :story_id=>story.id , :content=>"LAME")
+     c2.save
+     user2.block_story1(story)
+     story.get_story_rank
+     end 
+  end
+  
+
+##########Author: Diab ############ 
+  test "top stories red" do
+     
+     interest = Interest.new(:name=>"whatever")
+     interest.save
+     user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
+     user1.save
+     user2 = User.new(:email=>"email2@mail.com", password: "12345678",password_confirmation:"12345678")
+     user2.save
+     story1 = Story.new(:title=>"Story1")
+     story1.interest = interest
+     story2 = Story.new(:title=>"Story2")
+     story2.interest = interest
+     user1.thumb_story1(story1,1)
+     user2.thumb_story2(story2,-1)
+     user1.share(story1.id)
+     user1.flag_story(story2)
+     c1 = Comment.new(:user_id=> user1.id , :story_id=>story2.id , :content=>"LOL")
+     c1.save
+     Story.rank_all_stories
+     top_stories_names = Story.get_top_stories_names
+     top_stories_ranks = Story.get_top_stories_ranks
+     assert_equal top_stories_names , ["Story1","Story2"]
+     assert_equal top_stories_ranks , [7,-2]
+    	 end
 	 #Author: Lydia
 	test "no likes should return an empty list" do
 		int = Interest.create!(name: "Test Interest", description: "Description

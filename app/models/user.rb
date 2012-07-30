@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   include UsersHelper
 
   # attr_accessible :title, :body
-  attr_accessible :name, :first_name, :last_name, :birth_date, :gender, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password
+  attr_accessible :name, :first_name, :last_name, :birth_date, :gender, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password , :rank
   has_many :comments
   has_many :comment_up_downs
   # stat 0 pending
@@ -163,6 +163,7 @@ end
   share the same story twice, however this is 
   now allowed so no checks are neccessary.
   Author: Menisy
+  Ranking: Diab
 =end
   def share(story_id)
     self.shared_stories << Story.find(story_id)
@@ -171,6 +172,12 @@ end
     story_title = story.title || story.content[0,20]+"..."
     p story_title.nil?
     p user_name.nil?
+    
+    story.rank = story.rank + 4
+    story.save
+    self.rank = self.rank + 2
+    self.save
+
     Log.create!(loggingtype: 2,user_id_1: self.id,user_id_2: nil,admin_id: nil,story_id: story_id,interest_id: nil,message: user_name + " shared the story \"" +  story_title +  "\"" )
     return true
   end 
@@ -404,24 +411,44 @@ Description:his Action takes as parametars a story and action and checks if the 
 Input: Story , Action [1 or -1]
 Output: Nothing
 Author: Kareem
+Ranking: Diab
 =end
 	def thumb_story(story,act)
 		name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
-		action_n = if act == 1 then "UP" else "Down" end
+		rank_update = if act == 1 then 3 else -1 end
+    rank_update2 = if act == 1 then -1 else 3 end
+    action_n = if act == 1 then "UP" else "Down" end
 		thumped = Likedislike.where(:story_id => story.id, :user_id => self.id)
 		if thumped.empty? 
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
-				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")
+				
+        story.rank = story.rank + rank_update
+        story.save
+        self.rank = self.rank + 2
+        self.save
+
+        l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")
 				puts "Thump"
 
 		elsif (thumped[0].action == act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
-				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} un-Thumbed #{action_n} #{story.title}") 
+				
+        story.rank = story.rank - rank_update
+        story.save
+        self.rank = self.rank - 2
+        self.save
+
+        l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} un-Thumbed #{action_n} #{story.title}") 
 				puts "Removed"
 		elsif (thumped[0].action != act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
-				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")  
+				
+        story.rank = story.rank - rank_update2
+        story.rank = story.rank + rank_update
+        story.save
+
+        l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")  
 				puts "Removed _thumbed"
 		end
 
@@ -432,6 +459,7 @@ Description:this Action takes as a parametar a story and it checks if the curren
 Input: Story
 Output: true or False
 Author: Kareem
+Ranking: Diab
 =end
 	def flag_story(story)
 		thumped = Flag.where(:story_id => story.id, :user_id => self.id)
@@ -440,7 +468,13 @@ Author: Kareem
 				#Admin_Settings.update_story_if_flagged(story)
 				name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
 				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
-			return true
+			
+        story.rank = story.rank - 3
+        story.save
+        self.rank = self.rank + 2
+        self.save
+
+      return true
 		end
 			return false
 	end
@@ -500,15 +534,65 @@ Author:Kareem
 =begin
   This action returns the rank of one user
   Returns the rank of a user
-  Author: Shafei
+  Author: Shafei , Diab
 =end
   def get_user_rank
-        rank = (self.comments.count * 2) + (self.user_log_ins.count * 2)
-        rank = rank + self.likedislikes.count + self.flags.count
-        rank = rank +(self.user_add_interests.count * 5)
-        rank = rank + self.friends.count + (self.shares.count * 3)
-        return rank
+        ranking = (self.comments.count * 3) + (self.user_log_ins.count * 2)
+        ranking = ranking + (self.likedislikes.count * 2) + (self.flags.count * 2)
+        ranking = ranking +(self.user_add_interests.count * 5)
+        ranking = ranking + (self.friends.count * 4) + (self.shares.count * 2) + (self.blockers.count * -5)
+        self.update_attributes(:rank => ranking)
+        return ranking
   end
+
+=begin
+ This method to update the Ranks of all users
+ Author : Diab
+=end
+ def self.rank_all_users
+  
+   User.all.each do |usr|
+    usr.get_user_rank
+   end
+  end
+=begin this method returns a list of the top ranked Users in 
+ a descending order (Higher Rank First)
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users
+    
+    top_users =  User.order("rank DESC")
+ 
+ end
+
+=begin this method returns a list of names of the top ranked Users in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users_names
+
+    top_users = User.get_top_users
+    top_users_names =  []
+    top_users.each do |usr|
+     top_users_names << usr.name
+     end
+    return top_users_names       
+ end
+
+=begin this method returns a list of ranks of the top ranked Users in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users_ranks
+
+    top_users = User.get_top_users
+    top_users_ranks =  []
+    top_users.each do |usr|
+    top_users_ranks << usr.rank 
+     end
+    return top_users_ranks 
+ 
+ end
 
 =begin
   This action returns a list of all users in the database sorted according to their rank
@@ -539,7 +623,8 @@ Author:Kareem
 Discription: check if user toggle new interests the methods adds it to his interests if toggled old interest it deletes it from his interests and return msg discribing either interest is deleted or added
 Input : Interest
 Output : String
-Author : Omar 
+Author : Omar
+Ranking: Diab 
 =end
  
  def toggle_interests(interest)
@@ -556,12 +641,26 @@ Author : Omar
 	 	self.added_interests.delete interest
  		message = "#{username} deleted interest : #{interest_name}"
    		Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			interest_id: id, message: message)
-   		return "Interest deleted."
+   		
+      i = Interest.find(id)
+      i.rank = i.rank - 5
+      i.save
+      self.rank = self.rank - 5
+      self.save
+
+      return "Interest deleted."
        else 
 		 UserAddInterest.create(:user_id => self.id , :interest_id => id)
  	      	 message = "#{username} added interest : #{interest_name}"
    		 Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			 interest_id: id, message: message)
-   		 return "Interest added."
+   		 
+       i = Interest.find(id)
+       i.rank = i.rank + 5
+       i.save
+       self.rank = self.rank + 5
+       self.save
+
+       return "Interest added."
        end
  end
  
@@ -641,6 +740,7 @@ Author:Kareem
   Input: interest
   Output: message to indicate success/failure of block
   Author: Rana
+  Ranking: Diab
 =end   
   def block_interest1(this_interest)
    this_user = self
@@ -658,6 +758,11 @@ Author:Kareem
       @message = "#{@username} blocked interest with name: #{@interesttitle}"
       Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil,
       story_id: nil, interest_id: this_interest.id, message: @message)
+   
+      i = Interest.find(this_interest.id)
+      i.rank = i.rank - 5
+      i.save
+
    else 
       @text = "Interest is already blocked."    
    end
@@ -673,6 +778,7 @@ Author:Kareem
   Input: interest
   Output: message to indicate success/failure of unblock
   Author: Rana
+  Ranking: Diab
 =end   
   def unblock_interest1(this_interest)
    this_user = self
@@ -690,6 +796,11 @@ Author:Kareem
       @message = "#{@username} unblocked interest with name: #{@interesttitle}"
       Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil,
       story_id: nil, interest_id: this_interest.id, message: @message)
+   
+      i = Interest.find(this_interest.id)
+      i.rank = i.rank + 5
+      i.save
+
    else 
       @text = "Interest is already unblocked."    
    end
@@ -705,6 +816,7 @@ Author:Kareem
   Input: story
   Output: message to indicate success/failure of block
   Author: Rana
+  Ranking: Diab
 =end
   def block_story1(this_story)
    this_user = self
@@ -722,6 +834,10 @@ Author:Kareem
       @message = "#{@username} blocked story with title: #{@storytitle}" 
       Log.create!(loggingtype: 2,user_id_1: self.id,user_id_2: nil, admin_id: nil,
       story_id: this_story.id, interest_id: nil, message: @message)
+  
+      this_story.rank = this_story.rank - 5
+      this_story.save
+
    else 
       @text = "Story is already blocked."
    end
@@ -735,6 +851,7 @@ Author:Kareem
   Input: story
   Output: text message to indicate success of unblock  
   Author: Rana
+  Ranking: Diab
 =end
   def unblock_story1(this_story)
    this_user = self
@@ -752,6 +869,10 @@ Author:Kareem
       @message = "#{@username} unblocked story with title: #{@storytitle}" 
       Log.create!(loggingtype: 2,user_id_1: self.id,user_id_2: nil, admin_id: nil,
       story_id: this_story.id, interest_id: nil, message: @message)
+   
+      this_story.rank = this_story.rank + 5
+      this_story.save
+
    else
       @text = "Story is already unblocked."
    end
@@ -1011,7 +1132,6 @@ Author: Kareem
       return image    
   end
 
-<<<<<<< HEAD
 	
 def self.remote_file_exists?(url)
     url = URI.parse(url)
@@ -1019,7 +1139,6 @@ def self.remote_file_exists?(url)
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
 end
-=======
 =begin
   Description: This story is mainly used in the notification system to summarize the
                name of the user to fit within a certain length
@@ -1033,6 +1152,5 @@ end
     else return self.name[0..(char_num-1)] + "..."
     end
   end
->>>>>>> f47bbcbbcdb3a7c2fa27509ae79ba8620593a9fb
 
 end
