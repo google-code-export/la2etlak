@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   include UsersHelper
 
   # attr_accessible :title, :body
-  attr_accessible :name, :first_name, :last_name, :birth_date, :gender, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password
+  attr_accessible :name, :first_name, :last_name, :birth_date, :gender, :email, :deactivated, :twitter_account, :twitter_request, :image, :password, :password_confirmation, :new_password , :rank
   has_many :comments
   has_many :comment_up_downs
   # stat 0 pending
@@ -500,15 +500,65 @@ Author:Kareem
 =begin
   This action returns the rank of one user
   Returns the rank of a user
-  Author: Shafei
+  Author: Shafei , Diab
 =end
   def get_user_rank
-        rank = (self.comments.count * 2) + (self.user_log_ins.count * 2)
-        rank = rank + self.likedislikes.count + self.flags.count
-        rank = rank +(self.user_add_interests.count * 5)
-        rank = rank + self.friends.count + (self.shares.count * 3)
-        return rank
+        ranking = (self.comments.count * 3) + (self.user_log_ins.count * 2)
+        ranking = ranking + (self.likedislikes.count * 2) + (self.flags.count * 2)
+        ranking = ranking +(self.user_add_interests.count * 5)
+        ranking = ranking + (self.friends.count * 4) + (self.shares.count * 2) + (self.blockers.count * -5)
+        self.update_attributes(:rank => ranking)
+        return ranking
   end
+
+=begin
+ This method to update the Ranks of all users
+ Author : Diab
+=end
+ def self.rank_all_users
+  
+   User.all.each do |usr|
+    usr.get_user_rank
+   end
+  end
+=begin this method returns a list of the top ranked Users in 
+ a descending order (Higher Rank First)
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users
+    
+    top_users =  User.order("rank DESC")
+ 
+ end
+
+=begin this method returns a list of names of the top ranked Users in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users_names
+
+    top_users = User.get_top_users
+    top_users_names =  []
+    top_users.each do |usr|
+     top_users_names << usr.name
+     end
+    return top_users_names       
+ end
+
+=begin this method returns a list of ranks of the top ranked Users in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users_ranks
+
+    top_users = User.get_top_users
+    top_users_ranks =  []
+    top_users.each do |usr|
+    top_users_ranks << usr.rank 
+     end
+    return top_users_ranks 
+ 
+ end
 
 =begin
   This action returns a list of all users in the database sorted according to their rank
