@@ -133,7 +133,7 @@ end
 #output: true if the user with the mail in DB and false otherwise
 #Author: khaled.elbhaey
 =end
-  def has_account(mail)
+  def self.has_account(mail)
   
     @email=mail
     if User.find_by_email(@email).nil?
