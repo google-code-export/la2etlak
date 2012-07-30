@@ -1019,6 +1019,7 @@ Author: Kareem
   end
 
 
+
 =begin
 Description: This method takes as input an Image URL
  and checks if its a Valid image link or not
