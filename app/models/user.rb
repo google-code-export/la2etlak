@@ -1011,7 +1011,6 @@ Author: Kareem
       return image    
   end
 
-<<<<<<< HEAD
 	
 def self.remote_file_exists?(url)
     url = URI.parse(url)
@@ -1019,7 +1018,6 @@ def self.remote_file_exists?(url)
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
 end
-=======
 =begin
   Description: This story is mainly used in the notification system to summarize the
                name of the user to fit within a certain length
@@ -1033,6 +1031,5 @@ end
     else return self.name[0..(char_num-1)] + "..."
     end
   end
->>>>>>> f47bbcbbcdb3a7c2fa27509ae79ba8620593a9fb
 
 end
