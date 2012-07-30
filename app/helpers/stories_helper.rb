@@ -206,6 +206,12 @@ def fetch_rss(link)
       storynow.loksha_id = $loksha
       storynow.save
 
+      #Ranking by:Diab#
+      i = Interest.find(sinterest)
+      i.rank = i.rank + 1
+      i.save
+      #Ranking by:Diab#
+
       sid = Story.find_by_title(stitle).id
       
       Log.create(loggingtype: 2,story_id: sid,message: "new story")
