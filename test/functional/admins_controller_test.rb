@@ -301,4 +301,13 @@ class AdminsControllerTest < ActionController::TestCase
         assert_select "div[class=apple_pagination]"
       end
   end
+
+  #Author : Diab
+  test "admin has account red" do
+   #User.destroy_all
+   #Admin.destroy_all
+   post :create , :admin => {:email => "mailadmin@mail.com" , :password => "123456" , :password_confirmation => "123456" }#, :first_name=>"Admin Son" , :last_name => "Admin father"}
+   assert User.has_account(:email) , "email should be mailadmin@mail.com"
+  end
+  
 end
