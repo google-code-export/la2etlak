@@ -757,8 +757,36 @@ Author:Kareem
         end
   end
 
+=begin 
+Discription: checks if the user have all of the interest group added or not if its added the methods deletes it , if it wasnt added the methods adds all its interests
+Input : String => group name
+Output : 
+Author : Omar 
+=end
+def group_interests(name)
+  @user = self
+  interests = Interest.get_interests(name)
+  @flag = true
+  interests.each do |ii|
+    if !@user.added_interests.include?(ii)
+       @flag = false 
+       break
+    end
+  end
 
-  
+  if (@flag == true)
+    interests.each do |k|
+    text = @user.toggle_interests(k) 
+    end   
+ else
+  interests.each do |k|
+      if !(@user.added_interests.include?(k))
+    text = @user.toggle_interests(k) 
+      end    
+   end
+  end
+end 
+
 =begin 
 Discription: check if user toggle new interests the methods adds it to his interests if toggled old interest it deletes it from his interests and return msg discribing either interest is deleted or added
 Input : Interest
@@ -766,7 +794,6 @@ Output : String
 Author : Omar
 Ranking: Diab 
 =end
- 
  def toggle_interests(interest)
   
     id = interest.id
@@ -1334,4 +1361,17 @@ end
     else return self.name[0..(char_num-1)] + "..."
     end
   end
+
+def check_group(name)
+  all = Interest.get_interests(name)
+  flag = true
+  all.each do |i|
+    if !(self.added_interests.include?(i))
+       flag = false
+       break
+    end
+  end
+  return flag
+end
+
 end

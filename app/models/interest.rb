@@ -457,6 +457,40 @@ takes as argument the id of the interest and returns the interest after updating
     end
     return @interest
   end
+ 
+=begin
+Description: return type of interest
+input:
+output: String => type
+Author: Omar
+=end
+ def get_interest_type
+    return self.group_name
+ end
 
+=begin
+Description: all types of interests on the system
+input:
+output: list of all interest types
+Author: Omar
+=end
+def self.all_types
+  interests = Interest.all
+  types = Array.new
+  interests.each do |i|
+            types << i.group_name
+           end
+  return types.uniq
+end  
+
+=begin
+Description: return all interests having certain group_name
+input: String => group_name
+output: list of interest
+Author: Omar
+=end
+def self.get_interests(name)
+  return Interest.where(:group_name => name)
+end
 end
 

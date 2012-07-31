@@ -1,13 +1,13 @@
 <!-- Kareem New -->
 <html> 
-  
+  <div id="search">
 	<%= form_tag("/mob/friendship/#{@sid}/search_recomend", :method => "get") do %>
 	  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
-	  									 :placeholder => 'Search') %>
-	  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
+	  									 :placeholder => 'Search' , :id => 'search_field') %>
+	  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;", :id => "search_button") %>
 	<% end %>
 
-
+  </div>
 	<% if @query.nil? or @query == ''%>
 		<h5> No results </h5>
 	<% else %>

@@ -283,6 +283,7 @@ Author: Kareem
      @user = current_user
      @user_interests = @user.added_interests
      @all_interests = Interest.get_all_interests_for_users
+     @all_types = Interest.all_types
      render :layout => "mobile_template"
   end
 
@@ -290,6 +291,15 @@ Author: Kareem
   Discription : updates user interests according what the user selects  and redirect to the same view toggle to update view of interests
   Author Omar
 =end
+
+def toggle_group
+   name = params[:name]
+   @user = current_user
+   @user.group_interests(name)
+   redirect_to "/mob/toggle"
+ end 
+
+
 
   def int_toggle
     user = current_user

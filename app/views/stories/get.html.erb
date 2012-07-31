@@ -252,7 +252,7 @@
     <h4> Comments </h4>
 </div>
 <br>
-<div style="width:95%;">
+<div id="all-comments" style="width:95%;">
     <% comments = Comment.find_all_by_story_id(@story.id) %>
     <% comments.each do |comment| %>
 

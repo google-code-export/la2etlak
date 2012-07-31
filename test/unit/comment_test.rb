@@ -99,4 +99,22 @@ class CommentTest < ActiveSupport::TestCase
     comment.save
     comment.down_comment(user)
   end  
+
+  # Author: Lydia
+  test "comment is deleted from database RED" do
+    int = Interest.create!(name: "Test Interest", description: "Description
+    of Test Interest")
+    story = Story.new
+    story.title = "Test Story"
+    story.interest = int
+    story.content = "Test content"
+    story.save
+    user = User.create!(name: "Test user1",email: "test1@user.com",password: "123456",password_confirmation: "123456")
+    comment = Comment.new(:content => "Test content")
+    comment.story = story
+    comment.user = user
+    comment.save
+    comment.delete_comment
+    assert_true(comment.deleted == true)
+  end
 end

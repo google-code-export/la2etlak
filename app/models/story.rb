@@ -300,7 +300,7 @@ Author: Omar
 =end
 
  def get_related_stories
- 
+
  	stories =  Story.get_stories_ranking_all_time
 	st = Array.new
 	for story in stories 
@@ -325,6 +325,27 @@ Author: Omar
     else return self.title[0..(char_num-1)] + "..."
     end
   end
+
+=begin
+  Description: return rss_link story was fetched from
+  input:
+  output: String -> rss link
+  Author: Omar
+=end  
+def get_rss_feed
+  return self.rss_feed
+end  
+
+=begin
+  Description: return list of stories fetched from certain rss_link
+  input: rss_link
+  output: list of stories
+  Author: Omar
+=end
+def rss_feed_stories(link)
+  return Story.where(:rss_feed => link)
+end
+
 
 =begin 
 This method to get the rank of a story
@@ -385,5 +406,6 @@ end
     return top_stories_ranks 
  
  end
+
 
 end
