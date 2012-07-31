@@ -92,7 +92,7 @@ class CommentsController < ApplicationController
     elsif $source == "admins_index"
       redirect_to :controller=>'admins', :action => 'index'
     elsif $source == "get"
-      redirect_to :controller=>'stories', :action => 'get', :id => @comment.story_id
+      redirect_to :controller => "stories", :action => "get" , :id => @comment.story_id
     end
   end
 end
