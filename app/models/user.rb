@@ -1141,6 +1141,7 @@ Author: Kareem
 
 
 
+
 =begin
 Description: This method takes as input an Image URL
  and checks if its a Valid image link or not
@@ -1148,6 +1149,7 @@ input: URL
 output: Bool 
 Author: Kareem
 =end
+
 def self.remote_file_exists?(url)
     url = URI.parse(url)
     Net::HTTP.start(url.host, url.port) do |http|
@@ -1168,9 +1170,4 @@ end
     else return self.name[0..(char_num-1)] + "..."
     end
   end
-
-
-
-
-
 end
