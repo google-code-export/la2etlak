@@ -269,6 +269,12 @@
             <div style="padding-top:10px;padding-bottom:5px;">
                 <%= comment.content %>
             </div>
+            <% if ((current_user.id == comment.user_id) && !(comment.deleted)) %>
+              <div id="delete">
+                  <% $source = "get" %>
+                  <td><%= link_to("X" , comment,{:controller => "comments", :method=>:delete, class: "btn btn-small btn-danger" }) %></td>
+              </div>
+            <% end %>
         </div>
         <ul class="nav">
             <% pic = nil %>
