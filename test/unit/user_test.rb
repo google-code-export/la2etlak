@@ -8,7 +8,7 @@ class UserTest < ActiveSupport::TestCase
   setup :activate_authlogic
 
   ######Author : Diab######
-    test "User Ranking red" do
+    test "user ranking" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
@@ -17,17 +17,18 @@ class UserTest < ActiveSupport::TestCase
      user2.save
      user3 = User.new(:email=>"email3@mail.com", password: "12345678",password_confirmation:"12345678")
      user3.save
-     story1 = Story.new(:title=>"Story1")
+     story1 = Story.new(:title=>"Story1" , :content => "c1")
      story1.interest = interest
-     story2 = Story.new(:title=>"Story2")
+     story2 = Story.new(:title=>"Story2", :content => "c1")
      story2.interest = interest
-     assert_difference(user1.rank , 17) do
+     story1.save
+     story2.save
+     assert_difference('user1.rank' , 19) do
      user1.thumb_story(story1,1)
      user1.thumb_story(story2,-1)
      user1.share(story1.id)
      user1.flag_story(story2)
-     c1 = Comment.new(:user_id=> user1.id , :story_id=>story.id , :content=>"LOL")
-     c1.save
+     
      user1.toggle_interests(interest)
      UserLogIn.create!(:user_id => user1.id)
      user1.invite(user2)
@@ -39,8 +40,8 @@ class UserTest < ActiveSupport::TestCase
   
 
 ##########Author: Diab ############ 
-  test "top users red" do
-     
+  test "top users" do
+     User.destroy_all
      interest = Interest.new(:name=>"whatever")
      interest.save
      user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name1")
@@ -53,17 +54,17 @@ class UserTest < ActiveSupport::TestCase
      story1.interest = interest
      story2 = Story.new(:title=>"Story2")
      story2.interest = interest
-     c1 = Comment.new(:user_id=> user1.id , :story_id=>story2.id , :content=>"LOL")
-     c1.save
+     story1.save
+     story2.save
      user1.invite(user3)
      user3.approve(user1)
-     user1.share(story1)
+     user1.share(story1.id)
      user2.thumb_story(story2 , 1)
      User.rank_all_users
-     top_stories_names = User.get_top_users_names
-     top_stories_ranks = User.get_top_users_ranks
+     top_users_names = User.get_top_users_names
+     top_users_ranks = User.get_top_users_ranks
      assert_equal top_users_names , ["name1","name3","name2"]
-     assert_equal top_users_ranks , [9,4,2]
+     assert_equal top_users_ranks , [6,4,2]
     end
 
 #Author : Shafei
@@ -532,23 +533,6 @@ end
 
   end
 
-  #Kareem New
-  test "cannot send twice" do
-    toto = User.create!(:email=>"tesssst@test.com" , :password => "12345678" , :password_confirmation => "12345678")
-    flag = toto.send_feedback("Message")
-    flag1 = toto.send_feedback("hahahaha")
-    assert_not_equal flag,flag1,"User Can't Send Feedback twice in 10 days"
-  end
-
-
-  #Kareem New
-  test "feedback should be added to table" do
-    toty = User.create(:email=>"tote@test.com" , :password => "12345678" , :password_confirmation => "12345678")
-    toty.send_feedback("hahahahaha")
-    flag = Feedback.find_by_user_id(toty.id)
-    assert_not_nil flag , "User Feedback should be added to Feedback table"
-end
-
 ####Mazmoz#
   test "user has a gender" do
     count=User.get_no_of_users_signed_in_today
@@ -558,27 +542,12 @@ end
   end
 #<<<<<<< HEAD
 
-#Kareem
-test "query should return friend" do
-  	toti =User.create(:email=>"toti@test.com" , :password => "12345678" , :password_confirmation => "12345678")
-  	hseen = User.create(:email => "se7s@test.com", :password => "123456",:password_confirmation => "123456")
-  	Friendship.create(:user_id => toti.id , :friend_id => hseen.id)
-  	list = toti.search_friends("se7s")
-  	flag = false
-  	list.each do |friend|
-  		if (friend == hseen)
-  			flag = true
-  		end
-  	end
-  	assert flag , "Method should return the Friends i searched for by Email Prefix or name"
-  	assert_equal lists[0].class.name , "User" , "should return Objects of class User"
 
-end
-
+#kareem new
 test "should return profile pic" do
 
- tata = User.create(:email => "tata@tata.com" , :password => "123456" , :password_confirmation => "123456" , :image => "adel.jpg")
- assert_equal tata.get_profile_pic , "adel.jpg" , "Profile pic should be the same as the uploaded pp"
+	 tata = User.create(:email => "tata@tata.com" , :password => 		"123456" , :password_confirmation => "123456" , :image => "http://web.scott.k12.va.us/martha2/dmbtest.gif")
+	assert_equal tata.get_profile_pic , "http://web.scott.k12.va.us/martha2/dmbtest.gif" , 		"Profile pic should be the same as the uploaded pp"
 end
 
 #Kareem
