@@ -23,8 +23,8 @@ class StatisticsController < ApplicationController
   respond_with(@users = User.get_users_ranking)
  end
  def all_stories
-  @stories = Story.get_stories_ranking_all_time[0..4]
-  @ranks= Story.get_stories_ranking_all_time_rank[0..4]
+  @stories = Story.get_top_stories_names[0..4]
+  @ranks= Story.get_top_stories_ranks[0..4]
  end
  def all_interests
  end

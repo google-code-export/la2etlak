@@ -1,25 +1,34 @@
 
 
-<!kareem new -->
+<!--kareem new -->
 <html>
+<% if current_user.friends != [] %>
+<div>
 <h4> Search for a Friend </h4>
 <%= form_tag("/mob/friendship/#{@storyid}/search_recomend", :method => "get") do %>
   <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
   									 :placeholder => 'Search') %>
   <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
+
+<br>
+<h3 align = "center" > OR </h3>
+
+</div>  
 <% end %>
+<% end %>
+
+<!--kareem new -->
+
+
 <!-- Auther: khaled.elbhaey -->
 <div align="center">
 	<div id="submit">
 		<form action="/mob/stories/recommend_success_mobile_show/<%= @storyid%>"><!-- form which the user fill input in -->
 			<div id="recommendation">
-			
-					<br>
-				    <br>
 					
 					<p>
-						<br> 
-						<h4>Or Write an E-mail manually:</h4> 
+						
+						<h4>Write an E-mail manually:</h4> 
 					</p>
 			
 			  

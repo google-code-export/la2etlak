@@ -10,7 +10,7 @@ class FacebookAccountController < ApplicationController
    Author: Menisy
 =end
   def authenticate_facebook_init
-    path = Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => "http://localhost:3000/fb/done/",:permissions => "read_stream")  
+    path = Koala::Facebook::OAuth.new.url_for_oauth_code(:callback => "http://localhost:3000/fb/done/",:permissions => "publish_stream")  
     redirect_to path
   end
 

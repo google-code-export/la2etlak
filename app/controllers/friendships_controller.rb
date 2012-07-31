@@ -68,7 +68,8 @@ class FriendshipsController < ApplicationController
   in the params
   Input: params[:friend_id]
   Output: Nothing
-  Author: Yahia 
+  Author: Yahia
+  Ranking: Diab 
 =end
   def accept
     @user = current_user
@@ -90,6 +91,12 @@ class FriendshipsController < ApplicationController
     @friend.notifications =  @friend.notifications.to_i + 1
     @friend.save
     flash[:freindship_accept] = "You and #{name_2.humanize} are now friends $green"
+    
+    @user.rank = @user.rank + 4
+    @user.save
+    @friend.rank = @friend.rank + 4
+    @friend.save
+
     redirect_to action: 'pending'
   end
 
@@ -98,6 +105,7 @@ class FriendshipsController < ApplicationController
   Input: parmas[:friend_id]
   Output: Nothing
   Author: Yahia 
+  Ranking: Diab
 =end
   def remove
     @user = current_user
@@ -118,6 +126,11 @@ class FriendshipsController < ApplicationController
     l.message = "#{name_1.humanize} removed friendship of #{name_2.humanize}"
     l.loggingtype = 0
     l.save
+
+    @user.rank = @user.rank - 4
+    @user.save
+    @friend.rank = @friend.rank - 4
+    @friend.save
 
     redirect_to action: "index"
   end
@@ -152,6 +165,7 @@ class FriendshipsController < ApplicationController
   Input: params[:friend_id]
   Output: Nothing  
   Author: Yahia 
+  Ranking: Diab
 =end
   def block
     @user = current_user
@@ -167,6 +181,10 @@ class FriendshipsController < ApplicationController
     l.loggingtype = 0
     l.save
     flash[:block_success] = "#{name_2.humanize} was blocked successfully $green"    
+    
+    @friend.rank = @friend.rank - 5
+    @friend.save
+
     redirect_to action: 'pending'
   end
 
@@ -174,7 +192,8 @@ class FriendshipsController < ApplicationController
   This is the controller responsible of unblocking a user
   Input: params[:friend_id]
   Output: Nothing  
-  Author: Yahia 
+  Author: Yahia
+  Ranking: Diab 
 =end
   def unblock
     @user = current_user
@@ -190,6 +209,10 @@ class FriendshipsController < ApplicationController
     l.loggingtype = 0
     l.save
     flash[:blocked] = "#{name_2.humanize} was unblocked successfully $green"    
+   
+    @friend.rank = @friend.rank + 5
+    @friend.save
+
     redirect_to action: 'pending'
   end
 
@@ -228,7 +251,12 @@ class FriendshipsController < ApplicationController
       render layout: 'mobile_template'
     end 
   end 
-#Kareem
+=begin
+Description: this Method takes a search Query from the User as input and passes list of users (@resulted_users) according to the Entered Query.
+Input: query - Search query , sid  - Story to recomend id 
+output: Nothing
+Author: Kareem
+=end
   def search_recomend
     @user = current_user
     @sid = params[:sid]

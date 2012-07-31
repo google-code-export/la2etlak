@@ -4,12 +4,11 @@
   $j(document).ready(function() {
       
        var arrayNames = [] ;
-       var arrayRanks = [] ;
-        <% @stories.each do |story|%>
-          arrayNames.push("<%= story.title %>");
+       var arrayRanks = <%= Story.get_top_stories_ranks[0..4]%>;
+        <% Story.get_top_stories_names[0..4].each do |name|%>
+          arrayNames.push("<%= name %>");
           
         <% end %>
-        arrayRanks= <%= @ranks%>;
          
           
      
@@ -78,7 +77,7 @@
 			</div>
 		<% else %>
 			<div id ="genInfo" style="padding-top:20px;">
-				<% if Story.get_stories_ranking_all_time.first.get_story_rank_all_time == 0 %>
+				<% if Story.get_top_stories.first.get_story_rank == 0 %>
 					<div class="alert">  
 						<a class="close" data-dismiss="alert"></a>
 						<h2><strong>Warning!</strong> No Stories Ranking </h2>
@@ -96,7 +95,7 @@
 							</ul>	
 						</div>
 					
-					<% Story.get_stories_ranking_all_time[0..4].each do |story|%>
+					<% Story.get_top_stories[0..4].each do |story|%>
 						<div class="well-story-component">
 							<a href="/stories/<%= story.id%>"
 							 style="display:block; float:left; height:100px;">
@@ -109,7 +108,7 @@
 								<%= link_to "More Info",
 							    {:controller => 'stories', :action => 'show',:id => story.id },
 							     class: "interest-component-button-absolute btn btn-warning"%>
-								<h5> Rank : <%= story.get_story_rank_all_time %> </h5>
+								<h5> Rank : <%= story.rank %> </h5>
 								<h5> Shares : <%= story.shares.count %> </h5>
 								<%= link_to "Statistics", 
 								{:controller => 'statistics', :action => 'stories',:id => story.id }, 

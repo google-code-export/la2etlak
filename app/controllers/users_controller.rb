@@ -312,6 +312,51 @@ def toggle_group
         flash[:block_interest_toggle_f] = "#{text} $red"
      end    
     redirect_to "/mob/toggle"
+
+  end
+
+
+#jolly
+
+
+    def toggle_from_interest_page
+    user = current_user
+    id_num = params[:id]
+    id = Interest.find(id_num)
+    text = user.toggle_interests(id)
+     if (text == "Interest added.")
+        flash[:block_interest_toggle_s] = "#{text} $green"
+     else 
+        flash[:block_interest_toggle_f] = "#{text} $red"
+     end    
+    redirect_to "/mob/interests/"+ params[:id]
+  end
+
+
+    def block_interest_from_interest_page
+    @user = current_user
+    @interest_id = params[:id]
+    @interest = Interest.find_by_id(@interest_id)
+    @text = @user.block_interest1(@interest)
+    if (@text == "Interest blocked.")
+      flash[:block_interest_toggle_s] = "#{@text} $green"
+    else 
+      flash[:block_interest_toggle_f] = "#{@text} $red"
+    end
+     redirect_to "/mob/interests/"+ params[:id]
+  end
+
+    def unblock_interest_from_interest_page
+      @user = current_user
+      @interest_id = params[:id]
+      @interest = Interest.find_by_id(@interest_id)
+      @text = @user.unblock_interest1(@interest)
+      if(@text == "Interest unblocked.") 
+         flash[:interest_unblocked_toggle_s] = "#{@text} $green"
+      else 
+         flash[:interest_unblocked_toggle_f] = "#{@text} $red"
+      end
+      redirect_to "/mob/interests/"+ params[:id]
   end
 
 
