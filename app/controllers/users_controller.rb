@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
 	before_filter :admin_authenticated?, :only => [:force_reset_password, :index, :show, :activate, :deactivate ]
 	before_filter :user_authenticated?, :except => [:force_reset_password, :index, :show, :activate, :deactivate, :new, :create, :forgot_password, :resetPassword, :dummyLogin, :test, :test_2 ]
+  before_filter :user_verified?, :except => [:settings,:resendCode, :verifySettings, :verifyAccount, :force_reset_password, :index, :show, :activate, :deactivate, :new, :create, :forgot_password, :resetPassword, :dummyLogin, :test, :test_2 ]
   respond_to :html,:json
 
 
@@ -282,6 +283,7 @@ Author: Kareem
      @user = current_user
      @user_interests = @user.added_interests
      @all_interests = Interest.get_all_interests_for_users
+     @all_types = Interest.all_types
      render :layout => "mobile_template"
   end
 
@@ -289,6 +291,15 @@ Author: Kareem
   Discription : updates user interests according what the user selects  and redirect to the same view toggle to update view of interests
   Author Omar
 =end
+
+def toggle_group
+   name = params[:name]
+   @user = current_user
+   @user.group_interests(name)
+   redirect_to "/mob/toggle"
+ end 
+
+
 
   def int_toggle
     user = current_user
@@ -301,6 +312,51 @@ Author: Kareem
         flash[:block_interest_toggle_f] = "#{text} $red"
      end    
     redirect_to "/mob/toggle"
+
+  end
+
+
+#jolly
+
+
+    def toggle_from_interest_page
+    user = current_user
+    id_num = params[:id]
+    id = Interest.find(id_num)
+    text = user.toggle_interests(id)
+     if (text == "Interest added.")
+        flash[:block_interest_toggle_s] = "#{text} $green"
+     else 
+        flash[:block_interest_toggle_f] = "#{text} $red"
+     end    
+    redirect_to "/mob/interests/"+ params[:id]
+  end
+
+
+    def block_interest_from_interest_page
+    @user = current_user
+    @interest_id = params[:id]
+    @interest = Interest.find_by_id(@interest_id)
+    @text = @user.block_interest1(@interest)
+    if (@text == "Interest blocked.")
+      flash[:block_interest_toggle_s] = "#{@text} $green"
+    else 
+      flash[:block_interest_toggle_f] = "#{@text} $red"
+    end
+     redirect_to "/mob/interests/"+ params[:id]
+  end
+
+    def unblock_interest_from_interest_page
+      @user = current_user
+      @interest_id = params[:id]
+      @interest = Interest.find_by_id(@interest_id)
+      @text = @user.unblock_interest1(@interest)
+      if(@text == "Interest unblocked.") 
+         flash[:interest_unblocked_toggle_s] = "#{@text} $green"
+      else 
+         flash[:interest_unblocked_toggle_f] = "#{@text} $red"
+      end
+      redirect_to "/mob/interests/"+ params[:id]
   end
 
 
@@ -753,4 +809,17 @@ feed and renders the view.
 			redirect_to :controller => 'users', :action => 'feed'
 		end
 	end
+
+  def notifications
+    @user = current_user
+    notifications = UserNotification.find_all_by_owner(@user.id)
+    notifications.sort! {|b, a| a.created_at <=> b.created_at}
+    @count = notifications.count
+    @notifications=notifications.paginate(:per_page => 10, :page=> params[:page])
+
+    #@new = @notifications.select {|t| t.new == true}
+    #@old = @notifications - @new
+    render :layout => 'mobile_template'
+    
+  end
 end

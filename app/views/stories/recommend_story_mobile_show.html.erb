@@ -1,43 +1,46 @@
+
+
+<!--kareem new -->
+<html>
+<% if current_user.friends != [] %>
+<div>
+<h4> Search for a Friend </h4>
+<%= form_tag("/mob/friendship/#{@storyid}/search_recomend", :method => "get") do %>
+  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
+  									 :placeholder => 'Search') %>
+  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
+
+<br>
+<h3 align = "center" > OR </h3>
+
+</div>  
+<% end %>
+<% end %>
+
+<!--kareem new -->
+
+
 <!-- Auther: khaled.elbhaey -->
 <div align="center">
 	<div id="submit">
 		<form action="/mob/stories/recommend_success_mobile_show/<%= @storyid%>"><!-- form which the user fill input in -->
 			<div id="recommendation">
-			<%if @flistemail.empty?%>
-			<p>
-				<br> 
-				 email: 
-			</p>
-		    <%else%>
-				    <b>
-					  choose a friend's email
-					</b>
-					<br>
-				    <br>
-					<table id="list">
-						<% @flistemail.each do |f| %><!-- list of friends email-->
-							<tr>
-								<td>
-								 <input type="radio" name="lemail" value=<%=f%>><%=f%>
-								 <br>
-								</td> 
-							</tr>
-						<%end%>
-					</table>
+					
 					<p>
-						<br> 
-						or write an email manually: 
+						
+						<h4>Write an E-mail manually:</h4> 
 					</p>
-			<%end%>
+			
 			  
 			<input type="text" name="email" id="fmail" style ="height:30px; width:200px" placeholder ="E-mail"/>
 			<br>
 			<p>
-				recommendation message: 
+				<h4>Recommendation Message:</h4> 
 			</p>
-			<input type="text" name="message" style ="height:30px; width:200px" placeholder ="Message"/>
+			<textarea rows="2" cols ="20" name="message" placeholder ="Message"></textarea>
 			<br>  
 			<input type="submit" name="commit" value="send" style= "width:100px" />
 		</form>	
 	</div>
 </div>
+</html>

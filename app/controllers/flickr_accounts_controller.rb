@@ -2,6 +2,7 @@ require 'flickraw'
 class FlickrAccountsController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
 
   API_KEY='443b0e6f88e26df854bdf0d7f7a8c1d5'
   SHARED_SECRET='ff3e3ebe8f31e039'

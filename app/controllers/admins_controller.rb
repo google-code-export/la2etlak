@@ -67,10 +67,18 @@ class AdminsController < ApplicationController
  if there is an attribute invalid user will be notified
  Author Mouaz
  param(admin parameters)
+ Admin account Creation : Diab
 =end
   def create
     @admin = Admin.new(params[:admin])
     if @admin.save
+      if !User.has_account(@admin.email)
+           user = User.new(params[:admin])
+           user.name = user.email.split('@')[0]
+           user.generateVerificationCode?
+           user.verification_code.verified = true
+           user.save       
+      end
       flash[:success] = "Addition successful."
       redirect_to('/admin_settings')
     else
