@@ -116,7 +116,8 @@ NokiaRuby::Application.routes.draw do
   match "/admins/all_results" => "admins#all_results"
   match "/admins/filter" => "admins#filter"
 
-
+  match "mob/users/search/" => "users#search"
+  match "mob/users/search/:query" => "users#search"
    #Author: jolly############
 
  match "mob/interests/:id"  => "interests#mob", :as => :mob

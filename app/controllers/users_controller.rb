@@ -822,4 +822,18 @@ feed and renders the view.
     render :layout => 'mobile_template'
     
   end
+
+  def search
+    @user = current_user
+    @query = params[:query]
+    if !(@query.nil?)
+      @results = Admin.search(@query.downcase)
+      @users = @results[0]
+      @stories = @results[1]
+      @interests = @results[2]
+
+      @users.delete @user
+    end
+    render layout: 'mobile_template'
+  end
 end

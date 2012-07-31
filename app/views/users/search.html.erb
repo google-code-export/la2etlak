@@ -1,0 +1,74 @@
+<html>
+<%= form_tag("search", :method => "get") do %>
+    <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
+                       :placeholder => 'Search') %>
+    <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
+<% end %>
+<% if @query.nil? or @query == ''%>
+    <h5> No results </h5>
+<% else %>
+  <% if @users.length > 0 %>
+    <ul class="nav nav-list">
+      <table style="width:100%;">
+        <tr>
+      <td align="left"><font size = "4"><b align ="left">Users Search Results</b></font></td>
+        </tr></table>
+    </ul>
+    <ul class="nav nav-list ">
+      <% @users.each do |member| %>
+        <li class="divider"></li>
+        <li><b> <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </b></li>
+          <div align="right">
+        <%= if member.friends.include? @user or member.blocked? @user
+          link_to 'Remove friendship',{:controller => 'friendships',
+            :action => 'remove', 
+            :friend_id => member.id, 
+            :query_forward => @query}, 
+            class: "btn btn-danger btn-small"
+                
+
+        elsif @user.invited_by? member  
+          'Requested Friendship'
+
+        elsif @user.invited? member and not member.blocked? @user
+            link_to 'Remove request',{:controller => 'friendships',
+            :action => 'remove_request', 
+            :friend_id => member.id,
+            :query_forward => @query
+            }, 
+            class: "btn btn-warning btn-small"
+
+        else 
+          link_to 'Request friendship',{:controller => 'friendships',
+              :action => 'create',
+              :friend_id => member.id, 
+              :query_forward => @query
+              },
+            class: "btn btn-success btn-small", style: "margin:"
+            
+
+        end %>
+        </div>
+      <% end %> 
+    </ul>
+  <%end%>
+      <!--If the stories checkbox is checked, then the results of the stories will be shown unless there are no results to show. I also add a button to view the statistics of each story and another button to view the remaining results of the stories-->
+    			<% if @stories.length > 0 %>
+            <li class="divider"></li>
+            <ul class="nav nav-list">
+              <table style="width:100%;">
+                <tr>
+                  <td align="left"><font size = "4"><b align ="left">Stories Search Results</b></font></td>
+                </tr></table>
+            </ul>
+      			<ul class="nav nav-list ">
+       				<% @stories.each do |story| %>
+							<a href="/stories/<%= story.id%>/get"
+							 style="display:block; float:left; height:100px;">
+							 <%=story.title%>
+							</a>
+        			<%end%>
+  					</ul>
+					<% end %>
+<%end%>
+</html>
