@@ -994,8 +994,8 @@ Author: Kareem
     data = "[#{share},#{like},#{dislike},#{flag},#{comment}]"
   end
   
-  def self.top_rated(user)
-    stories = user.user_add_interests.map {|add| Story.where(:interest_id => add.interest_id)}
+  def top_rated
+    stories = self.user_add_interests.map {|add| Story.where(:interest_id => add.interest_id)}
     '''
     int = user.added_interests
     all_stories = []
