@@ -68,5 +68,21 @@ class FacebookAcountTest < ActiveSupport::TestCase
     end
   end 
 
+  test "should like a post" do
+    u1 = users(:ben)
+    u1.facebook_account = facebook_accounts(:one)
+    assert  u1.facebook_account.fb_like("1259868446_4387718092004")    
+  end
+
+  test "should comment on a post" do
+    u1 = users(:ben)
+    u1.facebook_account = facebook_accounts(:one)
+    x = u1.facebook_account.fb_comment("1259868446_4387718092004", "ana aho")
+    comments = u1.facebook_account.fb_get_comments("1259868446_4387718092004")
+    assert_equal( comments.last["id"], x["id"], "Should have found my comment" )
+    assert_equal( comments.last["message"], "ana aho", "Should have found my comment" )
+
+  end
+
 
 end
