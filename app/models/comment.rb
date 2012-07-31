@@ -169,6 +169,11 @@ class Comment < ActiveRecord::Base
     else
       return false
     end
+  end
+
+  def delete_comment
+    self.deleted = true
+    self.save
   end   
 
 =begin

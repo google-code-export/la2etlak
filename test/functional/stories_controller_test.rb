@@ -296,9 +296,4 @@ Author : Omar
         assert_select "div[class=well]" , 0
     end
   end
-
-  #Author: Lydia
-  test "admin can delete any comment from main feed RED" do
-
-  end
 end
