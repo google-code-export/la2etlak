@@ -621,6 +621,73 @@ class UsersControllerTest < ActionController::TestCase
 
 	end
 
+  #Author: Kiro
+  test "test not-verified user should be redirected to verification page after 10 days RED" do
+
+    ben = users(:ben)
+    ben.created_at = 10.days.ago
+    ben.save
+    ben.generateVerificationCode?
+    UserSession.create(ben)
+
+    get :feed
+    assert_redirected_to :controller => 'users', :action => 'force_verify'
+
+    get :toggle
+    assert_redirected_to :controller => 'users', :action => 'force_verify'
+
+    get :settings
+    assert_redirected_to :controller => 'users', :action => 'force_verify'
+
+  end
+
+  test "test verified should not be directed to the verification page after 10 days" do
+
+    ben = users(:ben)
+    ben.created_at = 10.days.ago
+    ben.save
+    ben.generateVerificationCode?
+    ben.verification_code.verified = true
+    ben.verification_code.save
+    ben.save
+    UserSession.create(ben)
+
+    get :settings
+    assert_response(:success, "redirect failed to settings")
+
+  end
+
+  test "test user can access feedback view RED" do
+
+    ben = users(:ben)
+    UserSession.create(ben)
+
+    get :feedback
+    assert_response(:success, "Failed accessing the feedback page")
+
+  end
+
+  test "test users feedback is sent via email" do
+
+    ben = users(:ben)
+    UserSession.create(ben)
+
+    assert_difference 'ActionMailer::Base.deliveries.size', +1 do
+      post :submit_feedback, :feedback => "This is ben's feedback"
+    end
+
+    registration_email = ActionMailer::Base.deliveries.last
+    assert_equal "User's Feedback", registration_email.subject, "wrong subject"
+    assert_equal "feedback.la2etlak@gmail.com", registration_email.to[0], "wrong reciever"
+
+  end
+
+  test "test correct flash after sending feedback" do
+
+    post :submit_feedback, :message => "This is ben's feedback"
+    assert_equal flash[:notice], "Your feedback has been sent, thanks for your co-operation"
+
+  end
   #############Author : Jailan ( logged_in_user ) ##############
 
 
@@ -646,13 +713,5 @@ class UsersControllerTest < ActionController::TestCase
     assert_select "div[class=logged_in_name]" 
 
   end
-
-
-
-
-
-
-
-
 
 end

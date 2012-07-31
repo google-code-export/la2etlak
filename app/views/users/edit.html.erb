@@ -35,6 +35,16 @@
     :style => "height:40px; width:95%" , :value => "http://" %>
     <%end%>
   </div>
+  <div class="field" align="center">
+     <div class="field" align="center">
+    <%= f.label :Birth_date %>
+    <%= date_select :user, :birth_date, :start_year => 1920, :end_year => 2000  %>
+  </div>
+     <div class="field" align="center">
+    <%= f.label :Gender %>
+    <%= radio_button_tag(:gender, "male") %> Male 
+    <%= radio_button_tag(:gender, "female") %> Female
+  </div>
 </br>
 <div><h4>Change Password<h4></div>
 </br>
@@ -47,6 +57,7 @@
     <%= f.label :Password_confirmation %>
     <%= f.password_field :password_confirmation,:style => "height:40px; width:95%"%>
   </div>
+
 
   <div class="actions"  align="center">
     <%= submit_tag("Update" ) %>

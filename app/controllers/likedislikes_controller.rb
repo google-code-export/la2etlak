@@ -1,6 +1,7 @@
 class LikedislikesController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
 respond_to :html,:json
 
 =begin

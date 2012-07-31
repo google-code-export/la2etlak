@@ -46,7 +46,8 @@ class UserSessionsController < ApplicationController
 	a flash will appear telling him that and it deletes the
 	session created, if he is not deactivated an he entered
 	a valid login he will be redirected to his main feed
-	Author: Kiro	
+	Author: Kiro
+	Ranking: Diab	
 =end
 	def create
  		@user_session = UserSession.new(params[:user_session])
@@ -59,7 +60,10 @@ class UserSessionsController < ApplicationController
   	if @user_session.save
 			@user = current_user
 			@user.new_password = nil
+			
+			@user.rank = @user.rank + 2
 			@user.save
+			
 			if @user.deactivated
 				@user_session.destroy
 				flash[:notice] = "Sorry, your account has been deactivated $red"

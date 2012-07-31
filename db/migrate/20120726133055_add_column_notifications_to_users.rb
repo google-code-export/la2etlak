@@ -1,6 +1,6 @@
 class AddColumnNotificationsToUsers < ActiveRecord::Migration
   def up
-    add_column :users, :notifications, :integer
+    add_column :users, :notifications, :integer, :default => 0
   end
 
   def down

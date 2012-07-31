@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
 
   before_filter {user_authenticated?}
+  before_filter {user_verified?}
   respond_to :html,:json
 =begin
   This controller is solely created by me, Menisy.
@@ -37,7 +38,8 @@ class CommentsController < ApplicationController
   failure flash displayed.
   Inputs: comment hash in the params of the http POST request
   Output: failure flash incase of failure
-  Author: Menisy  
+  Author: Menisy 
+  Ranking: Diab 
 =end 
   def create
     @comment = Comment.new
@@ -46,6 +48,14 @@ class CommentsController < ApplicationController
     @comment.user = User.find(params[:comment][:user_id])
     if @comment.save
       @comment.add_to_log
+       
+      story = Story.find(params[:comment][:story_id])
+      story.rank = story.rank + 2
+      story.save
+      user = User.find(params[:comment][:user_id])
+      user.rank = user.rank + 3
+      user.save
+
         #Author: Omar 
         #getting all commenters on certian story to send them all notification when another user comment on the same story
   commenters = Array.new
@@ -57,6 +67,8 @@ class CommentsController < ApplicationController
   commenters = commenters.uniq
   for f in commenters
 	   UserNotification.create(owner: f.id , user: @comment.user.id , story:@comment.story.id , comment:@comment.id , notify_type: 4 , new: true)
+     f.notifications =  f.notifications.to_i + 1
+     f.save
 	end   
       redirect_to :controller => "stories", :action => "get" , :id => @comment.story.id
     else

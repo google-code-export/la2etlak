@@ -84,7 +84,7 @@
 		<div id="ccc"></div>
 
 		<div class="general info" id ="genInfo" style="margin-top:20px;">
-			<% if User.get_users_ranking.first.get_user_rank == 0 %>
+			<% if User.get_top_users.first.get_user_rank == 0 %>
 				<div class="alert">  
 					<a class="close" data-dismiss="alert"></a>
 					<h1><strong>Warning!</strong> No Contributions By Our Users Yet.</h1>
@@ -100,7 +100,7 @@
 						And A Link To His Profile Page And Statistics Page -->
 				</ul>	
 				
-				<% User.get_users_ranking[0..4].each do |user|%>
+				<% User.get_top_users[0..4].each do |user|%>
 					<div class="well-user-component">
 						<a href="/users/<%= user.id%>"
 						style="display:block; float:left; height:100px;">
