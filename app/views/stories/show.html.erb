@@ -16,10 +16,12 @@
 									<ul class="nav nav-list">
 									<li class="nav-header">Status :</li>
 									<span class="greenbadge">Active</span>
+									</ul>
 									<% elsif @story.deleted %>
 									<ul class="nav nav-list">
 									<li class="nav-header">Status</li>
 									<li><span class="redbadge">Deleted</span></li>
+									</ul>
 									<% elsif @story.hidden %>
 									<li><span class="yellowbadge">Hidden</span></li>
 									<% end %>
@@ -40,9 +42,10 @@
             <%else%>
             <%= link_to  "Hide Stroy",{:controller => "stories", :action => "toggle_hiding"} ,:class => "btn btn-large btn-warning" %>
             <%end%>
-				</div>
+            </ul>
+		</div>
 				
-		</ul>	
+			
 
 			<div class="story_right_panel">
 			<h1><%= @story.title %></h1>
@@ -67,28 +70,35 @@
 					<ul class="nav nav-list story-identation" >
 					<li class="divider"></li>
 					</ul>
-
-<% if !(@comments.nil? || @comments.empty?) %>
-					<div class="story-comments">
-				<% @comments.each do |comment| %>
-							
-						<div class="well-comment-component">
-<a href=" #"class="thumbnail-comment-component"><img src="http://placehold.it/75x75"></a>
-<div class="comment-component-info">
-<h3><%= User.find(comment.user_id).name %></h3>
-<div class="comment-component-well">
-<p><font size="2"><%= comment.content %>
-</p>
+<div class="story-comments">
+	<table class="table" >
+		<% if !(@comments.nil? || @comments.empty?) %>
+			<% @comments.each do |comment| %>
+				<tr>
+					<% if !(comment.deleted) %>
+							<div class="comment-component-info">
+								<% if !(User.find(comment.user_id).name.nil?) %>
+									<td><h3><%= User.find(comment.user_id).name %> says: </h3></td>
+								<% else %>
+									<td><h3>(No name available)</h3</td>
+								<% end %>
+								<td><p><font size="4"><%= comment.content %></p></td>
+								<td><span class="pull-right greenbadge">  Ups  (<%=comment.get_num_ups%>)</span>
+									<span class="pull-right redbadge">Downs(<%=comment.get_num_downs%>)</span></td>
+								<div id="delete">
+									<% $source = "show" %>
+									<td><%= link_to("X" , comment,{:controller => "comments", :method=>:delete, class: "btn btn-small btn-danger" }) %></td>
+								</div>
+							</div>
+					<%end%>
+				</tr>
+			<%end%>
+		<%else%>
+				<p><font size="3">No comments</p>	
+		<%end%>	
+	</table>
 </div>
-</div>
-</div>
-<%end%>
-<%else%>
-<p><font size="3">No comments</p>
-		
-
-<%end%>	
-					</div>
+					
 			</div>
 	</div>
 </div>

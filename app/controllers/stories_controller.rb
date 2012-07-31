@@ -11,7 +11,8 @@ class StoriesController < ApplicationController
   $active = true
 
 def show
-   @comments = Comment.find_all_by_story_id(params[:id]) # get comments of this story
+   @comments = Comment.where(:deleted => nil, :story_id => params[:id])
+   # get comments of this story
    @story = Story.find(params[:id])
 
   end

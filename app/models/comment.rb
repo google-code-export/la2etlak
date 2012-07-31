@@ -164,7 +164,8 @@ class Comment < ActiveRecord::Base
   end
 
   def delete_comment
-    self.deleted = true  
+    self.deleted = true
+    self.save
   end
 
 end

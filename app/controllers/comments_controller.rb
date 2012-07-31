@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
 
-  before_filter {user_authenticated?}
+  before_filter :user_authenticated?, :except => [:destroy]
+  before_filter :admin_authenticated?, :only => [:destroy]
   respond_to :html,:json
 =begin
   This controller is solely created by me, Menisy.
@@ -67,5 +68,19 @@ class CommentsController < ApplicationController
 
   def index
     respond_with(@comments = Comment.all)
+  end
+
+  def destroy
+    @comment = Comment.find(params[:id])
+    @comment.delete_comment
+    if $source == "show"
+      redirect_to :controller=>'stories', :action => 'show', :id => @comment.story_id
+    elsif $source == "stories_index"
+      redirect_to :controller=>'stories', :action => 'index'
+    elsif $source == "admins_index"
+      redirect_to :controller=>'admins', :action => 'index'
+    elsif $source == "get"
+      redirect_to :controller=>'stories', :action => 'get', :id => @comment.story_id
+    end
   end
 end
