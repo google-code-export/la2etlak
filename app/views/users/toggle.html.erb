@@ -8,7 +8,7 @@
   	<%else%>
 
   <div align="center">
-     <font face="Courier New, Courier, monospace" size="3"><b>Interests</b></font></br><br>
+     <font face="Courier New, Courier, monospace" size="3"><b>Interests</b></font></br>
      <span class="greenbadge"><%="Added"%></span> 
      <span class="redbadge"><%="Deleted"%></span>  
      <span class="yellowbadge"><%="Blocked"%></span>
@@ -31,7 +31,7 @@ on deleting an exsiting interest the page is refreshed and button color is chang
    	<div class="well">
    	<% Interest.get_interests(t).each do |interest| %>
 		<!-- Kareem -->
-   	   <div class="well">
+   	   <div class="welllo">
 		<table>			
    <%if (@user_interests.include? interest) && (@user.blocked_interests.include? interest) %> 		 			
 	<span class="yellowbadge"><%=interest.name.upcase%></span><br>
