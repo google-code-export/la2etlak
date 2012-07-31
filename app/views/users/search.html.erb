@@ -52,9 +52,8 @@
       <% end %> 
     </ul>
   <%end%>
-      <!--If the stories checkbox is checked, then the results of the stories will be shown unless there are no results to show. I also add a button to view the statistics of each story and another button to view the remaining results of the stories-->
+
     			<% if @stories.length > 0 %>
-            <li class="divider"></li>
             <ul class="nav nav-list">
               <table style="width:100%;">
                 <tr>
@@ -63,10 +62,12 @@
             </ul>
       			<ul class="nav nav-list ">
        				<% @stories.each do |story| %>
-							<a href="/stories/<%= story.id%>/get"
-							 style="display:block; float:left; height:100px;">
-							 <%=story.title%>
-							</a>
+              <li class="divider"></li>
+							 <h4><a href="/stories/<%= story.id%>/get"
+							   style="display:block;">
+							   <%=story.title%>
+							     </a></h4>
+                </br>
         			<%end%>
   					</ul>
 					<% end %>
