@@ -8,7 +8,7 @@
   	<%else%>
 
   <div align="center">
-     <font face="Courier New, Courier, monospace" size="3"><b>Interests</b></font></br><br>
+     <font face="Courier New, Courier, monospace" size="3"><b>Interests</b></font></br>
      <span class="greenbadge"><%="Added"%></span> 
      <span class="redbadge"><%="Deleted"%></span>  
      <span class="yellowbadge"><%="Blocked"%></span>
@@ -18,9 +18,20 @@
 on deleting an exsiting interest the page is refreshed and button color is changed into red -->
    
       
-   	<% @all_interests.each do |interest| %>
+   	<% @all_types.each do |t| %>
+   	<table style="float:left">
+					<tr>
+						<% if current_user.check_group(t) == true %>
+						<td><span><%= link_to "#{t}", {:controller => 'users', :action => 'toggle_group',:name => t } ,class: "pull-left greenbadge" %></span></td>
+						<%else%>
+						<td><span><%= link_to "#{t}", {:controller => 'users', :action => 'toggle_group',:name => t } ,class: "pull-left redbadge" %></span></td>
+						<%end%>
+					</tr>
+				</table><br>
+   	<div class="well">
+   	<% Interest.get_interests(t).each do |interest| %>
 		<!-- Kareem -->
-   	   <div class="well">
+   	   <div class="welllo">
 		<table>			
    <%if (@user_interests.include? interest) && (@user.blocked_interests.include? interest) %> 		 			
 	<span class="yellowbadge"><%=interest.name.upcase%></span><br>
@@ -63,7 +74,9 @@ class: "btn btn-warning"%></span></td>
 		
 	</table>
 	</div>
-	<br>	
+	
+	<%end%> 
+   </div>
    	<%end%> 
 	</div>
 	<!-- added main feed button on click goes to main feed  -->
