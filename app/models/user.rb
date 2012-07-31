@@ -414,6 +414,7 @@ Author: Kareem
 Ranking: Diab
 =end
 <<<<<<< HEAD
+<<<<<<< HEAD
 	def thumb_story(story,act)
 		name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
 		rank_update = if act == 1 then 3 else -1 end
@@ -424,6 +425,8 @@ Ranking: Diab
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
 				
 =======
+=======
+>>>>>>> ft/twitter
   def thumb_story(story,act)
     name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
     rank_update = if act == 1 then 3 else -1 end
@@ -433,6 +436,9 @@ Ranking: Diab
     if thumped.empty? 
         Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
         
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
         story.rank = story.rank + rank_update
         story.save
@@ -441,17 +447,23 @@ Ranking: Diab
 
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")
 <<<<<<< HEAD
+<<<<<<< HEAD
 				puts "Thump"
 
 		elsif (thumped[0].action == act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
 				
 =======
+=======
+>>>>>>> ft/twitter
         puts "Thump"
 
     elsif (thumped[0].action == act) 
         Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
         
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
         story.rank = story.rank - rank_update
         story.save
@@ -460,17 +472,23 @@ Ranking: Diab
 
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} un-Thumbed #{action_n} #{story.title}") 
 <<<<<<< HEAD
+<<<<<<< HEAD
 				puts "Removed"
 		elsif (thumped[0].action != act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
 				
 =======
+=======
+>>>>>>> ft/twitter
         puts "Removed"
     elsif (thumped[0].action != act) 
         Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
         Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
         
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
         story.rank = story.rank - rank_update2
         story.rank = story.rank + rank_update
@@ -478,15 +496,21 @@ Ranking: Diab
 
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")  
 <<<<<<< HEAD
+<<<<<<< HEAD
 				puts "Removed _thumbed"
 		end
 
 	end
 =======
+=======
+>>>>>>> ft/twitter
         puts "Removed _thumbed"
     end
 
   end
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
 
 =begin
@@ -497,6 +521,7 @@ Author: Kareem
 Ranking: Diab
 =end
 <<<<<<< HEAD
+<<<<<<< HEAD
 	def flag_story(story)
 		thumped = Flag.where(:story_id => story.id, :user_id => self.id)
 		if thumped.empty?
@@ -506,6 +531,8 @@ Ranking: Diab
 				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
 			
 =======
+=======
+>>>>>>> ft/twitter
   def flag_story(story)
     thumped = Flag.where(:story_id => story.id, :user_id => self.id)
     if thumped.empty?
@@ -514,6 +541,9 @@ Ranking: Diab
         name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
       
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
         story.rank = story.rank - 3
         story.save
@@ -522,9 +552,15 @@ Ranking: Diab
 
       return true
 <<<<<<< HEAD
+<<<<<<< HEAD
 		end
 			return false
 	end
+=======
+    end
+      return false
+  end
+>>>>>>> ft/twitter
 =======
     end
       return false
@@ -595,7 +631,59 @@ Author:Kareem
         ranking = ranking + (self.friends.count * 4) + (self.shares.count * 2) + (self.blockers.count * -5)
         self.update_attributes(:rank => ranking)
         return ranking
+<<<<<<< HEAD
   end
+
+=begin
+ This method to update the Ranks of all users
+ Author : Diab
+=end
+ def self.rank_all_users
+  
+   User.all.each do |usr|
+    usr.get_user_rank
+   end
+=======
+>>>>>>> ft/twitter
+  end
+=begin this method returns a list of the top ranked Users in 
+ a descending order (Higher Rank First)
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users
+    
+    top_users =  User.order("rank DESC")
+ 
+ end
+
+=begin this method returns a list of names of the top ranked Users in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users_names
+
+    top_users = User.get_top_users
+    top_users_names =  []
+    top_users.each do |usr|
+     top_users_names << usr.name
+     end
+    return top_users_names       
+ end
+
+=begin this method returns a list of ranks of the top ranked Users in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_users_ranks
+
+    top_users = User.get_top_users
+    top_users_ranks =  []
+    top_users.each do |usr|
+    top_users_ranks << usr.rank 
+     end
+    return top_users_ranks 
+ 
+ end
 
 =begin
  This method to update the Ranks of all users
@@ -691,15 +779,21 @@ Ranking: Diab
   
        if(self.added_interests.include?(interest))
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 	self.added_interests.delete interest
  		message = "#{username} deleted interest : #{interest_name}"
    		Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			interest_id: id, message: message)
    		
 =======
+=======
+>>>>>>> ft/twitter
     self.added_interests.delete interest
     message = "#{username} deleted interest : #{interest_name}"
       Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil,       interest_id: id, message: message)
       
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
       i = Interest.find(id)
       i.rank = i.rank - 5
@@ -710,15 +804,21 @@ Ranking: Diab
       return "Interest deleted."
        else 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		 UserAddInterest.create(:user_id => self.id , :interest_id => id)
  	      	 message = "#{username} added interest : #{interest_name}"
    		 Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			 interest_id: id, message: message)
    		 
 =======
+=======
+>>>>>>> ft/twitter
      UserAddInterest.create(:user_id => self.id , :interest_id => id)
            message = "#{username} added interest : #{interest_name}"
        Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil,       interest_id: id, message: message)
        
+<<<<<<< HEAD
+>>>>>>> ft/twitter
+=======
 >>>>>>> ft/twitter
        i = Interest.find(id)
        i.rank = i.rank + 5
@@ -1219,6 +1319,7 @@ def self.remote_file_exists?(url)
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
 end
+
 
 =begin
   Description: This story is mainly used in the notification system to summarize the
