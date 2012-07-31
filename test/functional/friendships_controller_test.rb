@@ -52,7 +52,16 @@ class FriendshipsControllerTest < ActionController::TestCase
   	assert_difference('u1.friends.count', -1) do
   		get :remove, {friend_id: u2.id}
   	end 
-  end 
+  end
 
-
+  #Author Kareem  
+	test 'search components should exist' do
+			user = users(:ben)
+			user.generateVerificationCode?
+     	UserSession.create(user)        
+     	st = Story.first
+			assert get(:search_recomend , {'sid' => st.id , 'query' => "test" })
+    	assert_select 'div[ id=search]'
+			
+	end
 end
