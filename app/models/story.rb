@@ -326,4 +326,86 @@ Author: Omar
     end
   end
 
+=begin
+  Description: return rss_link story was fetched from
+  input:
+  output: String -> rss link
+  Author: Omar
+=end  
+def get_rss_feed
+  return self.rss_feed
+end  
+
+=begin
+  Description: return list of stories fetched from certain rss_link
+  input: rss_link
+  output: list of stories
+  Author: Omar
+=end
+def rss_feed_stories(link)
+  return Story.where(:rss_feed => link)
+end
+
+
+=begin 
+This method to get the rank of a story
+Author : Diab
+=end
+ def get_story_rank
+  ranking = (self.shares.count * 4) + (self.flags.count * -3) + (self.comments.count * 2)
+  ranking = ranking + (self.likedislikes.where(:action => 1).count * 3) + (self.likedislikes.where(:action => -1).count * -1) + (self.blockers.count * -5) 
+  self.update_attributes(:rank => ranking)
+ end
+
+=begin
+ This method to update the Ranks of all stories
+ Author : Diab
+=end
+ def self.rank_all_stories
+  
+   Story.all.each do |story|
+    story.get_story_rank
+   end
+end
+
+=begin this method returns a list of the top ranked stories in 
+ a descending order (Higher Rank First)
+ ##########Author: Diab ############
+=end 
+ def self.get_top_stories
+    
+    top_stories =  Story.order("rank DESC")
+ 
+ end
+
+=begin this method returns a list of names of the top ranked stories in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_stories_names
+
+    top_stories = Story.get_top_stories
+    top_stories_names =  []
+    top_stories.each do |stry|
+    top_stories_names << stry.title 
+     end
+    return top_stories_names       
+ end
+
+=begin this method returns a list of ranks of the top ranked stories in 
+ a descending order (Higher Rank First)'''
+ ##########Author: Diab ############
+=end 
+ def self.get_top_stories_ranks
+
+    top_stories = Story.get_top_stories
+    top_stories_ranks =  []
+    top_stories.each do |stry|
+    top_stories_ranks << stry.rank 
+     end
+    return top_stories_ranks 
+ 
+ end
+
+
 end

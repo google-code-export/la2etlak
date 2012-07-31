@@ -38,7 +38,7 @@
   <div class="field" align="center">
      <div class="field" align="center">
     <%= f.label :Birth_date %>
-    <%= date_select :user, :birth_date %>
+    <%= date_select :user, :birth_date, :start_year => 1920, :end_year => 2000  %>
   </div>
      <div class="field" align="center">
     <%= f.label :Gender %>

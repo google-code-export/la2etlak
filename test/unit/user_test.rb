@@ -7,6 +7,66 @@ class UserTest < ActiveSupport::TestCase
 
   setup :activate_authlogic
 
+  ######Author : Diab######
+    test "user ranking" do
+     interest = Interest.new(:name=>"whatever")
+     interest.save
+     user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678")
+     user1.save
+     user2 = User.new(:email=>"email2@mail.com", password: "12345678",password_confirmation:"12345678")
+     user2.save
+     user3 = User.new(:email=>"email3@mail.com", password: "12345678",password_confirmation:"12345678")
+     user3.save
+     story1 = Story.new(:title=>"Story1" , :content => "c1")
+     story1.interest = interest
+     story2 = Story.new(:title=>"Story2", :content => "c1")
+     story2.interest = interest
+     story1.save
+     story2.save
+     assert_difference('user1.rank' , 19) do
+     user1.thumb_story(story1,1)
+     user1.thumb_story(story2,-1)
+     user1.share(story1.id)
+     user1.flag_story(story2)
+     
+     user1.toggle_interests(interest)
+     UserLogIn.create!(:user_id => user1.id)
+     user1.invite(user2)
+     user2.approve(user1)
+     user3.block(user1)
+     user1.get_user_rank
+     end 
+  end
+  
+
+##########Author: Diab ############ 
+  test "top users" do
+     User.destroy_all
+     interest = Interest.new(:name=>"whatever")
+     interest.save
+     user1 = User.new(:email=>"email1@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name1")
+     user1.save
+     user2 = User.new(:email=>"email2@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name2")
+     user2.save
+     user3 = User.new(:email=>"email3@mail.com", password: "12345678",password_confirmation:"12345678" , name: "name3")
+     user3.save
+     story1 = Story.new(:title=>"Story1")
+     story1.interest = interest
+     story2 = Story.new(:title=>"Story2")
+     story2.interest = interest
+     story1.save
+     story2.save
+     user1.invite(user3)
+     user3.approve(user1)
+     user1.share(story1.id)
+     user2.thumb_story(story2 , 1)
+     User.rank_all_users
+     top_users_names = User.get_top_users_names
+     top_users_ranks = User.get_top_users_ranks
+     assert_equal top_users_names , ["name1","name3","name2"]
+     assert_equal top_users_ranks , [6,4,2]
+    end
+
 #Author : Shafei
   test "user get rank" do
 	user = users(:one)
@@ -500,8 +560,8 @@ end
 	UserSession.create(ben)
         ahmed = users(:ahmed)
         UserSession.create(ahmed)
-        	     
-        assert_equal(Noitification.last.type,1,"friendship request sent notification entered database correctly")
+         	     
+        assert_equal(Noitification.last.notify_type,1,"friendship request sent notification entered database correctly")
         end
   
   test "friend request accepeted notification RED" do
@@ -510,7 +570,7 @@ end
         ahmed = users(:ahmed)
         UserSession.create(ahmed)
         
-        assert_equal(Noitification.last.type,2,"friendship accepted notification entered database correctly")  	
+        assert_equal(Noitification.last.notify_type,2,"friendship accepted notification entered database correctly")  	
   end  
 
   test "recommend story notification RED" do
@@ -519,7 +579,7 @@ end
         ahmed = users(:ahmed)
         UserSession.create(ahmed)
         
-        assert_equal(Noitification.last.type,3,"friend recommend a story notification entered database correctly")  	
+        assert_equal(Noitification.last.notify_type,3,"friend recommend a story notification entered database correctly")  	
 
   end
   
@@ -532,7 +592,8 @@ end
         story = Story.create(interest_id: interest.id , title:"story title" , media_link:"http://www.omar.com")
         comment1 = Comment.create(user_id: ben.id ,story_id: story.id , content:"1")
         comment2 = Comment.create(user_id: ahmed.id ,story_id: story.id , content:"2")
-        assert_equal(Noitification.last.type,4,"friend comment on story i commented on notification entered database correctly")  	
+        assert_equal(Noitification.last.notify_type,4,"friend comment on story i commented on notification entered database correctly")
+        assert_equal(Noitification.last.owner.ben.id,"notification not sent properly")  	
   
   end
   
@@ -545,8 +606,8 @@ end
         story = Story.create(interest_id: interest.id , title:"story title" , media_link:"http://www.omar.com")
         comment1 = Comment.create(user_id: ben.id ,story_id: story.id , content:"1")
         CommentUpDown.create(action: 1 , user_id: ben.id , comment_id: comment1.id)
-        assert_equal(Noitification.last.type,5,"friend like comment notification entered database correctly")  	
-  
+        assert_equal(Noitification.last.notify_type,5,"friend like comment notification entered database correctly")  	
+        assert_equal(Noitification.last.owner,ben.id,"notification not sent properly")   
   end    
 
   test "dislike your notification RED" do

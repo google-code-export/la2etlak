@@ -112,9 +112,9 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
             end
             title = title+"\n"+msg
             media = "http://graph.facebook.com/#{s["from"]["id"]}/picture"
-            userid = s["id"].split('_')[0]
-            storyid = s["id"].split('_')[1]
-            story_link = "http://www.facebook.com/#{userid}/posts/#{storyid}"
+            user_id = s["id"].split('_')[0]
+            story_id = s["id"].split('_')[1]
+            story_link = "http://www.facebook.com/#{user_id}/posts/#{story_id}"
             if s["caption"]
               content = content + s["caption"]
             end
@@ -162,4 +162,56 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
     user_name = self.user.name  ||  self.user.email.split('@')[0]
     Log.create!(loggingtype: 2,user_id_1: self.user.id ,user_id_2: nil,admin_id: nil,story_id: nil ,interest_id: nil,message: (user_name+" added a Facebook account").to_s)
   end
+
+  def fb_comment(post_id, content)
+    graph = Koala::Facebook::API.new(self.auth_token.to_s)
+    graph.put_connections(post_id, "comments", :message => content)
+  end
+
+  def fb_delete_comment(post_id)
+    graph = Koala::Facebook::API.new(self.auth_token.to_s)
+    graph.delete_object(post_id)
+  end
+
+  def fb_like(post_id)
+    graph = Koala::Facebook::API.new(self.auth_token.to_s)
+    graph.put_connections(post_id, "likes")
+  end
+
+  def fb_dislike(post_id)
+    graph = Koala::Facebook::API.new(self.auth_token.to_s)
+    graph.delete_like(post_id)
+  end
+
+  def fb_get_comments(post_id)
+      graph = Koala::Facebook::API.new(self.auth_token.to_s)
+      return comments_hash = graph.get_connection(post_id,"comments")
+      #comments = Array.new
+      #comments_hash.each do |c|
+       # puts c["id"]
+        #puts c["from"]["id"]
+        #puts c["from"]["name"]
+        #puts c["message"]
+        #comments.push(c)
+      #end
+      #return comments
+  end
+
+def test 
+  c = self.fb_comment("1259868446_4387718092004", "ya rab")
+  g = self.fb_get_comments("1259868446_4387718092004")
+  puts c["id"]
+  puts g.last["id"]
+
+end
+
+
+#1259868446_4387718092004
+#test
+#http://www.facebook.com/1259868446/posts/4387718092004
+
+
+
+
+
 end

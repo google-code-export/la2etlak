@@ -1,7 +1,7 @@
 class Interest < ActiveRecord::Base
 #Author: jailan
 #attributes  that can be modified automatically by outside users
-  attr_accessible :description, :name, :deleted, :photo  
+  attr_accessible :description, :name, :deleted, :photo  , :rank
   has_many :stories
   has_many :feeds, :dependent => :destroy
 
@@ -31,7 +31,7 @@ class Interest < ActiveRecord::Base
   has_many :adding_users, :class_name => "User", :through => :user_add_interests
 
 #description can never exceed 240 characters .
-  validates :description,  :length   => { :maximum => 100 }
+  validates :description,  :length   => { :maximum => 240 }
 
 #a method that takes a number and returns this number of stories related to this interest
   def get_stories(stories_number=10)
@@ -315,46 +315,34 @@ end
     
  def get_interest_rank
  
-  rank =  (self.stories.count * 2) + (self.adding_users.count * 5)
-
+  ranking =  (self.stories.count * 1) + (self.adding_users.count * 5) + (self.blockers.count * -5)
+  self.update_attributes(:rank => ranking)
+  return ranking
  end
  
  
 =begin to get a list of hashes with all the interests and all of their ranks by 
- calling the method get_interest_rank on 3ach one of the interests in the system'''
+ calling the method get_interest_rank on each one of the interests in the system
  ##########Author: Diab ############
 =end
 
  def self.rank_all_interests
 
-   interests=[]
+      Interest.all.each do |interest|
 
-   Interest.all.each do |interest|
-
-     interests<< {:rank => interest.get_interest_rank, :theinterest => interest}
+        interest.get_interest_rank
   
-   end
+      end
 
-  ranked_interests =  interests
-
-end
+  end
  
 =begin this method returns a list of the top ranked interests in 
  a descending order (Higher Rank First)'''
  ##########Author: Diab ############
 =end 
  def self.get_top_interests
-
-    ranked_interests = rank_all_interests
-    interests=[]
-
-    (ranked_interests.sort_by {|element| element[:rank]}).each do |hsh|
-
-      interests << hsh[:theinterest]
     
-    end
-    
-    top_interests =  interests.reverse
+    top_interests =  Interest.order("rank DESC")
  
  end
 
@@ -364,17 +352,12 @@ end
 =end 
  def self.get_top_interests_names
 
-    ranked_interests = rank_all_interests
-    interests=[]
-
-    (ranked_interests.sort_by {|element| element[:rank]}).each do |hsh|
-
-      interests << hsh[:theinterest].name.to_s
-
-    end
-
-    top_interests_names =  interests.reverse
- 
+    top_interests = Interest.get_top_interests
+    top_interests_names =  []
+    top_interests.each do |int|
+      top_interests_names << int.name
+     end
+    return top_interests_names       
  end
 
 =begin this method returns a list of ranks of the top ranked interests in 
@@ -383,16 +366,12 @@ end
 =end 
  def self.get_top_interests_ranks
 
-    ranked_interests = rank_all_interests
-    interests=[]
-
-    (ranked_interests.sort_by {|element| element[:rank]}).each do |hsh|
-
-      interests << hsh[:rank]
-
-    end
-
-    top_interests_ranks = interests.reverse
+    top_interests = Interest.get_top_interests
+    top_interests_ranks =  []
+    top_interests.each do |int|
+      top_interests_ranks << int.rank
+     end
+    return top_interests_ranks 
  
  end
  
@@ -478,6 +457,40 @@ takes as argument the id of the interest and returns the interest after updating
     end
     return @interest
   end
+ 
+=begin
+Description: return type of interest
+input:
+output: String => type
+Author: Omar
+=end
+ def get_interest_type
+    return self.group_name
+ end
 
+=begin
+Description: all types of interests on the system
+input:
+output: list of all interest types
+Author: Omar
+=end
+def self.all_types
+  interests = Interest.all
+  types = Array.new
+  interests.each do |i|
+            types << i.group_name
+           end
+  return types.uniq
+end  
+
+=begin
+Description: return all interests having certain group_name
+input: String => group_name
+output: list of interest
+Author: Omar
+=end
+def self.get_interests(name)
+  return Interest.where(:group_name => name)
+end
 end
 
