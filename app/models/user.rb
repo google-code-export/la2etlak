@@ -1207,4 +1207,22 @@ def check_group(name)
   return flag
 end
 
+  
+  def top_rated
+    stories = self.user_add_interests.map {|add| Story.where(:interest_id => add.interest_id)}
+    '''
+    int = user.added_interests
+    all_stories = []
+    int.each {|interest| all_stories<<interest.stories}
+    '''
+    all_stories = []
+    c = stories.count - 1
+    (0..c).each do |i|
+      stories[i].each do |story|
+        all_stories.push(story)
+      end
+    end
+    sorted = all_stories.sort_by { |r| r.rank }
+    return sorted.sort_by(&:rank).reverse
+  end
 end
