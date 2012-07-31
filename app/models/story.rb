@@ -300,7 +300,7 @@ Author: Omar
 =end
 
  def get_related_stories
- 
+
  	stories =  Story.get_stories_ranking_all_time
 	st = Array.new
 	for story in stories 
