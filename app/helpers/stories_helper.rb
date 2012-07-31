@@ -201,10 +201,21 @@ def fetch_rss(link)
       	storynow.media_link =  storynow.new_media_link(sdescription)	
       #end
       storynow.mobile_content = storynow.new_content(sdescription)
+      if storynow.mobile_content.include? "read more"
+        storynow.mobile_content["read more"] = " <a href= storynow.link> read more</a>"
+      else
+        storynow.mobile_content = storynow.mobile_content + " <a href= storynow.link> see the original story</a>"
+      end
       #Author: Gasser
       #to add the current loksha_id to this new story.
       storynow.loksha_id = $loksha
       storynow.save
+
+      #Ranking by:Diab#
+      i = Interest.find(sinterest)
+      i.rank = i.rank + 1
+      i.save
+      #Ranking by:Diab#
 
       sid = Story.find_by_title(stitle).id
       

@@ -13,34 +13,47 @@ class InterestTest < ActiveSupport::TestCase
   end
 
   ##########Author: Diab ############
-  test "is rank updated after user added interest" do
+  test "is rank updated after user added interest red" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      user = User.new(:email=>"email@mail.com" , password: "12345678",password_confirmation:"12345678")
      user.save
-     rank = interest.get_interest_rank
-     user.added_interests << interest
-     assert_difference('rank' , 5) do
-     rank = interest.get_interest_rank
+     #rank = interest.rank
+     #user.added_interests << interest
+     assert_difference(interest.rank , 5) do
+     user.toggle_interests(interest)
+     interest.get_interest_rank
      end
     end
 
   ##########Author: Diab ############
-  test "is rank updated after story added to interest" do
+  test "is rank updated after story added to interest red" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      rank = interest.get_interest_rank
      story = Story.new(:title=>"Story")
      story.interest = interest
      story.save
-     assert_difference('rank' , 2) do
-     rank = interest.get_interest_rank
+     assert_difference(interest.rank , 1) do
+     interest.get_interest_rank
+     end
+    end
+  
+   ##########Author: Diab ############
+  test "is rank updated after user blocked interest red" do
+     interest = Interest.new(:name=>"whatever")
+     interest.save
+     user = User.new(:email=>"email@mail.com" , password: "12345678",password_confirmation:"12345678")
+     user.save
+     assert_difference(interest.rank , -5) do
+     user.block_interests1(interest)
+     interest.get_interest_rank
      end
     end
   
   
   ##########Author: Diab ############
-  test "top interests" do
+  test "top interests red" do
      interest1 = Interest.new(:name=>"whatever1")
      interest1.save
      interest2 = Interest.new(:name=>"whatever2")
@@ -55,12 +68,12 @@ class InterestTest < ActiveSupport::TestCase
      story2 = Story.new(:title=>"Story")
      story2.interest = interest3
      story2.save
-     user.added_interests << interest1
-     user.added_interests << interest3
+     user.toggle_interests(interest1)
+     user.toggle_interests(interest3)
      top_interests_names = Interest.get_top_interests_names
      top_interests_ranks = Interest.get_top_interests_ranks
      assert_equal top_interests_names , ["whatever3","whatever1","whatever2"]
-     assert_equal top_interests_ranks , [7,5,2]
+     assert_equal top_interests_ranks , [6,5,1]
     end
 
   ##########Author: Diab ############
