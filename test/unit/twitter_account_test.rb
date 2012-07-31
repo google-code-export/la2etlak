@@ -47,4 +47,27 @@ class TwitterAccountTest < ActiveSupport::TestCase
     assert_equal stories.first.class.name, "Story", 'get_feed should return a list of stories'
   end 
 
+
+  test "should favorite a tweet" do 
+    t_account = twitter_accounts(:one)
+    ids = t_account.get_id
+    id = ids.first
+    puts "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQq"
+    puts id
+    puts "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQq"
+    #t_account.unfavorite(id)
+    t_account.favorite(id)
+    fav = t_account.favorites
+    fav.each do |t|
+      puts t["id"]
+      puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+      if t["id"] == id
+        assert true
+      end
+    end
+    t_account.unfavorite(id)
+  end 
+
+
+
 end

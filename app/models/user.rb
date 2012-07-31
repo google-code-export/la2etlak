@@ -1,10 +1,10 @@
 class User < ActiveRecord::Base
 
-	# This is added to use the authlogic gem
-	# Author: Kiro
-	acts_as_authentic	do |c|
-		c.merge_validates_length_of_password_field_options :minimum => 6
-	end
+  # This is added to use the authlogic gem
+  # Author: Kiro
+  acts_as_authentic do |c|
+    c.merge_validates_length_of_password_field_options :minimum => 6
+  end
 
 =begin
 
@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   # stat 2 accepted
   has_one :facebook_account
   has_one :twitter_account
-	has_one :verification_code
+  has_one :verification_code
   has_one :tumblr_account
   has_one :flickr_account
   has_many :shares
@@ -42,8 +42,8 @@ class User < ActiveRecord::Base
 
   has_many :user_add_interests
   has_many :added_interests, :class_name =>"Interest", :through => :user_add_interests 
-	
-	
+  
+  
   URL_regex = /^(?:(?:http|https):\/\/[a-z0-9]+(?:[\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(?::[0-9]{1,5})?(\/.*)?)|(?:^$)$/ix
 
   email_regex = /\A(?:\w+\.)*\w+@(?:[a-z\d]+[.-])*[a-z\d]+\.[a-z\d]+\z/i
@@ -54,7 +54,7 @@ class User < ActiveRecord::Base
   :uniqueness => { :case_sensitive => false}
   validates :first_name, :length => { :maximum => 20 }
   validates :last_name,  :length => { :maximum => 20 }
-	
+  
   validates :image, :format=> {:with => URL_regex}
 =begin  
  gets the shared stories of one friend given his/her id
@@ -413,6 +413,7 @@ Output: Nothing
 Author: Kareem
 Ranking: Diab
 =end
+<<<<<<< HEAD
 	def thumb_story(story,act)
 		name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
 		rank_update = if act == 1 then 3 else -1 end
@@ -422,37 +423,71 @@ Ranking: Diab
 		if thumped.empty? 
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
 				
+=======
+  def thumb_story(story,act)
+    name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
+    rank_update = if act == 1 then 3 else -1 end
+    rank_update2 = if act == 1 then -1 else 3 end
+    action_n = if act == 1 then "UP" else "Down" end
+    thumped = Likedislike.where(:story_id => story.id, :user_id => self.id)
+    if thumped.empty? 
+        Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
+        
+>>>>>>> ft/twitter
         story.rank = story.rank + rank_update
         story.save
         self.rank = self.rank + 2
         self.save
 
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")
+<<<<<<< HEAD
 				puts "Thump"
 
 		elsif (thumped[0].action == act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
 				
+=======
+        puts "Thump"
+
+    elsif (thumped[0].action == act) 
+        Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
+        
+>>>>>>> ft/twitter
         story.rank = story.rank - rank_update
         story.save
         self.rank = self.rank - 2
         self.save
 
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} un-Thumbed #{action_n} #{story.title}") 
+<<<<<<< HEAD
 				puts "Removed"
 		elsif (thumped[0].action != act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
 				
+=======
+        puts "Removed"
+    elsif (thumped[0].action != act) 
+        Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
+        Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
+        
+>>>>>>> ft/twitter
         story.rank = story.rank - rank_update2
         story.rank = story.rank + rank_update
         story.save
 
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")  
+<<<<<<< HEAD
 				puts "Removed _thumbed"
 		end
 
 	end
+=======
+        puts "Removed _thumbed"
+    end
+
+  end
+>>>>>>> ft/twitter
 
 =begin
 Description:this Action takes as a parametar a story and it checks if the current User flagged it before or not .. if not a new Record will be added in the Flags table with current user_id , current_story id else if he already flagged it nothing will happen.
@@ -461,6 +496,7 @@ Output: true or False
 Author: Kareem
 Ranking: Diab
 =end
+<<<<<<< HEAD
 	def flag_story(story)
 		thumped = Flag.where(:story_id => story.id, :user_id => self.id)
 		if thumped.empty?
@@ -469,15 +505,31 @@ Ranking: Diab
 				name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
 				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
 			
+=======
+  def flag_story(story)
+    thumped = Flag.where(:story_id => story.id, :user_id => self.id)
+    if thumped.empty?
+        Flag.create!(:user_id =>  self.id, :story_id => story.id)
+        #Admin_Settings.update_story_if_flagged(story)
+        name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
+        l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
+      
+>>>>>>> ft/twitter
         story.rank = story.rank - 3
         story.save
         self.rank = self.rank + 2
         self.save
 
       return true
+<<<<<<< HEAD
 		end
 			return false
 	end
+=======
+    end
+      return false
+  end
+>>>>>>> ft/twitter
 =begin
 Description: this Action returns a list of stories according to the current user interests .. and it also checks if theses stories are blocked According to an Interest or its a Blocked story or not before it returns the List of stories,the method also takes as input Interest name if it's not "null" the method will return the stories filtered according to this interest only.
 Input: Interest.name 
@@ -485,7 +537,7 @@ Output: returns List of stories according to the Description
 Author: Kareem
 =end
   def get_feed
-	
+  
     user_interests = UserAddInterest.find(:all , :conditions => ["user_id =?" , self.id ] , :select => "interest_id").map {|interest|interest.interest_id} 
     blocked_interests =  BlockInterest.select {|entry| self.id==entry.user_id }.map{|entry| entry.interest_id }
     unblocked_stories = Array.new
@@ -493,18 +545,18 @@ Author: Kareem
     stories_list = Array.new
     #loop on the unblocked_interests Array and for each Interest call the get_stories method and returns it's corresponding stories
     unblocked_interests.each do |unblocked_interest|
-  		stories_list +=  Interest.find(unblocked_interest).get_stories(10)
-   	end
+      stories_list +=  Interest.find(unblocked_interest).get_stories(10)
+    end
     stories_list = stories_list.sort_by &:created_at
- 		stories_ids = stories_list.map {|story| story.id}
- 		blocked_stories_ids = BlockStory.select { |entry| self.id==entry.user_id }.map  { |entry| entry.story_id }
- 		unblocked_stories_ids = stories_ids - blocked_stories_ids
-		#loop on the unblocked_stories_ids [Array] and get the story for each story_id and append it to the Array of unblocked_stories
-  	unblocked_stories_ids.each do |unblocked_story_id|
+    stories_ids = stories_list.map {|story| story.id}
+    blocked_stories_ids = BlockStory.select { |entry| self.id==entry.user_id }.map  { |entry| entry.story_id }
+    unblocked_stories_ids = stories_ids - blocked_stories_ids
+    #loop on the unblocked_stories_ids [Array] and get the story for each story_id and append it to the Array of unblocked_stories
+    unblocked_stories_ids.each do |unblocked_story_id|
         unblocked_stories.append(Story. find(unblocked_story_id))
     end
- 		done_stories =   unblocked_stories
-  	return done_stories
+    done_stories =   unblocked_stories
+    return done_stories
   end
 
 =begin
@@ -514,23 +566,23 @@ Output:array of unblocked stories
 Author:Kareem
 =end
   def  get_unblocked_stories(stories)
-		unblocked_stories = Array.new
-		stories = stories.sort_by &:created_at
-		stories_ids = stories.map {|story| story.id}
-		blocked_stories_ids = BlockStory.select { |entry| self.id==entry.user_id }.map  { |entry| entry.story_id }
-		blocked_interests =  BlockInterest.select {|entry| self.id==entry.user_id }.map{|entry| entry.interest_id }
-		unblocked_stories_ids = stories_ids - blocked_stories_ids
-		#loop on unblocked stories and for each unblocked_story_id we get the Story accrding to this Id and if this story doesn't belong 	an 
-		# unblocked interest append it to unblocked_stories
-		unblocked_stories_ids.each do |unblocked_story_id|
-			story = Story.find(unblocked_story_id)
-			if !(blocked_interests.include?(story.interest_id))
-					unblocked_stories.append(story)
-			end
-		end
-		return unblocked_stories	
-	end
-	
+    unblocked_stories = Array.new
+    stories = stories.sort_by &:created_at
+    stories_ids = stories.map {|story| story.id}
+    blocked_stories_ids = BlockStory.select { |entry| self.id==entry.user_id }.map  { |entry| entry.story_id }
+    blocked_interests =  BlockInterest.select {|entry| self.id==entry.user_id }.map{|entry| entry.interest_id }
+    unblocked_stories_ids = stories_ids - blocked_stories_ids
+    #loop on unblocked stories and for each unblocked_story_id we get the Story accrding to this Id and if this story doesn't belong  an 
+    # unblocked interest append it to unblocked_stories
+    unblocked_stories_ids.each do |unblocked_story_id|
+      story = Story.find(unblocked_story_id)
+      if !(blocked_interests.include?(story.interest_id))
+          unblocked_stories.append(story)
+      end
+    end
+    return unblocked_stories  
+  end
+  
 =begin
   This action returns the rank of one user
   Returns the rank of a user
@@ -628,20 +680,27 @@ Ranking: Diab
 =end
  
  def toggle_interests(interest)
-	
+  
     id = interest.id
-	 if self.name.nil?
-	      username = self.email.split('@')[0]
+   if self.name.nil?
+        username = self.email.split('@')[0]
          else
-      	      username = self.name
+              username = self.name
          end
     interest_name = Interest.find(id).name
   
        if(self.added_interests.include?(interest))
+<<<<<<< HEAD
 	 	self.added_interests.delete interest
  		message = "#{username} deleted interest : #{interest_name}"
    		Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			interest_id: id, message: message)
    		
+=======
+    self.added_interests.delete interest
+    message = "#{username} deleted interest : #{interest_name}"
+      Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil,       interest_id: id, message: message)
+      
+>>>>>>> ft/twitter
       i = Interest.find(id)
       i.rank = i.rank - 5
       i.save
@@ -650,10 +709,17 @@ Ranking: Diab
 
       return "Interest deleted."
        else 
+<<<<<<< HEAD
 		 UserAddInterest.create(:user_id => self.id , :interest_id => id)
  	      	 message = "#{username} added interest : #{interest_name}"
    		 Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			 interest_id: id, message: message)
    		 
+=======
+     UserAddInterest.create(:user_id => self.id , :interest_id => id)
+           message = "#{username} added interest : #{interest_name}"
+       Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil,       interest_id: id, message: message)
+       
+>>>>>>> ft/twitter
        i = Interest.find(id)
        i.rank = i.rank + 5
        i.save
@@ -672,23 +738,23 @@ Author:Kareem
 =end
 
   def get_interests
- 	  interests = UserAddInterest.find(:all , :conditions => ["user_id = ?" , self.id ] , :select => "interest_id").map {|interest| interest.interest_id}.map {|id| 		Interest.find(id).name}
-	 return interests 
-	end 
+    interests = UserAddInterest.find(:all , :conditions => ["user_id = ?" , self.id ] , :select => "interest_id").map {|interest| interest.interest_id}.map {|id|     Interest.find(id).name}
+   return interests 
+  end 
 
 =begin
-	Description: This method generated a verification code record
-	for the user, where the verification code is a random 4 characters
-	string containing digits and lowercase letters, and it sets the
-	boolean verified field to false. This method returns true if
-	the user has no verification code record yet, false otherwise
-	Output: Boolean
-	Author: Kiro
+  Description: This method generated a verification code record
+  for the user, where the verification code is a random 4 characters
+  string containing digits and lowercase letters, and it sets the
+  boolean verified field to false. This method returns true if
+  the user has no verification code record yet, false otherwise
+  Output: Boolean
+  Author: Kiro
 =end
   def generateVerificationCode?()
-  		@verification_code = self.verification_code
+      @verification_code = self.verification_code
       if @verification_code.nil? then
-			entry = VerificationCode.new :code=>( (0..9).to_a + ('a'..'z').to_a).shuffle[0..3].join, :verified=>false
+      entry = VerificationCode.new :code=>( (0..9).to_a + ('a'..'z').to_a).shuffle[0..3].join, :verified=>false
       self.verification_code = entry
       return true               
     else                        
@@ -697,12 +763,12 @@ Author:Kareem
   end 
 
 =begin
-	Description: This method checks if the code entered by the
-	user matches his verification code, it returns true if it
-	matches, false otherwise.
-	Input: String (code entered by user)
-	Output: Boolean
-	Author: Kiro
+  Description: This method checks if the code entered by the
+  user matches his verification code, it returns true if it
+  matches, false otherwise.
+  Input: String (code entered by user)
+  Output: Boolean
+  Author: Kiro
 =end
   def verifyAccount?(verCode)
     @verEntry = self.verification_code
@@ -718,7 +784,7 @@ Author:Kareem
   This method resendCode? resets the verification Code of the user's account and updates the
   verification code in the database by the new generated one.
   This method returns true if the accout wasnt verified yet, otherwise it returns false.
-	Output: Boolean
+  Output: Boolean
   Author: Kiro
 =end
   def resendCode?
@@ -1025,21 +1091,21 @@ Author:Kareem
   end
 
 =begin
-	Description: This method generates a new password for the user
-	and updates it in the database, this password generated is
-	a 6 character string containing digits and letters (lower case
-	and upper case), and it returns the new password.
-	Output: String (The new password)
-	Author: Kiro
+  Description: This method generates a new password for the user
+  and updates it in the database, this password generated is
+  a 6 character string containing digits and letters (lower case
+  and upper case), and it returns the new password.
+  Output: String (The new password)
+  Author: Kiro
 =end
-	def resetPassword
-	
-		newpass = ((0..9).to_a + ('a'..'z').to_a + ('A'..'Z').to_a ).shuffle[0..5].join
-		self.new_password = newpass
-		self.save
-		return newpass
-	
-	end
+  def resetPassword
+  
+    newpass = ((0..9).to_a + ('a'..'z').to_a + ('A'..'Z').to_a ).shuffle[0..5].join
+    self.new_password = newpass
+    self.save
+    return newpass
+  
+  end
 
 =begin  
   get recent Activity of user from the passed start date
@@ -1074,13 +1140,13 @@ Input : Interest
 Output: Array of Stories - related to this Interest
 Author: Kareem
 =end
-	def get_interest_stories(interest)
-				stories = interest.get_stories(10)
-				unblocked_stories = get_unblocked_stories(stories)
-				return unblocked_stories
-	end
+  def get_interest_stories(interest)
+        stories = interest.get_stories(10)
+        unblocked_stories = get_unblocked_stories(stories)
+        return unblocked_stories
+  end
 
-=begin	
+=begin  
   Description: This method is not included in the Gem "amistad" yet we need it 
                therefore, it's not very efficient because of the lack of a proper data
                structuture 
@@ -1138,9 +1204,6 @@ Author: Kareem
        end
       return image    
   end
-
-
-
 
 =begin
 Description: This method takes as input an Image URL

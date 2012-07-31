@@ -7,9 +7,13 @@ class TwitterAccount < ActiveRecord::Base
    provided us. This correspons our entity to twitter. The Consumer
    Secret should be saved in a safe place. 
    Author: Yahia
+   
+
+   Yahia A8Fh0r4H5DJl3dCYLGbXyQ
+   Yahie 614KLHBIR3jyAyULABnxeJ7jUWz5jDG2rs7K1zY20Q
 =end    
-  CONSUMER_TOKEN  = 'A8Fh0r4H5DJl3dCYLGbXyQ'
-  CONSUMER_SECRET = '614KLHBIR3jyAyULABnxeJ7jUWz5jDG2rs7K1zY20Q' 
+  CONSUMER_TOKEN  = 'V577GmUU92GcJVveOnYJZw'
+  CONSUMER_SECRET = 'tGKCUxc86v0YAABuL1zeCeoo7VstYS7hwAo7Gkv8' 
 
 =begin  
   auth_secret and auth_token are the access keys to the twitter 
@@ -98,5 +102,72 @@ class TwitterAccount < ActiveRecord::Base
     OAuth::Consumer.new(CONSUMER_TOKEN, CONSUMER_SECRET,
                       { :site=>"http://twitter.com" })
   end
+
+  def favorite(tweet_id)
+    self.config_twitter
+    Twitter.favorite(tweet_id)
+  end
+
+  def unfavorite(tweet_id)
+    self.config_twitter
+    Twitter.unfavorite(tweet_id)
+  end
+
+  def favorites
+    self.config_twitter
+    return Twitter.favorites
+  end
+
+
+  def retweet(tweet_id)
+    self.config_twitter
+    Twitter.retweet(tweet_id)
+  end
+
+  def get_id
+    self.config_twitter
+    feed = Twitter.home_timeline(:count => '5')
+    array = Array.new
+    feed.each do |x|
+      array.push(x["id"])
+    end
+    return array
+  end
+
+  def fav_to_id
+    fav = self.favorites
+    array = Array.new
+    fav.each do |t|
+      array.push(t["id"])
+    end
+    return array
+  end
+
+  def test
+    ids = self.get_id
+    puts ids
+    id = ids.first
+    puts id
+    #self.unfavorite(id)
+    self.favorite(id)
+    fav = self.favorites
+    fav.each do |t|
+      puts t["id"]
+      if t["id"] == "id"
+        return true
+      end
+    end
+  end
+
+  def unfav_all
+    array = self.favorites
+    array.each do |f|
+      self.unfavorite(f["id"])
+    end
+    return
+    self.fav_to_id
+  end
+
+
 
 end
