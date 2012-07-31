@@ -56,4 +56,17 @@ class FacebookAcountTest < ActiveSupport::TestCase
     assert feed.first.class.name == "Story" , "Feed type must be story"
     assert feed.first.category == "Facebook" , "Stories category must be Facebook"
   end 
+
+  test "should get facebook status" do
+    fb = facebook_accounts(:one)
+    fb.user = users(:ben)
+    feed = fb.get_feed
+    feed.each do |f|
+      if f.title.index"changed his status"
+        assert true
+      end
+    end
+  end 
+
+
 end
