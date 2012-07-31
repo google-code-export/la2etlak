@@ -473,23 +473,6 @@ end
 
 	end
 
-  #Kareem New
-  test "cannot send twice" do
-    toto = User.create!(:email=>"tesssst@test.com" , :password => "12345678" , :password_confirmation => "12345678")
-    flag = toto.send_feedback("Message")
-    flag1 = toto.send_feedback("hahahaha")
-    assert_not_equal flag,flag1,"User Can't Send Feedback twice in 10 days"
-  end
-
-
-  #Kareem New
-  test "feedback should be added to table" do
-    toty = User.create(:email=>"tote@test.com" , :password => "12345678" , :password_confirmation => "12345678")
-    toty.send_feedback("hahahahaha")
-    flag = Feedback.find_by_user_id(toty.id)
-    assert_not_nil flag , "User Feedback should be added to Feedback table"
-end
-
 ####Mazmoz#
   test "user has a gender" do
     count=User.get_no_of_users_signed_in_today
@@ -499,27 +482,12 @@ end
   end
 #<<<<<<< HEAD
 
-#Kareem
-test "query should return friend" do
-  	toti =User.create(:email=>"toti@test.com" , :password => "12345678" , :password_confirmation => "12345678")
-  	hseen = User.create(:email => "se7s@test.com", :password => "123456",:password_confirmation => "123456")
-  	Friendship.create(:user_id => toti.id , :friend_id => hseen.id)
-  	list = toti.search_friends("se7s")
-  	flag = false
-  	list.each do |friend|
-  		if (friend == hseen)
-  			flag = true
-  		end
-  	end
-  	assert flag , "Method should return the Friends i searched for by Email Prefix or name"
-  	assert_equal lists[0].class.name , "User" , "should return Objects of class User"
 
-end
-
+#kareem new
 test "should return profile pic" do
 
- tata = User.create(:email => "tata@tata.com" , :password => "123456" , :password_confirmation => "123456" , :image => "adel.jpg")
- assert_equal tata.get_profile_pic , "adel.jpg" , "Profile pic should be the same as the uploaded pp"
+	 tata = User.create(:email => "tata@tata.com" , :password => 		"123456" , :password_confirmation => "123456" , :image => "http://web.scott.k12.va.us/martha2/dmbtest.gif")
+	assert_equal tata.get_profile_pic , "http://web.scott.k12.va.us/martha2/dmbtest.gif" , 		"Profile pic should be the same as the uploaded pp"
 end
 
   
