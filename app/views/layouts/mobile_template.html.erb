@@ -11,6 +11,10 @@
           <ul class="nav">
           <a href="<%= url_for :controller => "users", :action => "feed" %>" id="logo" ><h2 class = "pull-left" style = "float:up;">LA2ETLAK</h2></a>
         </ul>
+        <ul class="nav">
+            <li><%= link_to (image_tag("search.png")) , {:controller => "users" , :action =>
+              "search"}, {:style => 'width:40px;height:40px;padding-top:15;border-color:white'}%></li>
+          </ul>
         <% if current_user != nil %>
           <ul class="nav">
       			<li><%= link_to (image_tag("gear.png")) , {:controller => "users" , :action =>
