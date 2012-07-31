@@ -202,7 +202,9 @@ def fetch_rss(link)
       #end
       storynow.mobile_content = storynow.new_content(sdescription)
       if storynow.mobile_content.include? "read more"
-        storynow,mobile_content["read more"] = "<a href= storynow.link> read more</a>"
+        storynow.mobile_content["read more"] = " <a href= storynow.link> read more</a>"
+      else
+        storynow.mobile_content = storynow.mobile_content + " <a href= storynow.link> see the original story</a>"
       end
       #Author: Gasser
       #to add the current loksha_id to this new story.
