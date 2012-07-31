@@ -13,40 +13,40 @@ class InterestTest < ActiveSupport::TestCase
   end
 
   ##########Author: Diab ############
-  test "is rank updated after user added interest red" do
+  test "is rank updated after user added interest" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      user = User.new(:email=>"email@mail.com" , password: "12345678",password_confirmation:"12345678")
      user.save
      #rank = interest.rank
      #user.added_interests << interest
-     assert_difference(interest.rank , 5) do
+     assert_difference('interest.rank' , 5) do
      user.toggle_interests(interest)
      interest.get_interest_rank
      end
     end
 
   ##########Author: Diab ############
-  test "is rank updated after story added to interest red" do
+  test "is rank updated after story added to interest" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      rank = interest.get_interest_rank
      story = Story.new(:title=>"Story")
      story.interest = interest
      story.save
-     assert_difference(interest.rank , 1) do
+     assert_difference('interest.rank' , 1) do
      interest.get_interest_rank
      end
     end
   
    ##########Author: Diab ############
-  test "is rank updated after user blocked interest red" do
+  test "is rank updated after user blocked interest" do
      interest = Interest.new(:name=>"whatever")
      interest.save
      user = User.new(:email=>"email@mail.com" , password: "12345678",password_confirmation:"12345678")
      user.save
-     assert_difference(interest.rank , -5) do
-     user.block_interests1(interest)
+     assert_difference('interest.rank' , -5) do
+     user.block_interest1(interest)
      interest.get_interest_rank
      end
     end
@@ -70,6 +70,7 @@ class InterestTest < ActiveSupport::TestCase
      story2.save
      user.toggle_interests(interest1)
      user.toggle_interests(interest3)
+     Interest.rank_all_interests
      top_interests_names = Interest.get_top_interests_names
      top_interests_ranks = Interest.get_top_interests_ranks
      assert_equal top_interests_names , ["whatever3","whatever1","whatever2"]
