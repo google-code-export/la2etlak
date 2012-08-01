@@ -174,6 +174,16 @@ class Comment < ActiveRecord::Base
   def delete_comment
     self.deleted = true
     self.save
+    
+    #Ranking : Diab#
+    s = self.story
+    u = self.user
+    s.rank = s.rank - 2
+    u.rank = u.rank - 3
+    s.save
+    u.save
+    #Ranking : Diab#
+
   end   
 
 =begin
