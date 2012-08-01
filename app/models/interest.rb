@@ -1,7 +1,14 @@
 class Interest < ActiveRecord::Base
 #Author: jailan
 #attributes  that can be modified automatically by outside users
-  attr_accessible :description, :name, :deleted, :photo  , :rank
+before_save :default_values
+  def default_values
+    if self.group_name.nil? || self.group_name == ""
+    self.group_name = "general"
+  end
+end
+
+  attr_accessible :description, :name, :deleted, :photo  , :rank, :group_name
   has_many :stories
   has_many :feeds, :dependent => :destroy
 
@@ -13,7 +20,7 @@ class Interest < ActiveRecord::Base
 #validates_attachment_presence :photo
   validates_attachment_size :photo, :less_than => 5.megabytes
   validates_attachment_content_type :photo, :content_type => ['image/jpeg', 'image/png']
-
+  validates :group_name, :length   => { :maximum => 20 }
  # RSS feed link has to be of the form "http://www.abc.com"
   LINK_regex = /^(?:(?:http|https):\/\/[a-z0-9]+(?:[\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(?::[0-9]{1,5})?(\/.*)?)|(?:^$)$/ix
  
@@ -491,6 +498,32 @@ Author: Omar
 =end
 def self.get_interests(name)
   return Interest.where(:group_name => name)
+end
+#$$$$$$$$ JOLLY $$$$$$$$$$$$$
+    def self.model_categorize(id,category)
+    @interest= Interest.find(id)
+    @interests = Interest.all 
+
+   
+      @interest.group_name = category
+      @interest.save
+
+      if @interest
+        Log.create!(loggingtype: 1,user_id_1: nil,user_id_2: nil,admin_id: nil,story_id: nil,interest_id: @interest.id,message: "Admin changed category of an interest")
+      end
+    
+    return @interest
+  end
+
+  def self.get_categories
+ @list = Interest.select(:group_name).map(&:group_name).uniq
+
+
+
+
+  #@list = temp.uniq{|x| x.group_name}
+  return @list
+
 end
 end
 

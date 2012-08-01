@@ -28,6 +28,52 @@
       		<%= f.text_field :name  ,:style=>"width:100%"%>
       		<%= f.label :description%>
       		<%= f.text_field :description ,:style=>"width:100%"%>
+
+      		<! Category update Author : Jolly >
+
+      		<div id = edit_category>
+      		   
+
+      		<nav>
+            <ul class="nav pull-left">
+			  
+				<ul class="nav nav-pills">
+				   <li class="dropdown">
+			                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick="dropdown();"> Choose Category <b class="caret"></b></a>
+			                    <ul class="dropdown-menu">
+
+
+			                    	<% u = 0 %>
+			                    	<% num = Interest.get_categories.length %>
+
+			                    	<% (0..num).each do |i| %>
+   
+                                  <% if (Interest.get_categories[u]!= nil  && Interest.get_categories[u].downcase!= "general" && Interest.get_categories[u].downcase!= "") %> 
+                                 
+			                      <%= link_to  Interest.get_categories[u].downcase,{:controller => "interests" ,:action => "categorize" ,:id => @interest.id ,:category =>  Interest.get_categories[u].downcase}%>
+			                      <li class="divider"></li>
+			                       <% end %>
+			                     
+			                      <% u = u+1 %>
+			                    
+			                     
+			                       <% end %>
+
+			                      <%= link_to  "general",{:controller => "interests" ,:action => "categorize" ,:id => @interest.id ,:category =>  "general"}%>
+			                    
+
+
+			      
+			                </ul>
+			       </li>
+				</ul>
+			</ul>
+          </nav>
+      </div>
+            <%= f.label :group_name ,"New Category?" %>
+         <%= f.text_field :group_name ,:style=>"width:100%"%>
+
+      		<! Category update Author : Jolly >
      <!-- The field of the browse to upload the image from the Admin's Computer -->
            <%= f.label :photo, "Image "%>
            <%= f.file_field :photo ,:style=>"width:100%"%>
@@ -41,14 +87,23 @@
 	    		<div class="story-page-well"><% if !(@interest.deleted ) %>
 					<ul class="nav nav-list"  style="width:100%">
 						<li class="nav-header"  style="width:100%">Status :</li>
-							<span class="greenbadge"  style="width:100%" >Active</span>
+							<span class="greenbadge"  style="width:100%" >Active</span></br>
 							<% elsif @interest.deleted %>
 					<ul class="nav nav-list"  style="width:100%">
 						<li class="nav-header"  style="width:100%">Status</li>
 						<li  style="width:100%"><span class="redbadge"  style="width:100%">Blocked</span></li>
-						<% end %>
+						<% end %></br>
+						<div id="category">
+
+						<li class="nav-header"  style="width:100%">Category :</li>
+						<li  style="width:100%"><% if @interest.group_name == nil %> general <% else %> <%= @interest.group_name.downcase%><% end%></li>
+					    </div>
+
+
 						<li class="nav-header"  style="width:100%">Date :</li>
-						<li  style="width:100%"><%= @interest.created_at.to_date %></li>			
+						<li  style="width:100%"><%= @interest.created_at.to_date %></li>
+						
+
 				</div>
 
 		</div>
@@ -103,6 +158,31 @@
   						<% end %>
 						</table>
 					</div>
+
+<! Category panel Author : Jolly >
+<ul class="nav nav-list" >
+	<li class="divider"></li>
+</ul>
+
+<h3 class="interest-page-text">Category :</h3>
+		<div class="interest-page-well">
+		<% if @interest.group_name == nil %>
+        general
+
+		<%else%>	
+          <%= @interest.group_name.downcase %>
+          <%end%>
+          
+		</div>	
+
+
+
+
+<! .end of Category panel , Author : jolly >
+
+
+
+
 					<ul class="nav nav-list" >
 						<li class="divider"></li>	
 					</ul>	

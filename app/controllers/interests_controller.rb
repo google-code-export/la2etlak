@@ -171,6 +171,25 @@ this method calls the "model_toggle" method that takes as parameters the Interes
   end
 
 end
+ #$$$$$$$$ JOLLY $$$$$$$$$$$$$
+  def categorize
+    @interest= Interest.model_categorize(params[:id],params[:category])
+    @interests = Interest.get_all_interests
+  
+   
+    if @interest.save
+# if the interest was deleted and the admin restored it successfully a flash appears endicating that
+      flash[:success] = " Category set successfully. $green"
+    else
+# if the interest wasn't deleted and the admin blocked it successfully a flash appears endicating that
+      flash[:error] = " Interest Update failed, please set a valid category. $red"
+
+
+    end
+# finally , we redirect to the main interest's page after adjusting the changes
+    redirect_to @interest
+  end
+  
 
 end
       

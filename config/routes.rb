@@ -120,16 +120,12 @@ NokiaRuby::Application.routes.draw do
   match "mob/users/search/:query" => "users#search"
    #Author: jolly############
 
- match "mob/interests/:id"  => "interests#mob", :as => :mob
+  match "mob/interests/:id"  => "interests#mob", :as => :mob
   match "mob/interest/:id"  => "users#toggle_from_interest_page"
-
-    match "mob/interest/block/:id"  => "users#block_interest_from_interest_page"
-
-    match "mob/interest/unblock/:id"  => "users#unblock_interest_from_interest_page"
-
+  match "mob/interest/block/:id"  => "users#block_interest_from_interest_page"
+  match "mob/interest/unblock/:id"  => "users#unblock_interest_from_interest_page"
   match "/interests/list"  => "interests#new", :as => :new
-
- match "interests/:id/toggle" => "interests#toggle"
+  match "interests/:id/toggle" => "interests#toggle"
 
    ##########################
 
