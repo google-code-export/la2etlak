@@ -1215,6 +1215,8 @@ def self.remote_file_exists?(url)
     Net::HTTP.start(url.host, url.port) do |http|
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
+    rescue
+			return false
 end
 
 
