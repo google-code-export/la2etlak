@@ -35,17 +35,22 @@
     :style => "height:40px; width:95%" , :value => "http://example.com/image"%>
     <%end%>
   </div>
+  <!-- mouaz alabsawi -->
   <div class="field" align="center">
      <div class="field" align="center">
     <%= f.label :Birth_date %>
     <%= date_select :user, :birth_date, :start_year => 1920, :end_year => 2000  %>
   </div>
      <div class="field" align="center">
-    <%= f.label :Gender %>
+<!--     <%= f.label :Gender %>
     <%= radio_button_tag(:gender, "male") %> Male 
-    <%= radio_button_tag(:gender, "female") %> Female
+    <%= radio_button_tag(:gender, "female") %> Female -->
+    <input type="radio" id="user_male" name="user[gender]" value="male" /> Male 
+        <input type="radio" id="user_male" name="user[gender]" value="male" /> Female
+
   </div>
 </br>
+<!-- a5er mouaz alavbsawi -->
 <div><h4>Change Password<h4></div>
 </br>
   <div class="field" align="center">
