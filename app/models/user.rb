@@ -413,20 +413,6 @@ Output: Nothing
 Author: Kareem
 Ranking: Diab
 =end
-<<<<<<< HEAD
-<<<<<<< HEAD
-	def thumb_story(story,act)
-		name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
-		rank_update = if act == 1 then 3 else -1 end
-    rank_update2 = if act == 1 then -1 else 3 end
-    action_n = if act == 1 then "UP" else "Down" end
-		thumped = Likedislike.where(:story_id => story.id, :user_id => self.id)
-		if thumped.empty? 
-				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
-				
-=======
-=======
->>>>>>> ft/twitter
   def thumb_story(story,act)
     name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
     rank_update = if act == 1 then 3 else -1 end
@@ -435,83 +421,30 @@ Ranking: Diab
     thumped = Likedislike.where(:story_id => story.id, :user_id => self.id)
     if thumped.empty? 
         Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act)
-        
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
         story.rank = story.rank + rank_update
         story.save
         self.rank = self.rank + 2
         self.save
-
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")
-<<<<<<< HEAD
-<<<<<<< HEAD
 				puts "Thump"
-
 		elsif (thumped[0].action == act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
-				
-=======
-=======
->>>>>>> ft/twitter
-        puts "Thump"
-
-    elsif (thumped[0].action == act) 
-        Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
-        
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
         story.rank = story.rank - rank_update
         story.save
         self.rank = self.rank - 2
         self.save
-
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} un-Thumbed #{action_n} #{story.title}") 
-<<<<<<< HEAD
-<<<<<<< HEAD
 				puts "Removed"
 		elsif (thumped[0].action != act) 
 				Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
 				Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
-				
-=======
-=======
->>>>>>> ft/twitter
-        puts "Removed"
-    elsif (thumped[0].action != act) 
-        Likedislike.find(:first , :conditions => ["user_id = ? AND story_id = ?" ,self.id , story.id]).destroy
-        Likedislike.create!(:user_id => self.id, :story_id => story.id , :action => act )
-        
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
         story.rank = story.rank - rank_update2
         story.rank = story.rank + rank_update
         story.save
-
         l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Thumbed #{action_n} #{story.title}")  
-<<<<<<< HEAD
-<<<<<<< HEAD
-				puts "Removed _thumbed"
-		end
-
-	end
-=======
-=======
->>>>>>> ft/twitter
         puts "Removed _thumbed"
     end
-
   end
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
 
 =begin
 Description:this Action takes as a parametar a story and it checks if the current User flagged it before or not .. if not a new Record will be added in the Flags table with current user_id , current_story id else if he already flagged it nothing will happen.
@@ -520,8 +453,6 @@ Output: true or False
 Author: Kareem
 Ranking: Diab
 =end
-<<<<<<< HEAD
-<<<<<<< HEAD
 	def flag_story(story)
 		thumped = Flag.where(:story_id => story.id, :user_id => self.id)
 		if thumped.empty?
@@ -530,42 +461,14 @@ Ranking: Diab
 				name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
 				l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
 			
-=======
-=======
->>>>>>> ft/twitter
-  def flag_story(story)
-    thumped = Flag.where(:story_id => story.id, :user_id => self.id)
-    if thumped.empty?
-        Flag.create!(:user_id =>  self.id, :story_id => story.id)
-        #Admin_Settings.update_story_if_flagged(story)
-        name_1 = if self.name.nil? then self.email.split('@')[0] else self.name end
-        l = Log.create(:loggingtype => 2 , :user_id_1 => self.id , :story_id => story.id , :message => "#{name_1} Flagged Story #{story.title}")  
-      
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
         story.rank = story.rank - 3
         story.save
         self.rank = self.rank + 2
         self.save
-
       return true
-<<<<<<< HEAD
-<<<<<<< HEAD
 		end
 			return false
 	end
-=======
-    end
-      return false
-  end
->>>>>>> ft/twitter
-=======
-    end
-      return false
-  end
->>>>>>> ft/twitter
 =begin
 Description: this Action returns a list of stories according to the current user interests .. and it also checks if theses stories are blocked According to an Interest or its a Blocked story or not before it returns the List of stories,the method also takes as input Interest name if it's not "null" the method will return the stories filtered according to this interest only.
 Input: Interest.name 
@@ -631,7 +534,6 @@ Author:Kareem
         ranking = ranking + (self.friends.count * 4) + (self.shares.count * 2) + (self.blockers.count * -5)
         self.update_attributes(:rank => ranking)
         return ranking
-<<<<<<< HEAD
   end
 
 =begin
@@ -643,8 +545,6 @@ Author:Kareem
    User.all.each do |usr|
     usr.get_user_rank
    end
-=======
->>>>>>> ft/twitter
   end
 =begin this method returns a list of the top ranked Users in 
  a descending order (Higher Rank First)
@@ -805,54 +705,24 @@ Ranking: Diab
     interest_name = Interest.find(id).name
   
        if(self.added_interests.include?(interest))
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 	self.added_interests.delete interest
- 		message = "#{username} deleted interest : #{interest_name}"
-   		Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			interest_id: id, message: message)
-   		
-=======
-=======
->>>>>>> ft/twitter
     self.added_interests.delete interest
     message = "#{username} deleted interest : #{interest_name}"
       Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil,       interest_id: id, message: message)
-      
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
       i = Interest.find(id)
       i.rank = i.rank - 5
       i.save
       self.rank = self.rank - 5
       self.save
-
       return "Interest deleted."
        else 
-<<<<<<< HEAD
-<<<<<<< HEAD
-		 UserAddInterest.create(:user_id => self.id , :interest_id => id)
- 	      	 message = "#{username} added interest : #{interest_name}"
-   		 Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil, 			 interest_id: id, message: message)
-   		 
-=======
-=======
->>>>>>> ft/twitter
      UserAddInterest.create(:user_id => self.id , :interest_id => id)
            message = "#{username} added interest : #{interest_name}"
        Log.create!(loggingtype: 3,user_id_1: self.id,user_id_2: nil, admin_id: nil, story_id: nil,       interest_id: id, message: message)
-       
-<<<<<<< HEAD
->>>>>>> ft/twitter
-=======
->>>>>>> ft/twitter
        i = Interest.find(id)
        i.rank = i.rank + 5
        i.save
        self.rank = self.rank + 5
        self.save
-
        return "Interest added."
        end
  end

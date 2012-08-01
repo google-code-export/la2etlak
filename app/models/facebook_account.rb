@@ -1,5 +1,3 @@
-
-
 class FacebookAccount < ActiveRecord::Base
   attr_accessible :auth_secret, :auth_token
   belongs_to :user

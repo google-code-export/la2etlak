@@ -213,9 +213,9 @@ def fetch_rss(link)
       storynow.save
 
       #Ranking by:Diab#
-      i = Interest.find(sinterest)
-      i.rank = i.rank + 1
-      i.save
+      int = Interest.find(sinterest)
+      int.rank = int.rank + 1
+      int.save
       #Ranking by:Diab#
 
       sid = Story.find_by_title(stitle).id
