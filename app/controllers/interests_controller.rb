@@ -35,22 +35,10 @@ class InterestsController < ApplicationController
   end
 
 
-  # $$$$$$$$$$$$$ JOLLY $$$$$$$$$$$$$$$
 
 
 
-    def mob
-      @user = current_user
-      @user_interests = @user.added_interests
-      @interest = Interest.get_interest(params[:id])
-      @feeds = Feed.find_all_by_interest_id(params[:id])
-      @feed = Feed.find_by_interest_id(params[:id])#retrieving the feeds for a certain interest in the database using the id of the interest
 
-    if @feed == nil #if the list of RSS feeds if a certain interest is empty we will create a new one
-       @feed = Feed.new
-   render :layout => "mobile_template"
-
-end
 
 
 
@@ -170,8 +158,8 @@ this method calls the "model_toggle" method that takes as parameters the Interes
     redirect_to @interest
   end
 
-end
- #$$$$$$$$ JOLLY $$$$$$$$$$$$$
+
+  #$$$$$$$$ JOLLY $$$$$$$$$$$$$
   def categorize
     @interest= Interest.model_categorize(params[:id],params[:category])
     @interests = Interest.get_all_interests
@@ -189,7 +177,6 @@ end
 # finally , we redirect to the main interest's page after adjusting the changes
     redirect_to @interest
   end
-  
 
 end
       

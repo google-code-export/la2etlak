@@ -119,8 +119,15 @@ NokiaRuby::Application.routes.draw do
   match "mob/users/search/" => "users#search"
   match "mob/users/search/:query" => "users#search"
    #Author: jolly############
+  match "users/index" => "users#index"
+  match "/users/new" => "users#create", :as => :create
+ 
+ match "/h_accounts/create" => "h_accounts#create", :as => :create
+ 
+
 
   match "mob/interests/:id"  => "interests#mob", :as => :mob
+  match "interests/:id/category" => "interests#categorize", :as => :categorize
   match "mob/interest/:id"  => "users#toggle_from_interest_page"
   match "mob/interest/block/:id"  => "users#block_interest_from_interest_page"
   match "mob/interest/unblock/:id"  => "users#unblock_interest_from_interest_page"

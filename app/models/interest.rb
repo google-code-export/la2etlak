@@ -524,6 +524,6 @@ end
   #@list = temp.uniq{|x| x.group_name}
   return @list
 
-end
+end  
 end
 
