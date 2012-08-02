@@ -13,6 +13,9 @@
          <li class="divider"></li>
             <form action="feeds/create" method="post">
               <input  style="width:100%" type="text" name="feed[link]" />
+              <p>Enter tag limits to get full content for stories</p>
+              <input  style="width:100%" type="text" name="feed[first_tag]" />
+              <input  style="width:100%" type="text" name="feed[end_tag]" />
               <input   style="width:100%" type="hidden" name="feed[interest_id]" value= "<%= @interest.id %>" />
               <input type="submit" name="commit" value="Submit" class="btn btn-primary"/>
             </form>

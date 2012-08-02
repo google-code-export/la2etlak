@@ -183,6 +183,7 @@ def fetch_rss(link)
 	#getting the id of the interest
       
 	sinterest = Feed.find_by_link(source).interest
+  sfeed = Feed.find_by_link(source)
 
     #if it is a new story, it will enter automatically
     if sid == nil
@@ -198,14 +199,28 @@ def fetch_rss(link)
       storynow.story_link = slink
       #img = "img src="
       #if(sdescription.index(img) != 0)
-      	storynow.media_link =  storynow.new_media_link(sdescription)	
+      storynow.media_link =  storynow.new_media_link(sdescription)	
       #end
       storynow.mobile_content = storynow.new_content(sdescription)
-      if storynow.mobile_content.include? "read more"
-        storynow.mobile_content["read more"] = " <a href= storynow.link> read more</a>"
+      # if storynow.mobile_content.include? "read more"
+      #   storynow.mobile_content["read more"] = " <a href= storynow.link> read more</a>"
+      # else
+      #   storynow.mobile_content = storynow.mobile_content + " <a href= storynow.link> see the original story</a>"
+      # end
+      if sfeed.first_tag == nil || sfeed.end_tag = nil || sfeed.first_tag.last != ">" || sfeed.end_tag.last != ">" || sfeed.first_tag.first != "<" || sfeed.end_tag.first != "<"
+        storynow.content = sdescription
+        storynow.mobile_content = storynow.new_content(sdescription)
       else
-        storynow.mobile_content = storynow.mobile_content + " <a href= storynow.link> see the original story</a>"
+        result_from = StoriesHelper.get_full_content(slink,sfeed.first_tag,sfeed.end_tag)
+        if result_from == "emptyuu" || result_from.length < sdescription.length
+          storynow.content = sdescription
+          storynow.mobile_content = storynow.new_content(sdescription)
+        else
+          storynow.content = result_from
+          storynow.mobile_content = storynow.new_content(result_from)
+        end
       end
+
       #Author: Gasser
       #to add the current loksha_id to this new story.
       storynow.loksha_id = $loksha
@@ -288,6 +303,68 @@ def check_rss(link)
   return false
 end
 
+=begin
+author : mouaaaaaaaaaaz
+this method take the link of a certain story and the limits
+of a certain tag wich belongs to certain feed and get the full content in this tag
+=end
+
+def get_full_content(story_link, match1, match2)
+  # require 'open-uri'
+  # source = open(story_link).read
+
+#   require 'net/http'
+#   rss_link["http://www."] = ""
+#   # rss_link["http://"] = ""
+# stack = Net::HTTP.new rss_link
+# p stack
+# page = story_link
+# page["http://www." + rss_link] = ""
+# p page
+# html = stack.get(page).body
+# return html
+response = ""
+  require 'open-uri'
+
+  url = URI.parse(story_link)
+  open(url) do |http|
+    response = http.read
+
+    returno = StoriesHelper.substring_between(response,match1,match2)
+    if returno == nil
+      return "emptyuu"
+    else
+      return returno
+    end
+
+    # puts "response: #{response.inspect}"
+      # if response =~ regex
+      #   return $1
+      # else
+      #   return false
+      # end
+  end
+  # StoriesHelper.get_full_content('http://www.yallakora.com//arabic/YK_news/details.aspx?ID=191740&amp;ref=rss&amp;updated=182012240',/<div id="" class="bodycontent">(.*)<\/div>/)
+  rescue OpenURI::HTTPError
+  return false
+  rescue SocketError
+  return false
+  rescue RuntimeError
+  return false
+end
+
+def substring_between(target, match1, match2)
+  start_match1 = target.index(match1)
+  if start_match1 && start_match2 = target.index(match2, start_match1 + match1.length)
+    start_idx = start_match1 + match1.length
+    target[start_idx, start_match2 - start_idx]
+  else
+    nil
+  end
+end
+
+module_function :substring_between
+module_function :get_full_content
 module_function :fetch_rss
 module_function :check_rss
 end
