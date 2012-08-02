@@ -66,6 +66,25 @@ class FacebookAccountController < ApplicationController
       <h7 style=\"color:#FF9408;\">undo?</h7> </a> $yellow"
     redirect_to :controller => "users", :action => "connect_social_accounts"
   end
+
+  def comment
+    user = current_user
+    id = params[:id]
+    content = params[:content]
+    begin
+      if user.facebook_account.comment(id, content)
+          redirect_to(:back)
+      else
+        flash[:facebook_error] = "Error occured contacting facebook $red"
+        redirect_to(:back)
+      end
+    rescue
+      flash[:facebook_error] = "Error occured contacting facebook $red"
+      redirect_to(:back)
+    end
+  end
+
+  
 end
 
 
