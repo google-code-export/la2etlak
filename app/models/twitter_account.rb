@@ -88,6 +88,7 @@ class TwitterAccount < ActiveRecord::Base
     story.content = tweet['text']
     story.category = 'twitter'
     story.media_link = tweet.attrs["user"]["profile_image_url"]
+    story.id = tweet["id"]
     return story 
   end
 
@@ -105,7 +106,11 @@ class TwitterAccount < ActiveRecord::Base
 
   def favorite(tweet_id)
     self.config_twitter
-    Twitter.favorite(tweet_id)
+    if Twitter.favorite(tweet_id)
+      return true
+    else 
+      return false
+    end
   end
 
   def unfavorite(tweet_id)
@@ -118,22 +123,6 @@ class TwitterAccount < ActiveRecord::Base
     return Twitter.favorites
   end
 
-
-  def retweet(tweet_id)
-    self.config_twitter
-    Twitter.retweet(tweet_id)
-  end
-
-  def get_id
-    self.config_twitter
-    feed = Twitter.home_timeline(:count => '5')
-    array = Array.new
-    feed.each do |x|
-      array.push(x["id"])
-    end
-    return array
-  end
-
   def fav_to_id
     fav = self.favorites
     array = Array.new
@@ -142,6 +131,36 @@ class TwitterAccount < ActiveRecord::Base
     end
     return array
   end
+
+  def check_fav(tweet_id)
+    fav = self.fav_to_id
+    fav.each do |t|
+      if tweet_id.to_i == t.to_i
+        return true
+      else 
+        return false
+      end
+    end
+  end
+
+  
+
+  def retweet(tweet_id)
+    self.config_twitter
+    Twitter.retweet(tweet_id)
+  end
+
+  
+ def get_ids
+    self.config_twitter
+    feed = Twitter.home_timeline(:count => '5')
+    array = Array.new
+    feed.each do |x|
+      array.push(x["id"])
+    end
+    return array
+  end
+  
 
   def test
     ids = self.get_id
@@ -167,7 +186,5 @@ class TwitterAccount < ActiveRecord::Base
     return
     self.fav_to_id
   end
-
-
 
 end
