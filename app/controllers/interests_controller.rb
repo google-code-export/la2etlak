@@ -1,5 +1,8 @@
 class InterestsController < ApplicationController
-  before_filter {admin_authenticated?}
+  
+
+  before_filter :admin_authenticated?, :except => [:mob ]
+  before_filter :user_authenticated?, :only => [:mob ]
   def index
     redirect_to "/interests/list"
     @interests = Interest.all #passing a list of all interests to show them all in the view
@@ -21,6 +24,8 @@ class InterestsController < ApplicationController
 
   end
 
+
+
 #Author : Jailan
 
   def new
@@ -34,20 +39,26 @@ class InterestsController < ApplicationController
   @title = "Add interest"
   end
 
-  def mob
+
+  # $$$$$$$$$$$$$ JOLLY $$$$$$$$$$$$$$$
+  
+    def mob
       @user = current_user
       @user_interests = @user.added_interests
-      @interest = Interest.find(params[:id])
+      @interest = Interest.get_interest(params[:id])
       @feeds = Feed.find_all_by_interest_id(params[:id])
       @feed = Feed.find_by_interest_id(params[:id])#retrieving the feeds for a certain interest in the database using the id of the interest
 
     if @feed == nil #if the list of RSS feeds if a certain interest is empty we will create a new one
        @feed = Feed.new
-   render :layout => "mobile_template"
+       render :layout => "mobile_template"
 
-end    
+    end
+end
 
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+  #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 =begin  
 
 
@@ -136,6 +147,25 @@ all databese changes are done in the "model_update" method in the Model that tak
 
   end
 
+
+    def categorize
+    @interest= Interest.model_categorize(params[:id],params[:category])
+    @interests = Interest.get_all_interests
+  
+   
+    if @interest.save
+# if the interest was deleted and the admin restored it successfully a flash appears endicating that
+      flash[:success] = " Category set successfully. $green"
+    else
+# if the interest wasn't deleted and the admin blocked it successfully a flash appears endicating that
+      flash[:error] = " Interest Update failed, please set a valid category. $red"
+
+
+    end
+# finally , we redirect to the main interest's page after adjusting the changes
+    redirect_to @interest
+  end
+
 =begin
 #Author: jailan
 
@@ -144,6 +174,7 @@ if the interest is deleted then he admin has the right to restore it once more .
 
 this method calls the "model_toggle" method that takes as parameters the Interest's id .
 =end
+
   def toggle
     @interest= Interest.model_toggle(params[:id])
     @interests = Interest.get_all_interests
@@ -162,25 +193,7 @@ this method calls the "model_toggle" method that takes as parameters the Interes
     redirect_to @interest
   end
 
-
-  #$$$$$$$$ JOLLY $$$$$$$$$$$$$
-  def categorize
-    @interest= Interest.model_categorize(params[:id],params[:category])
-    @interests = Interest.get_all_interests
-  
-   
-    if @interest.save
-# if the interest was deleted and the admin restored it successfully a flash appears endicating that
-      flash[:success] = " Category set successfully. $green"
-    else
-# if the interest wasn't deleted and the admin blocked it successfully a flash appears endicating that
-      flash[:error] = " Interest Update failed, please set a valid category. $red"
-
-
-    end
-# finally , we redirect to the main interest's page after adjusting the changes
-    redirect_to @interest
-  end
 end
-end
+
+
       

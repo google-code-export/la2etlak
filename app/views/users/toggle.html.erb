@@ -34,12 +34,15 @@ on deleting an exsiting interest the page is refreshed and button color is chang
    	   <div class="welllo">
 		<table>			
    <%if (@user_interests.include? interest) && (@user.blocked_interests.include? interest) %> 		 			
-	<span class="yellowbadge"><%=interest.name.upcase%></span><br>
+	
+	<span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "yellowbadge" %></span><br>
 	<%else%>
 		<% if @user.added_interests.include? interest %>
-			<span class="greenbadge"><%=interest.name.upcase%></span><br>	
+		
+			<span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "greenbadge" %></span><br>	
 		<%else%>	
-	   		<span class="redbadge"><%=interest.name.upcase%></span><br>
+	   		
+	   		<span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "redbadge" %></span><br>
 	        <%end%>
    <%end%>
 		</table><br>
