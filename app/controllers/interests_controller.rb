@@ -51,9 +51,11 @@ class InterestsController < ApplicationController
 
     if @feed == nil #if the list of RSS feeds if a certain interest is empty we will create a new one
        @feed = Feed.new
+
+     end 
        render :layout => "mobile_template"
 
-    end
+   
 end
 
 
