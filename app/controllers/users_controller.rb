@@ -19,7 +19,7 @@ class UsersController < ApplicationController
     render :layout => "mobile_template"
   end
 
-  
+
 
 =begin
 	Description: This method saves the information of the new user to the database.
