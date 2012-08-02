@@ -107,6 +107,7 @@ class TwitterAccountsController < ApplicationController
     id = params[:id]
     begin
       user.twitter_account.retweet(id)
+      flash[:notice] = 'You have retweeted this tweet successfully $green'
     rescue
       flash[:notice] = 'You have already retweeted this tweet $red'
      end
