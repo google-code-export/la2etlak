@@ -57,6 +57,7 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
         i = 0
         g.each do |s| 
           i = i+1
+          id  = s["id"]
           # p i.to_s
           # p s["type"]
           title = s["from"]["name"]+" shared "
@@ -128,6 +129,8 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
           if content.length > 500
             content = content[0,500]+"..."
           end
+          story.mobile_content = id
+          story.id = id
           story.title = title
           story.media_link = media
           story.story_link = story_link
@@ -183,16 +186,18 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
   def fb_get_comments(post_id)
       graph = Koala::Facebook::API.new(self.auth_token.to_s)
-      return comments_hash = graph.get_connection(post_id,"comments")
-      #comments = Array.new
-      #comments_hash.each do |c|
-       # puts c["id"]
-        #puts c["from"]["id"]
-        #puts c["from"]["name"]
-        #puts c["message"]
-        #comments.push(c)
-      #end
-      #return comments
+      comments_hash = graph.get_connection(post_id,"comments")
+      comments = Comment.new
+      comments_array = Array.new
+      comments_hash.each do |c|
+         comments.id = c["id"]
+         comments.user_id = c["from"]["id"]
+         #c["from"]["name"]
+         comments.story_id = post_id
+         comments.content = c["message"]
+         comments_array.push(comments)
+      end
+      return comments_array
   end
 
 def test 
