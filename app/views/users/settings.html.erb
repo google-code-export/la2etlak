@@ -10,7 +10,7 @@
 			  <li class="divider-vertical"></li>
 			     </ul>	
 						<ul class="nav pull-right" >				 
-			                 <% if current_user == nil %> [User_name] <% else %> <%= current_user.email %><% end%> </br>
+			                 <% if current_user.name != nil %> <%= current_user.name %> <% else %> <%= current_user.email %><% end%> </br>
 			             </ul>    
 			                   
 
