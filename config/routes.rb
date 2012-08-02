@@ -13,6 +13,8 @@ NokiaRuby::Application.routes.draw do
   match "mob/flickr/authenticate" => "flickr_accounts#auth"
   match "mob/flickr/callback" => "flickr_accounts#callback"
   match "mob/flickr/delete" => "flickr_accounts#delete_account"
+  match "mob/twitter/fav" => "twitter_accounts#favorite"
+  match "mob/twitter/retweet" => "twitter_accounts#retweet"
 
  # ~~~~~~~~~~~~~~~~ 3OBAD ~~~~~~~~~~~~~~~~~~~~~~~~
 
