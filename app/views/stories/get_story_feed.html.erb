@@ -29,15 +29,23 @@
  <%=raw @story.content %>
  </div>
  <%end%> 
+ <% if @story.category = 'twitter' %>
+  <div align="center">
+  <%= link_to image_tag('images.jpg' , :style =>"width:50px;height:35px;"), {:controller => 'twitter_accounts' , :action => 'retweet' , :id => (@story.id) }%> &nbsp;&nbsp;
+  <%= link_to image_tag('favorite.jpg' , :style =>"width:30px;height:35px;"), {:controller => 'twitter_accounts' , :action => 'favorite' , :id => (@story.id) }%> 
+</div>
+  <%end%>
+
  <% type = "" %>
  <% if @story.category == "Facebook" %>
   <% if @story.title.index"shared a photo" %>
     <% type = "photo" %>
-  <% elsif @story.title.index"shared a video" %>
+  <% elsif @story.title.index"shared a video"%> 
     <% type = "video" %>
   <% else %>
     <% type = "status" %>
   <% end %>
+
   <div class="story-comment-box-mobile" style="text-align:center">
     <ul class="nav nav-list">
       <li><%= link_to "Go to "+type , @story.story_link , class: "btn btn-primary", :target=>"_new" ,style: "margin:2%; height:25px;"%>
