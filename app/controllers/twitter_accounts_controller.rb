@@ -89,4 +89,28 @@ class TwitterAccountsController < ApplicationController
       redirect_to controller: 'users', action: 'connect_social_accounts'
   end 
 
+
+  def favorite
+    user = current_user
+    id = params[:id]
+    if !user.twitter_account.check_fav(id)
+      user.twitter_account.favorite(id)
+      flash[:notice] = 'You have favorited this tweet $green'
+    else
+      flash[:notice] = 'You have already favorited this tweet $red'
+    end
+    redirect_to(:back) 
+  end
+
+  def retweet
+    user = current_user
+    id = params[:id]
+    begin
+      user.twitter_account.retweet(id)
+    rescue
+      flash[:notice] = 'You have already retweeted this tweet $red'
+     end
+    redirect_to(:back)
+  end
+
 end
