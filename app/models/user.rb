@@ -528,7 +528,7 @@ Author:Kareem
   Author: Shafei , Diab
 =end
   def get_user_rank
-        ranking = (self.comments.count * 3) + (self.user_log_ins.count * 2)
+        ranking = (self.comments.where(:deleted => nil).count * 3) + (self.user_log_ins.count * 2)
         ranking = ranking + (self.likedislikes.count * 2) + (self.flags.count * 2)
         ranking = ranking +(self.user_add_interests.count * 5)
         ranking = ranking + (self.friends.count * 4) + (self.shares.count * 2) + (self.blockers.count * -5)
@@ -1215,6 +1215,8 @@ def self.remote_file_exists?(url)
     Net::HTTP.start(url.host, url.port) do |http|
       return http.head(url.request_uri)['Content-Type'].start_with? 'image'
     end
+    rescue
+			return false
 end
 
 

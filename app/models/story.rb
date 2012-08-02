@@ -352,7 +352,7 @@ This method to get the rank of a story
 Author : Diab
 =end
  def get_story_rank
-  ranking = (self.shares.count * 4) + (self.flags.count * -3) + (self.comments.count * 2)
+  ranking = (self.shares.count * 4) + (self.flags.count * -3) + (self.comments.where(:deleted => nil).count * 2)
   ranking = ranking + (self.likedislikes.where(:action => 1).count * 3) + (self.likedislikes.where(:action => -1).count * -1) + (self.blockers.count * -5) 
   self.update_attributes(:rank => ranking)
  end
