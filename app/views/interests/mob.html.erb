@@ -48,7 +48,7 @@
 						<! .. adding the RSS feeds added to this interest unless the table is empty ..>
 						<table class="table" >
 
-						<% if @feeds.nil? %>
+					<% if @feeds.length == 0 %>
 						No Sources
 						<%else%>
          			
@@ -58,8 +58,11 @@
       						<td><%= link_to( (f.link.length > 30 ? ('%{sub}...' % {:sub => f.link[0,30]}) : f.link), f.link)	%></td>
       						
     					</tr>
-  						<% end %>
+  						
   						<%end%>
+  						<%end%>
+  						
+
   						</div>
 						</table>
 				
