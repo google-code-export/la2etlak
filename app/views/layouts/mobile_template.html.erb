@@ -7,32 +7,31 @@
 </head>
    <header class="navbar navbar-fixed-top">
       <div class="navbar-inner">
-        <div class="container" style="padding-left:8%;height:60px"align="center">
+        <div class="container" style="padding-left:1%;padding-right:1%;height:60px"align="center">
           <ul class="nav">
           <a href="<%= url_for :controller => "users", :action => "feed" %>" id="logo" ><h2 class = "pull-left" style = "float:up;">LA2ETLAK</h2></a>
-        </ul>
-        <ul class="nav">
-            <li><%= link_to (image_tag("search.png")) , {:controller => "users" , :action =>
-              "search"}, {:style => 'width:40px;height:40px;padding-top:15;border-color:white'}%></li>
-          </ul>
+        
         <% if current_user != nil %>
-          <ul class="nav">
-      			<li><%= link_to (image_tag("gear.png")) , {:controller => "users" , :action =>
-      				"settings"}, {:style => 'width:25px;height:25px;padding-top:15;border-color:white'}%></li>
-          </ul>
-         <% if current_user.notifications <= 0 %>
-            <ul class="nav">
-            <%= button_to '0' , {:controller => "users" , :action =>
-              "notifications"}, :class => 'btn btn-large' , :style => 'width:40px;height:30px;margin-top:13;'%>
-            </ul>
-          <% else %>
-            <ul class="nav">
-            <%= button_to current_user.notifications , {:controller => "users" , :action =>
-              "notifications"}, :class => 'btn btn-large btn-primary' , :style => 'width:40px;height:30px;margin-top:13;border-color:white'%>
-            </ul>
-          <% end %>
-        <% end %>
+        
+            <li><%= link_to (image_tag("gear.png")) , {:controller => "users" , :action =>
+              "settings"}, {:style => 'width:25px;height:30px;padding-top:15;padding-left:20px;border-color:white'}%></li>
           
+         <% if current_user.notifications <= 0 %>
+          
+            <li><%= button_to '0' , {:controller => "users" , :action =>
+              "notifications"}, :class => 'btn btn-large' , :style => 'width:35px;height:30px;padding-left:20%;margin-top:13;'%></li>
+          
+          <% else %>
+          
+            <li><%= button_to current_user.notifications , {:controller => "users" , :action =>
+              "notifications"}, :class => 'btn btn-large btn-primary' , :style => 'width:35px;height:30px;margin-top:13;border-color:white;padding-left:25%'%></li>
+            
+          <% end %>
+
+            <li><%= link_to (image_tag("search.png")) , {:controller => "users" , :action =>
+              "search"}, {:style => 'width:40px;height:25px;padding-top:8;padding-left:1%;border-color:white'}%></li>
+            </ul> 
+        <% end %>
         </div>
       </div>
 </header>
