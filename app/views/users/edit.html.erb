@@ -42,12 +42,19 @@
     <%= date_select :user, :birth_date, :start_year => 1920, :end_year => 2000  %>
   </div>
      <div class="field" align="center">
-<!--     <%= f.label :Gender %>
-    <%= radio_button_tag(:gender, "male") %> Male 
-    <%= radio_button_tag(:gender, "female") %> Female -->
-    <input type="radio" id="user_male" name="user[gender]" value="male" /> Male 
+   <%= f.label :Gender %>
+    <% if @user.gender != nil %>
+      <% if  @user.gender == "male" %>
+        <input type="radio" id="user_male" name="user[gender]" value="male"  checked /> Male 
         <input type="radio" id="user_male" name="user[gender]" value="female" /> Female
-
+      <%else%>
+        <input type="radio" id="user_male" name="user[gender]" value="male"   /> Male 
+        <input type="radio" id="user_male" name="user[gender]" value="female" checked/> Female
+      <%end%>
+    <%else%>
+        <input type="radio" id="user_male" name="user[gender]" value="male"   /> Male 
+        <input type="radio" id="user_male" name="user[gender]" value="female" checked/> Female
+      <%end%>
   </div>
 </br>
 <!-- a5er mouaz alavbsawi -->
