@@ -14,6 +14,12 @@ class Emailer < ActionMailer::Base
   	mail(:to => user.email, :subject => "La2etlak verification code")
   end
 
+  def send_feedback(email, text)
+    @email = email
+    @text = text
+    mail(:to => "feedback.la2etlak@gmail.com", :subject => "Feedback: #{email}")
+  end
+
 	# Author: Kiro
   def reset_password(user,pass)
   	@pass = pass

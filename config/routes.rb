@@ -24,6 +24,8 @@ NokiaRuby::Application.routes.draw do
 	match "login" => "user_sessions#login_with_token"
 	match "register" => "users#register"
 	match "mob/resetPassword" => "users#resetPassword"
+  match "mob/feedback" => "users#feedback"
+  match "mob/send_feedback" => "users#send_feedback"
 #	match "dummyLogin" => "users#dummyLogin"
 	match "mob/test" => "users#test"
 	match "mob/test_2" => "users#test_2"

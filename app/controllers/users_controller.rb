@@ -823,6 +823,44 @@ feed and renders the view.
     
   end
 
+  def feedback
+    if current_user.feedback != nil
+      if (Time.now - current_user.feedback) < 10.days
+        flash[:notice] = "Sorry, you can only send feedback once every 10 days $red"
+        redirect_to :controller => 'users', :action =>'feed'
+      else
+        render :layout => 'mobile_template'
+      end
+    else
+      render :layout => 'mobile_template'
+    end
+  end
+
+  def send_feedback
+    if current_user.feedback != nil
+      if (Time.now - current_user.feedback) < 10.days
+          flash[:notice] = "Sorry, you can only send feedback once every 10 days $red"
+          redirect_to :controller => 'users', :action =>'feed'
+      else
+        email = current_user.email
+        text = params[:text]
+        current_user.feedback = Time.now
+        current_user.save
+        Emailer.send_feedback(email, text).deliver
+        flash[:notice] = "Your feedback has been sent $green"
+        redirect_to :controller => 'users', :action =>'feed'
+      end
+    else
+       email = current_user.email
+        text = params[:text]
+        current_user.feedback = Time.now
+        current_user.save
+        Emailer.send_feedback(email, text).deliver
+        flash[:notice] = "Your feedback has been sent $green"
+        redirect_to :controller => 'users', :action =>'feed'
+    end
+  end
+
   def search
     @user = current_user
     @query = params[:query]
