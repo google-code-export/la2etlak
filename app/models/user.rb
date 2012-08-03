@@ -1264,4 +1264,51 @@ end
     sorted = all_stories.sort_by { |r| r.rank }
     return sorted.sort_by(&:rank).reverse
   end
+
+=begin
+  Description: This story generates the mainfeed of the user using the Loksha System,
+             it takes the stories of the feed of the user and the stories shared by
+             friends and sort them by loksha and each loksha is sortd by their rank.
+  Input      : None
+  Output     : None
+  Author : Gasser
+=end
+  def get_main_feed
+    $i = $loksha
+    my_stories = self.get_feed + self.get_friends_stories
+    feed = Array.new
+    while $i > 0 do
+      feed = feed +(my_stories.select {|my_story| my_story.loksha_id == $i }.sort_by {|story| story.rank}).reverse
+      $i = $i - 1
+    end
+    return feed.uniq
+  end
+  
+=begin
+  Description: This story generates the hot stories in the user's feed,
+               The stories are sorted by their loksha and each loksha by its rank
+               then we view the 1st 20% of each loksha (the most recent and ranked)
+               then the rest in each loksha is shown.
+  Input      : None.
+  Output     : None.
+  Author : Gasser
+=end
+  def get_hot_stories
+    $i = $loksha
+    my_stories = self.get_feed + self.get_friends_stories
+    feed = Array.new
+    rest_feed = Array.new
+    hot_feed = Array.new
+    all_feed = Array.new
+    while $i > 0 do
+      all_feed =  (my_stories.select {|my_story| my_story.loksha_id == $i }.sort_by {|story| story.rank}).reverse
+      for $j in 0..((all_feed.length*20)/100)
+        hot_feed << all_feed[$j]
+      end
+      rest_feed = all_feed - hot_feed
+      feed = feed + rest_feed
+      $i = $i - 1
+    end
+    return (hot_feed + feed).uniq
+  end
 end
