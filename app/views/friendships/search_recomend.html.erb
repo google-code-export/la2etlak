@@ -2,9 +2,9 @@
 <html> 
   <div id="search">
 	<%= form_tag("/mob/friendship/#{@sid}/search_recomend", :method => "get") do %>
-	  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
-	  									 :placeholder => 'Search' , :id => 'search_field') %>
-	  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;", :id => "search_button") %>
+	  <%= text_field_tag(:query, "#{@query}", :class => "pull-left" , :style => "height:40px;width:73%",
+	  									 :placeholder => 'Search' , :id => 'search_field') %>&nbsp;
+	  <%= submit_tag('Search', :class => 'btn', :style => "height:40px;width:20%;padding-left:5px", :id => "search_button") %>
 	<% end %>
 
   </div>
