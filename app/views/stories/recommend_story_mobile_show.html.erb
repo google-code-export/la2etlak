@@ -3,23 +3,22 @@
 <!--kareem new -->
 <html>
 <% if current_user.friends != [] %>
-<div>
-<h4> Search for a Friend </h4>
-<%= form_tag("/mob/friendship/#{@storyid}/search_recomend", :method => "get") do %>
-  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
+<div align="center">
+<h4> Search for a Friend: </h4><br>
+<div align="center">
+	<%= form_tag("/mob/friendship/#{@storyid}/search_recomend", :method => "get") do %>
+  <%= text_field_tag(:query, "#{@query}", :style => "height:40px;width:80%",
   									 :placeholder => 'Search') %>
-  <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
-
-<br>
-<h3 align = "center" > OR </h3>
-
+  <br><%= submit_tag('Search', :class => 'btn', :style => "height:30px;width:30%",) %>
+</div>
+<% end %>
 </div>  
 <% end %>
-<% end %>
+
 
 <!--kareem new -->
 
-
+<h3 align = "center" > OR </h3>
 <!-- Auther: khaled.elbhaey -->
 <div align="center">
 	<div id="submit">
@@ -32,7 +31,7 @@
 					</p>
 			
 			  
-			<input type="text" name="email" id="fmail" style ="height:30px; width:200px" placeholder ="E-mail"/>
+			<input type="text" name="email" id="fmail" style ="height:30px; width:80%" placeholder ="E-mail"/>
 			<br>
 			<p>
 				<h4>Recommendation Message:</h4> 
