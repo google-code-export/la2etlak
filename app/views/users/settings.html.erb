@@ -35,6 +35,7 @@
 				<li><%= link_to "Blocked stories", {:controller => "users", :action => "manage_blocked_stories"}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
 				<li><%= link_to "Modify info", {:controller => 'users', :action => 'edit'}, class: "btn", style: "margin:2%; height:30px;" %>	</li>
 				<li><%= link_to "Toggle interests", {:controller => 'users', :action => 'toggle'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
+				<li><%= link_to "Send Feedback", {:controller => 'users', :action => 'feedback'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
 				<% if !@user.verification_code.verified %>
 				<li><%= link_to "Verify account", {:controller => 'users', :action => 'verifySettings'}, class: "btn", style: "margin:2%; height:30px;"%>	</li>
 			<% end %>
