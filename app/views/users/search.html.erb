@@ -1,9 +1,12 @@
 <html>
+<div align="left">
 <%= form_tag("search", :method => "get") do %>
-    <%= text_field_tag(:query, "#{@query}", :style => "height:40px;",
+    <%= text_field_tag(:query, "#{@query}", :style => "height:40px;width:73%",
                        :placeholder => 'Search') %>
-    <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;",) %>
+    <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;width:20%;padding-left:5px;",) %>
 <% end %>
+</div>
+</br></br>
 <% if @query.nil? or @query == ''%>
     <h5> No results </h5>
 <% else %>
@@ -11,7 +14,8 @@
     <ul class="nav nav-list">
       <table style="width:100%;">
         <tr>
-      <td align="left"><font size = "4"><b align ="left">Users Search Results</b></font></td>
+      <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;") %>
+        <font size = "4"><b align ="left">Users Search Results</b></font></td>
         </tr></table>
     </ul>
     <ul class="nav nav-list ">
@@ -52,12 +56,14 @@
       <% end %> 
     </ul>
   <%end%>
+</br></br>
 
     			<% if @stories.length > 0 %>
             <ul class="nav nav-list">
               <table style="width:100%;">
                 <tr>
-                  <td align="left"><font size = "4"><b align ="left">Stories Search Results</b></font></td>
+                  <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+                  <font size = "3"><b align ="left">Stories Search Results</b></font></td>
                 </tr></table>
             </ul>
       			<ul class="nav nav-list ">
