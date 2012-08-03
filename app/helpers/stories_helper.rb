@@ -211,14 +211,35 @@ def fetch_rss(link)
         storynow.content = sdescription
         storynow.mobile_content = storynow.new_content(sdescription)
       else
-        result_from = StoriesHelper.get_full_content(slink,sfeed.first_tag,sfeed.end_tag)
-        if result_from == "emptyuu" || result_from.length < sdescription.length
-          storynow.content = sdescription
-          storynow.mobile_content = storynow.new_content(sdescription)
-        else
-          storynow.content = result_from
-          storynow.mobile_content = storynow.new_content(result_from)
+        feed_first_tag = sfeed.first_tag
+        feed_end_tag = sfeed.end_tag
+        # result_from = StoriesHelper.get_full_content(slink,feed_first_tag,feed_end_tag)
+        # if result_from == "emptyuu" || result_from.length < sdescription.length
+        #   storynow.content = sdescription
+        #   storynow.mobile_content = storynow.new_content(sdescription)
+        # else
+        #    p story_link
+        #    p result_from
+        #   storynow.content = result_from
+        #   storynow.mobile_content = storynow.new_content(result_from)
+        # end
+        response = ""
+        require 'open-uri'
+
+        url = URI.parse(storynow.story_link)
+        open(url) do |http|
+        response = http.read
+      end
+        want = response.match(/#{feed_first_tag}(.*)#{feed_end_tag}/m)
+        new_contentoz = $1
+                if new_contentoz == nil || new_contentoz.length < sdescription.length
+                      storynow.content = sdescription
+                      storynow.mobile_content = storynow.new_content(sdescription)
+                else
+                       storynow.content = new_contentoz
+              storynow.mobile_content = storynow.new_content(new_contentoz)
         end
+
       end
 
       #Author: Gasser
@@ -332,7 +353,8 @@ response = ""
 
     returno = StoriesHelper.substring_between(response,match1,match2)
     if returno == nil
-      return "emptyuu"
+      returno = "emptyuu"
+      return returno
     else
       return returno
     end
