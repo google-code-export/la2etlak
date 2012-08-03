@@ -182,7 +182,9 @@ class FriendshipsController < ApplicationController
     l.save
     flash[:block_success] = "#{name_2.humanize} was blocked successfully $green"    
     
-    @friend.rank = @friend.rank - 5
+    @user.rank = @user.rank - 4
+    @user.save
+    @friend.rank = @friend.rank - 9
     @friend.save
 
     redirect_to action: 'pending'

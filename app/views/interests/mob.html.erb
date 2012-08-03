@@ -1,9 +1,8 @@
 <html>
-
-
 		<div class="main-right-interest">
-			<div class="middle-interest-panel" >
-						<table>			
+			<div class="middle-interest-panel">
+						<table>
+	<div id = name align="center">								
    <%if (@user_interests.include? @interest) && (@user.blocked_interests.include? @interest) %> 		 			
 	<span class="yellowbadge"><%=@interest.name.upcase%></span><br>
 	<%else%>
@@ -13,7 +12,9 @@
 	   		<span class="redbadge"><%=@interest.name.upcase%></span><br>
 	        <%end%>
    <%end%>
+
 		</table><br>
+	</div>
 <!-- if the interest's image isn't there  .. the alternative is Nokia Logo image -->
 				<div id="image" align = "center">
 					<h3><% if @interest.photo.file? %>
@@ -30,8 +31,15 @@
 					</ul>
       			<h3 class="interest-page-text">Description:</h3>
 					<div class="interest-page-well">
+
+						<% if @interest.description.nil? %>
+						No Description
+						<%else%>
          				<%= @interest.description %>
+         				<%end%>
 					</div>
+				</div>
+				<div class="well">
 					<ul class="nav nav-list" >
 						<li class="divider"></li>
 					</ul>
@@ -39,14 +47,25 @@
 					<div class="interest-page-well ">
 						<! .. adding the RSS feeds added to this interest unless the table is empty ..>
 						<table class="table" >
+
+					<% if @feeds.length == 0 %>
+						No Sources
+						<%else%>
+         			
+         				
 						<% @feeds.each do |f| %>
     					<tr >
       						<td><%= link_to( (f.link.length > 30 ? ('%{sub}...' % {:sub => f.link[0,30]}) : f.link), f.link)	%></td>
       						
     					</tr>
-  						<% end %>
+  						
+  						<%end%>
+  						<%end%>
+  						
+
+  						</div>
 						</table>
-					</div>
+				
 					<ul class="nav nav-list" >
 						<li class="divider"></li>	
 					</ul>	

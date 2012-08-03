@@ -61,7 +61,7 @@ class UserSessionsController < ApplicationController
 			@user = current_user
 			@user.new_password = nil
 			
-			#@user.rank = @user.rank + 2
+			@user.rank = @user.rank + 2
 			@user.save
 			
 			if @user.deactivated
