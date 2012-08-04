@@ -9,7 +9,7 @@ require 'chronic'
     #Author: Gasser
     #Increment the $loksha before each fetch for the feeds in the system
     $loksha = $loksha + 1
-  	puts '%%%%%%%%%%%%%%% FETCHING NEW RSS '+$loksha +'%%%%%%%%%%%%%%%%%%'
+  	puts '%%%%%%%%%%%%%%% FETCHING NEW RSS '+ "#{$loksha}" +'%%%%%%%%%%%%%%%%%%'
     Interest.all.each do |interest|
       if interest.deleted.nil?
         interest.feeds.each do |feed|
