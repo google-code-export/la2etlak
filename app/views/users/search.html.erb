@@ -64,7 +64,7 @@
   <%end%>
 </br></br>
           
-    			<% if @stories.length > 0 %>
+    			<% if @stories != nil && @stories.length > 0 %>
           <ul class="nav nav-list">
               <table style="width:100%;">
                 <tr>
@@ -136,8 +136,10 @@
     <% end %>
 
 					<% end %>
+          <% if @stories != nil && @stories.length > 0 %>
           <div class="apple_pagination">
     <%= will_paginate @stories, :container => false %>
   </div>
+  <% end %>
 <%end%>
 </html>

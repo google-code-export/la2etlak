@@ -934,7 +934,9 @@ feed and renders the view.
 
       @users.delete @user
     end
+     if @stories != nil && @stories.length > 0 
     @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
+    end
     render layout: 'mobile_template'
   end
 end
