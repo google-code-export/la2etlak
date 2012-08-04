@@ -27,8 +27,10 @@ Author : Omar
   def get_story_feed
    @ser = params[:serStor]
    @story = Marshal::load(@ser)
+   if @story.category == "Facebook"
    @com = params[:serComment]
    @comments = Marshal::load(@com)
+ end
    render :layout => "mobile_template"   
   end
 
@@ -197,7 +199,7 @@ Author: Omar
 				   @successflag=false
            flash[:notice]="Please enter a valid email $red"
 			else
-			  if !@user.has_account(@friendmail)
+			  if !User.has_account(@friendmail)
 				    Emailer.invite_to_app(@useremail, @friendmail, @message,
             @storytit, @story_url).deliver
             flash[:notice]="Recommendation sent $green" 

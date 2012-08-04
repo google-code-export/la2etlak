@@ -22,36 +22,36 @@
 							transform: rotate(-45deg); 
 							margin-top:40px;">User</span>
                                          
-					<% if @user.first_name.nil? %>
-					<% name = @user.email %>
+					<% if nf.first_name.nil? %>
+					<% name = nf.email %>
 					<% else %>
-					<% name = @user.first_name %>
+					<% name = nf.first_name %>
 					<%  end %>
 					<font size="3"><b><%= 
-					link_to(name , {:controller => "users", :action => "show",:id => @user.id}) %></b></font>
+					link_to(name , {:controller => "users", :action => "show",:id => nf.id}) %></b></font>
 					
 						<div class="well admin_story_feed "  style=" border-right:5px solid #b94a48; ">
-							<% if @user.image == nil%>
-				     		<%=  link_to (image_tag "logo.jpeg"  , :style => "float:left; margin-right:20px; width=150x; height:150px;"), {:action => 'show', :controller => 'users' , :id => @user.id } %>
+							<% if nf.image == nil%>
+				     		<%=  link_to (image_tag "logo.jpeg"  , :style => "float:left; margin-right:20px; width=150x; height:150px;"), {:action => 'show', :controller => 'users' , :id => nf.id } %>
 				     		<% else %>
-				            <%= link_to image_tag(@interest.image), :action => 'show', :controller => 'users' , :id =>  @user.id  %>
+				            <%= link_to image_tag(@interest.image), :action => 'show', :controller => 'users' , :id =>  nf.id  %>
 				            <% end %>
 							<div class"control-panel">
-								<% if !(@user.deactivated) %>
+								<% if !(nf.deactivated) %>
 								<ul class="nav nav-list">
 									<li class="nav-header">Status:</li>
 									<span class="greenbadge">Active</span>
-									<% elsif @user.deactivated %>
+									<% elsif nf.deactivated %>
 									<ul class="nav nav-list">
 										<li class="nav-header">Status:</li>
 										<li><span class="redbadge">Deactivated</span></li>
 										<% end %>
                                                                                </br></br> <li class="nav-header">E-mail:</li>
-										<li><h3><%= @user.email  %></h3></li>
+										<li><h3><%= nf.email  %></h3></li>
 										
 									
 									<%= link_to "view Statistics", 
-													{:controller => 'statistics', :action => 'users',:id => @user.id }, 
+													{:controller => 'statistics', :action => 'users',:id => nf.id }, 
 													class: "btn btn-primary"  %>
 							</div>
 					</div>

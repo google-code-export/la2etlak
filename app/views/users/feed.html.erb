@@ -39,27 +39,6 @@
 					<%end%>
 
 
-				<table>
-					<% people = f.sharers %>
-					<% shares = Array.new %>
-					<% count = 0 %>
-					<% people.each do |person| %>
-						<%if @friends.include?(person) %>
-							<% shares << person %>
-							<%count = count +1%>
-						<%end%>
-					<%end%>	
-					<% unless shares.empty? %>
-						<% user_name = shares.first.name  ||  shares.first.email.split('@')[0] %>	
-						<% if count>1 %>	
-						<td><h4><%=  user_name + " and "+(count-1).to_s + " other".pluralize(count-1) +" shared this"%></h4></td>
-						<%else%>
-						<td><h4><%=  user_name + " shared this"%></h4></td>
-						<%end%>
-					<%end%>
-				</table>
-
-
 				<table style="float:right">
 					<tr>
 						<td><span  class="pull-right bluebadge"><%=f.interest.name%> </span></td>
