@@ -5,6 +5,7 @@ before_save :default_values
   def default_values
     if self.group_name.nil? || self.group_name == ""
     self.group_name = "general"
+    self.group_name.downcase
   end
 end
 

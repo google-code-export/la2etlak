@@ -155,6 +155,7 @@ Author: Kareem , Gasser , Omar
 
   def feed
     @user = current_user
+    @friends = @user.friends
     @stories = @user.get_main_feed
     #@stories = @stories.uniq    
     # YAHIA
@@ -170,6 +171,7 @@ Author: Kareem , Gasser , Omar
 
 def hot
     @user = current_user
+    @friends = @user.friends
     @stories = @user.get_hot_stories
     #@stories = @stories.uniq    
     # YAHIA
@@ -198,6 +200,7 @@ def hot
 
 def top
   @user = current_user
+  @friends = @user.friends
   @stories = @user.top_rated
   @stories.delete_if{|x| x.hidden}
     # YAHIA END
@@ -921,6 +924,7 @@ feed and renders the view.
 
   def search
     @user = current_user
+    @friends = @user.friends
     @query = params[:query]
     if !(@query.nil?) and !(@query == '') and !(@query == ' ')
       @results = Admin.search(@query.downcase)
@@ -930,6 +934,7 @@ feed and renders the view.
 
       @users.delete @user
     end
+    @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
     render layout: 'mobile_template'
   end
 end
