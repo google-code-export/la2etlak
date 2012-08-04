@@ -53,6 +53,7 @@ Author: 3OBAD
 
   def get_feed(count=20)
 
+    puts "HELLOOOOOOOOOOOOOOOOOO Flickr #{Time.now}"
     begin
       self.config_flickr
       login = flickr.test.login
@@ -67,7 +68,8 @@ Author: 3OBAD
       puts ex
       return []
     end
-      stories
+    puts "BYEEEEEEEEEEEEEEEEEEEE Flickr #{Time.now}"
+    stories
   end
 
 
@@ -89,6 +91,7 @@ Author: 3OBAD
     story.category = 'flickr'
     story.content = info.description
     story.media_link = original_url
+    story.id = photo["id"]
     return story 
   end
 

@@ -56,6 +56,7 @@ class TwitterAccount < ActiveRecord::Base
   Author: Yahia
 =end
   def get_feed(count=20)
+    puts "HELLOOOOOOOOOOOOOOO TWITTER #{Time.now}"
     begin 
       self.config_twitter
       feed = Twitter.home_timeline(:count => count)
@@ -64,6 +65,7 @@ class TwitterAccount < ActiveRecord::Base
         temp = TwitterAccount.convert_tweet_to_story(tweet) 
         stories.push(temp) 
       end 
+      puts "BYEEEEEEEEEEEEEEEEE TWITTER #{Time.now}"
       stories
     rescue 
       puts 'EXCEPTION RAISED IN TWITTER_ACCOUNT#GET_FEED'

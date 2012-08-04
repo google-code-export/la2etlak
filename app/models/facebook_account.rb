@@ -16,13 +16,14 @@ class FacebookAccount < ActiveRecord::Base
 	 Author: Menisy
 =end
   def get_feed
+    puts "HELLOOOOOOOOOOOOOO Facebook #{Time.now}"
   	begin
-      self.auth_secret = self.auth_secret.to_i+1
-      new_token = Koala::Facebook::OAuth.new('http://localhost:3000').exchange_access_token(self.auth_token.to_s)
-      self.auth_token = new_token.to_s
-      self.auth_secret = self.auth_secret.to_i+1
-      self.save!
-      graph = Koala::Facebook::API.new(new_token)
+      #self.auth_secret = self.auth_secret.to_i+1
+      #new_token = Koala::Facebook::OAuth.new('http://localhost:3000').exchange_access_token(self.auth_token.to_s)
+      #self.auth_token = new_token.to_s
+      #self.auth_secret = self.auth_secret.to_i+1
+      #self.save!
+      graph = Koala::Facebook::API.new(self.auth_token.to_s)
       g = graph.get_connections("me","home")
       #$facebook_pp	= graph.get_object(current_user.facebook_account.facebook_id)["picture"]
       feed = Array.new
@@ -31,25 +32,25 @@ class FacebookAccount < ActiveRecord::Base
       media = ""
       # p g.nil?
 
-puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+# puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
-g.each do |x|
-  if x["type"] == "status"
-   # puts x
+# g.each do |x|
+#   if x["type"] == "status"
+#    # puts x
 
-    i = x["id"]
-    puts i
-    userid = i.split('_')[0]
-    storyid = i.split('_')[1]
-    puts userid
-    puts storyid
+#     i = x["id"]
+#     puts i
+#     userid = i.split('_')[0]
+#     storyid = i.split('_')[1]
+#     puts userid
+#     puts storyid
 
-    puts "http://www.facebook.com/#{userid}/posts/#{storyid}"
+#     puts "http://www.facebook.com/#{userid}/posts/#{storyid}"
 
-  end
-end
+#   end
+# end
 
-puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+# puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
 
 
@@ -144,10 +145,17 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
           content = ""
           media = ""
         end
+        puts "BYEEEEEEEEEEEEEEE Facebook #{Time.now}"
         return feed
       end	
     rescue
       #self.destroy
+      self.auth_secret = self.auth_secret.to_i+1
+      new_token = Koala::Facebook::OAuth.new('http://localhost:3000').exchange_access_token(self.auth_token.to_s)
+      self.auth_token = new_token.to_s
+      self.auth_secret = self.auth_secret.to_i+1
+      self.save!
+      self.get_feed
       return []
     end
   end
@@ -185,17 +193,26 @@ puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
   end
 
   def fb_get_comments(post_id)
-      graph = Koala::Facebook::API.new(self.auth_token.to_s)
-      comments_hash = graph.get_connection(post_id,"comments")
-      comments = Comment.new
-      comments_array = Array.new
-      comments_hash.each do |c|
-         comments.id = c["id"]
-         comments.user_id = c["from"]["id"]
-         #c["from"]["name"]
-         comments.story_id = post_id
-         comments.content = c["message"]
-         comments_array.push(comments)
+      begin
+        graph = Koala::Facebook::API.new(self.auth_token.to_s)
+        comments_hash = graph.get_connection(post_id,"comments")
+        comments = Comment.new
+        comments_array = Array.new
+        comments_hash.each do |c|
+          comments.id = c["id"]
+          comments.user_id = c["from"]["id"]
+          #c["from"]["name"]
+          comments.story_id = post_id
+          comments.content = c["message"]
+          comments_array.push(comments)
+        end
+      rescue 
+        self.auth_secret = self.auth_secret.to_i+1
+        new_token = Koala::Facebook::OAuth.new('http://localhost:3000').exchange_access_token(self.auth_token.to_s)
+        self.auth_token = new_token.to_s
+        self.auth_secret = self.auth_secret.to_i+1
+        self.save!
+        return []
       end
       return comments_array
   end

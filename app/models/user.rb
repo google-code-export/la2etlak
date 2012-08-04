@@ -1033,28 +1033,41 @@ Author:Kareem
    def get_social_feed()
     Rack::Timeout.timeout = 7
     puts 'GETTING THE SOCIAL FEED'
+    puts "Started at #{Time.now}"
     user = self
     social_stories = Array.new #Initialize new empty array
+    twit = []
+    fac = []
+    flick = []
+    tum = []
+    threads = []
     if(!user.twitter_account.nil?) # if user has twitter account then enters if
       puts 'TWITTER '
-       social_stories = social_stories + (user.twitter_account.get_feed) # appends twitter feed to list
+       threads<<Thread.new{ twit = twit + (user.twitter_account.get_feed)} # appends twitter feed to list
      end
      if(!user.tumblr_account.nil?) #if user has tumblr account then enters if
       puts 'TUMBLR'
-       social_stories = social_stories + (user.tumblr_account.get_feed) #appends tumblr feed to list
+       threads<<Thread.new{ tum = tum + (user.tumblr_account.get_feed)}  #appends tumblr feed to list
      end
      if(!user.facebook_account.nil?) # if user has facebook account then enters if
       puts 'FACEBOOK'
-       social_stories = social_stories + (user.facebook_account.get_feed) #appends facebook feed to list
+       threads<<Thread.new{ fac = fac + (user.facebook_account.get_feed)}  #appends facebook feed to list
      end
      if(!user.flickr_account.nil?) # if user has flickr account then enters if
       puts 'FLICKR '
-       social_stories = social_stories + (user.flickr_account.get_feed) # appends flickr feed to list
+       threads<<Thread.new{ flick = flick + (user.flickr_account.get_feed)}  # appends flickr feed to list
      end
+
+    threads.each do |aThread|
+      aThread.join
+    end
+    social_stories = twit + fac + flick  + tum
      Rack::Timeout.timeout =33
+     puts "Ended at #{Time.now}"
      return social_stories.shuffle # returned stories shuffled
      puts 'GETTING THE SOCIAL FEED END'
    end
+
    
 
     
