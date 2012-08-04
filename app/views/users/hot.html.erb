@@ -1,7 +1,7 @@
-<!--$$$$$$$$$$$$$$$$$$ Mina Adel  , Gasser , Omar $$$$$$$$$$$$$$$$$$$ -->
+<!--$$$$$$$$$$$$$$$$$$ Mina Adel , Gasser , Omar $$$$$$$$$$$$$$$$$$$ -->
 <!--This checks whether the list of stories I receive is nil or not -->
 
-<ul class="nav nav-tabs">	
+<ul class="nav nav-pills">
   <li class="<%= 'active' if params[:action] == "get_main_feed" %>"><a href="<%= url_for :controller => "users", :action => "feed" %>">Main Feed</a></li>
   <li class="<%= 'active' if params[:action] == "get_hot_stories" %>"><a href="<%= url_for :controller => "users", :action => "hot" %>">Hot Stories</a></li>
   <li class="<%= 'active' if params[:action] == "get_top_rated" %>"><a href="<%= url_for :controller => "users", :action => "top" %>">Top Rated</a></li>

@@ -146,13 +146,70 @@ class UsersController < ApplicationController
 
 
 =begin
-Description:this Action generates the User main feed if the User doesn't have Interests the Top ranked Stories on the System will appear
+Description:this Action generates the User main feed & hot stroies & top rated & social stories if the User doesn't have Interests the Top ranked Stories on the System will appear
 and The Registered Social Networks Stories else the Stories will appear to Him according to his Interests and in both cases the Stories shared by his Friends will be Included and Also stories From his Social Accounts.
 Input: Interest.name
 Output: Array of Stories according to the Description Stored in variable @stories
-Author: Kareem
+Author: Kareem , Gasser , Omar
 =end
 
+  def feed
+    @user = current_user
+    @stories = @user.get_main_feed
+    #@stories = @stories.uniq    
+    # YAHIA
+    @stories.delete_if{|x| x.hidden}
+    # YAHIA END
+    if (@stories == [])  
+        flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=  \"color:#FF0000;\">Click here to add some                     interests. </h7> </a> $yellow"
+    end
+    # Author : Mina Adel
+    @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template"
+  end
+
+def hot
+    @user = current_user
+    @stories = @user.get_hot_stories
+    #@stories = @stories.uniq    
+    # YAHIA
+    @stories.delete_if{|x| x.hidden}
+    # YAHIA END
+    if (@stories == [])  
+        flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=  \"color:#FF0000;\">Click here to add some                     interests. </h7> </a> $yellow"
+    end
+    # Author : Mina Adel
+    @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template"
+  end
+
+ def social
+  @user = current_user
+  @stories = @user.get_social_feed()
+  @stories.delete_if{|x| x.hidden}
+    # YAHIA END
+    if (@stories == [])  
+        flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=  \"color:#FF0000;\">Click here to add some                     interests. </h7> </a> $yellow"
+    end
+    # Author : Mina Adel
+    @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template"
+ end 
+
+def top
+  @user = current_user
+  @stories = @user.top_rated
+  @stories.delete_if{|x| x.hidden}
+    # YAHIA END
+    if (@stories == [])  
+        flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=  \"color:#FF0000;\">Click here to add some                     interests. </h7> </a> $yellow"
+    end
+    # Author : Mina Adel
+    @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
+    render :layout => "mobile_template"
+ end 
+
+=begin
   def feed
     user = current_user
     @friends = user.friends
@@ -192,6 +249,7 @@ Author: Kareem
     render :layout => "mobile_template"
   end
 ########################
+=end
 
 =begin
   Description: Method to render the settings view 

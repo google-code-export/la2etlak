@@ -1,7 +1,8 @@
-<!--$$$$$$$$$$$$$$$$$$ Mina Adel  , Gasser , Omar $$$$$$$$$$$$$$$$$$$ -->
+<!--$$$$$$$$$$$$$$$$$$ Mina Adel , Gasser , Omar $$$$$$$$$$$$$$$$$$$ -->
 <!--This checks whether the list of stories I receive is nil or not -->
 
-<ul class="nav nav-tabs">	
+
+<ul class="nav nav-pills">
   <li class="<%= 'active' if params[:action] == "get_main_feed" %>"><a href="<%= url_for :controller => "users", :action => "feed" %>">Main Feed</a></li>
   <li class="<%= 'active' if params[:action] == "get_hot_stories" %>"><a href="<%= url_for :controller => "users", :action => "hot" %>">Hot Stories</a></li>
   <li class="<%= 'active' if params[:action] == "get_top_rated" %>"><a href="<%= url_for :controller => "users", :action => "top" %>">Top Rated</a></li>
@@ -16,6 +17,76 @@
 	
 	<% @stories.each do |f| %>
 		<% if f.is_a?(Story) %>
+		<div>
+			<% if !f.id.nil? %>
+				<% if f.category.nil? %>
+					<div class="well" style="border-right:5px solid #f89406;">
+					
+
+				<% else %>
+					<% if f.category == "Facebook"%>
+						<div class="well" style="border-right:5px solid #3b589a;">
+					<% elsif f.category == "twitter"%>
+						<div class="well" style="border-right:5px solid #30ccfa;">
+					<% elsif f.category == "flickr"%>
+						<div class="well" style="border-right:5px solid #fb0080;">
+					<% elsif f.category == "tumblr"%>
+						<div class="well" style="border-right:5px solid #385672;">
+					<% end %>
+				<% end %>
+				<% serStory = Marshal::dump(f)%>
+				<% if f.category == "Facebook" %>
+				  <% comments = @user.facebook_account.fb_get_comments(f.mobile_content)%>
+				  <% serComment = Marshal::dump(comments)%>
+				<% end %>
+				<% if f.title.nil? %>
+				 <% if f.category == "Facebook" %>
+					<h4><%= link_to("Social Feed, No Title", {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory , :serComment => serComment} )%></h4>
+						<%if f.media_link!=""%>
+						<%= link_to image_tag(f.media_link),  {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory  , :serComment => serComment}%>
+						<%end%>
+				 <% else %>
+				 		<h4><%= link_to("Social Feed, No Title", {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory} )%></h4>
+						<%if f.media_link!=""%>
+						<%= link_to image_tag(f.media_link),  {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory}%>
+				 <% end %>		
+							<% if f.category == "Facebook"%>
+							<span class="pull-right facebookbadge" >Facebook</span>
+							<% elsif f.category == "twitter"%>
+								<span class="pull-right twitterbadge">Twitter</span>
+							<% elsif f.category == "flickr"%>
+								<span class="pull-right flickrbadge">Flickr</span>
+							<% elsif f.category == "tumblr"%>
+								<span class="pull-right tumblrbadge">Tumblr</span>
+								<% end %>
+							<% end %>	
+				<% else %>
+				 <% if f.category == "Facebook" %>
+					<h4><%= link_to(f.title, {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory , :serComment => serComment} )%></h4>
+						<%if f.media_link!=""%>
+						<%= link_to image_tag(f.media_link),  {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory , :serComment => serComment}%>
+						<%end%>
+				 <% else %>		
+				        <h4><%= link_to(f.title, {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory } )%></h4>
+						<%if f.media_link!=""%>
+						<%= link_to image_tag(f.media_link),  {:controller => 'stories', :action => 'get_story_feed', :serStor => serStory }%>
+						<%end%>
+				 <% end %>		
+							<% if f.category == "Facebook"%>
+							<span class="pull-right facebookbadge">Facebook</span>
+							<% elsif f.category == "twitter"%>
+								<span class="pull-right twitterbadge">Twitter</span>
+							<% elsif f.category == "flickr"%>
+								<span class="pull-right flickrbadge">Flickr</span>
+							<% elsif f.category == "tumblr"%>
+								<span class="pull-right tumblrbadge">Tumblr</span>
+					<% end %>
+				<% end %>
+				
+			
+					
+				
+			<% else %>
 			<%if f.interest.deleted.nil?%>
 			<div id=<%=f.title%> class="well" style="border-right:5px solid #f89406;">
 			<% if f.title.nil? %>
@@ -76,7 +147,7 @@
 			<% end %>
 		</div>
 		<% end %>
-	
+	<% end %>
 	<div class="apple_pagination">
 		<%= will_paginate @stories, :container => false %>
 	</div>

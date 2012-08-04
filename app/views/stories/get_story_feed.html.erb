@@ -29,7 +29,7 @@
  <%=raw @story.content %>
  </div>
  <%end%> 
- <% if @story.category = 'twitter' %>
+ <% if @story.category == 'twitter' %>
   <div style="pull-left">
   <%= link_to image_tag('images.jpg' , :style =>"width:35px;height:25px;") + "  Retweet" , {:controller => 'twitter_accounts' , :action => 'retweet' , :id => (@story.id) }%> &nbsp;&nbsp;
   <%= link_to image_tag('favorite.png' , :style =>"width:35px;height:25px;")  + "  Favorite" ,  {:controller => 'twitter_accounts' , :action => 'favorite' , :id => (@story.id) }%> 
@@ -38,6 +38,29 @@
 
  <% type = "" %>
  <% if @story.category == "Facebook" %>
+ <!-- OMAR -->
+
+<div style="padding-left:3px;float:left;">
+    <h4> Comments </h4>
+</div>
+<br>
+<div id="all-comments" style="width:95%;">
+    <% @comments.each do |comment| %>
+
+    <div class="story-comment-box-mobile well-large" style="float:left;clear:both;width:90%;margin:0.5%;">
+        <h5 style="padding-top:1px;padding-left:1%;">   <!-- commenter name -->
+        <div style="clear:both;padding:1px;">
+            <!-- pp -->
+            <div style="padding-top:10px;padding-bottom:5px;">
+                <%= comment.content %>
+            </div>
+        </div>
+      </div>
+    <!-- area to comment -->        
+    <% end %>
+</div>
+
+ <!-- OMAR -->  
   <% if @story.title.index"shared a photo" %>
     <% type = "photo" %>
   <% elsif @story.title.index"shared a video"%> 
@@ -45,14 +68,12 @@
   <% else %>
     <% type = "status" %>
   <% end %>
-
-  <div class="story-comment-box-mobile" style="text-align:center">
+  
+  <div style="text-align:center">
     <ul class="nav nav-list">
-      <li><%= link_to "Go to "+type , @story.story_link , class: "btn btn-primary", :target=>"_new" ,style: "margin:2%; height:25px;"%>
-      </li>
-      <li>
-          <font face="verdana" size="2" color="blue" >This button will redirect you out of LA2ETLAK!<br>Use the back soft key to return.</font>
-      </li>
+      <%= link_to "Go to "+type , @story.story_link , class: "btn btn-primary", :target=>"_new" ,style: "margin:2%; height:25px;"%><br>
+      <font face="verdana" size="2" color="blue" >This button will redirect you out of LA2ETLAK!<br>Use the back soft key to return.</font>
+      
     </ul>
   </div>
  <% end %>

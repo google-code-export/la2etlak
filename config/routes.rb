@@ -46,6 +46,10 @@ NokiaRuby::Application.routes.draw do
   match "mob/int_toggle" => "users#int_toggle"
   match "mob/story_feed" => "stories#get_story_feed"
   match "mob/toggle_group/:name" => "users#toggle_group"
+  match "mob/main_feed" => "users#feed"
+  match "mob/hot_feed" => "users#hot"
+  match "mob/social_feed" => "users#social"
+  match "mob/top_feed" => "users#top"
 # $$$$$$$$$$$$$$  OMAR $$$$$$$$$$$$$$$$$$$$$$$ 
 
 
@@ -74,7 +78,6 @@ NokiaRuby::Application.routes.draw do
         # $$$$$$$$$$$$$$ RANA $$$$$$$$$$$$$$$$$$$$$$$$$
         
   #$$$$$$$$$$$$$$$$ MINA $$$$$$$$$$$$$$$$$$$$$$$
-  match "mob/main_feed" => "users#feed"
   match "mob/shares/:id" => "shares#user_share_story"
   match "mob/settings" => "users#settings"
   match "mob/facebook" => "users#facebook_feed"

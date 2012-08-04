@@ -27,6 +27,8 @@ Author : Omar
   def get_story_feed
    @ser = params[:serStor]
    @story = Marshal::load(@ser)
+   @com = params[:serComment]
+   @comments = Marshal::load(@com)
    render :layout => "mobile_template"   
   end
 
