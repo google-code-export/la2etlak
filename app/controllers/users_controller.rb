@@ -922,7 +922,7 @@ feed and renders the view.
   def search
     @user = current_user
     @query = params[:query]
-    if !(@query.nil?)
+    if !(@query.nil?) and !(@query == '') and !(@query == ' ')
       @results = Admin.search(@query.downcase)
       @users = @results[0]
       @stories = @results[1]

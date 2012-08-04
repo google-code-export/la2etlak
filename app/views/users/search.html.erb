@@ -7,8 +7,9 @@
 <% end %>
 </div>
 </br></br>
-<% if @query.nil? or @query == ''%>
-    <h5> No results </h5>
+
+<% if @query == '' or @query.nil? or @query == ' ' or (@users.empty? and @stories.empty?) %>
+    <h3> Please enter a valid search query. </h3>
 <% else %>
   <% if @users.length > 0 %>
     <ul class="nav nav-list">
@@ -21,7 +22,12 @@
     <ul class="nav nav-list ">
       <% @users.each do |member| %>
         <li class="divider"></li>
-        <li><b> <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </b></li>
+        <li><% if not member.image? %>
+          <%= image_tag "logo.jpeg", :class=>"img-user-component" , :style =>"width:30px;height:30px;"%>
+        <% else %>
+          <img src= "<%= member.image %>" style ="width:30px;height:30px;"/>
+        <% end %>
+        <b>&nbsp; <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </b></li>
           <div align="right">
         <%= if member.friends.include? @user or member.blocked? @user
           link_to 'Remove friendship',{:controller => 'friendships',
@@ -67,14 +73,17 @@
                 </tr></table>
             </ul>
       			<ul class="nav nav-list ">
+              <table>
        				<% @stories.each do |story| %>
               <li class="divider"></li>
-							 <h4><a href="/stories/<%= story.id%>/get"
+              <td><%= image_tag "logo.jpeg", :class=>"img-user-component" , :style =>"width:30px;height:30px;"%></td>
+							<td><h4><a href="/stories/<%= story.id%>/get"
 							   style="display:block;">
-							   <%=story.title%>
+							   &nbsp;&nbsp;<%=story.title%></td>
 							     </a></h4>
                 </br>
         			<%end%>
+            </table>
   					</ul>
 					<% end %>
 <%end%>
