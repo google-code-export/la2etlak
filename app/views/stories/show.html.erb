@@ -28,7 +28,7 @@
 									<li class="nav-header">Date :</li>
 									<li><%= @story.created_at.to_date %></li>
 									<li class="nav-header">Rank :</li>
-									<li><%= @story.get_story_rank_all_time %></li>
+									<li><%= @story.rank %></li>
 									<li class="nav-header">Interest Name :</li>
 									<li><%= Interest.find(@story.interest_id).name %></li>
 
