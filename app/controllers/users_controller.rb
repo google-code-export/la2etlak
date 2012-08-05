@@ -276,7 +276,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(2)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -289,7 +289,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(1)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -302,7 +302,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(3)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -315,7 +315,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(4)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -484,6 +484,7 @@ def toggle_group
   Author: bassem
 =end
   
+
   def deactivate
     @user = User.find(params[:id])
     @user.deactivate_user()

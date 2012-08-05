@@ -206,6 +206,8 @@ Author: Omar
 			  else
 				    Emailer.recommend_story(@useremail, @friendmail, @message,
             @storytit, @story_url).deliver
+            u = User.find_by_email(@friendmail)
+            UserNotification.create(owner: u.id , user: @user.id, story: @story.id , comment: nil , notify_type: 3 , new: true)
             flash[:notice]="Recommendation sent $green"
 			  end
 			Log.create!(loggingtype: 2,user_id_1: @user.id,user_id_2: nil,admin_id: nil, 
