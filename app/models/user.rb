@@ -1261,24 +1261,10 @@ end
 
   
   def top_rated
-    stories = self.user_add_interests.map {|add| Story.where(:interest_id => add.interest_id)}
-    all_stories = []
-    c = stories.count - 1
-    (0..c).each do |i|
-      stories[i].each do |story|
-        all_stories.push(story)
-      end
-    end
-
-    blocked = self.blocked_stories
-    all_stories2 = []
-    all_stories.each do |story2|
-      if !(blocked.include? story2)
-        all_stories2.push(story2)
-      end
-    end
+    all_stories = self.get_feed + self.get_friends_stories
+    top = []
     
-    sorted = all_stories2.sort_by { |r| r.rank }
+    sorted = all_stories.uniq.sort_by { |r| r.rank }
     return sorted.sort_by(&:rank).reverse
   end
 
