@@ -152,10 +152,10 @@
 		  <% if @dislikes.length > 0 %>
 		  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 		  <%=link_to(@a, {:controller => "stories", :action => "disliked_mobile_show", :id => (@story.id)})%>
-		  <%end%>
       <%else%>
       <%="#{@dislikes.length}"+" user".pluralize(@likes.length)+ " dislike this."%>
 		  <%end%>
+      <%end%>
 		  
 <!-- if user liked this story before remove like button and only adds dislike button -->
 <!-- checks for number of likes and dislikes per story -->
@@ -175,6 +175,10 @@
 	  <% if @dislikes.length > 0 %>
 		  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 		  <%=link_to(@a , {:controller => 'stories', :action => 'disliked_mobile_show', :id => (@story.id)})%>
+    <%else%>
+
+      <%= "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
+
   	<%end%>
  	
   <%end%>
@@ -197,10 +201,10 @@
 	<% if @dislikes.length > 1 %>
 		<% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
   	  	<%=link_to(@a , {:controller => 'stories', :action => 'disliked_mobile_show', :id => (@story.id)})%>
-  	 <%end%>
      <%else%>
       <% if @dislikes.length ==1 %>
       <%="You Dislike this."%>
+    <%end%>
     <%end%>
 
 

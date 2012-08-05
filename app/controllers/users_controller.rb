@@ -155,6 +155,7 @@ Author: Kareem , Gasser , Omar
 
   def feed
     @user = current_user
+    @friends = @user.friends
     @stories = @user.get_main_feed
     #@stories = @stories.uniq    
     # YAHIA
@@ -170,6 +171,7 @@ Author: Kareem , Gasser , Omar
 
 def hot
     @user = current_user
+    @friends = @user.friends
     @stories = @user.get_hot_stories
     #@stories = @stories.uniq    
     # YAHIA
@@ -198,6 +200,7 @@ def hot
 
 def top
   @user = current_user
+  @friends = @user.friends
   @stories = @user.top_rated
   @stories.delete_if{|x| x.hidden}
     # YAHIA END
@@ -273,7 +276,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(2)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -286,7 +289,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(1)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -299,7 +302,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(3)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -312,7 +315,7 @@ def top
     @user = current_user
     stories = @user.filter_social_network(4)
     @stories=stories.paginate(:per_page => 10, :page=> params[:page])
-    render :layout => "mobile_template", :template => "users/feed"
+    redirect_to :controller => 'users' , :action => 'social'
   end
 
 =begin
@@ -481,6 +484,7 @@ def toggle_group
   Author: bassem
 =end
   
+
   def deactivate
     @user = User.find(params[:id])
     @user.deactivate_user()
@@ -921,6 +925,7 @@ feed and renders the view.
 
   def search
     @user = current_user
+    @friends = @user.friends
     @query = params[:query]
     if !(@query.nil?) and !(@query == '') and !(@query == ' ')
       @results = Admin.search(@query.downcase)
@@ -929,6 +934,9 @@ feed and renders the view.
       @interests = @results[2]
 
       @users.delete @user
+    end
+     if @stories != nil && @stories.length > 0 
+    @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
     end
     render layout: 'mobile_template'
   end
