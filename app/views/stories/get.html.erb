@@ -259,7 +259,7 @@
 <div id="all-comments" style="width:95%;">
     <% comments = Comment.find_all_by_story_id(@story.id) %>
     <% comments.each do |comment| %>
-
+  <% if !(comment.deleted) %>  
     <div class="story-comment-box-mobile well-large" style="float:left;clear:both;width:90%;margin:0.5%;">
         <h5 style="padding-top:1px;padding-left:1%;">    <%= comment.user.name || comment.user.email.split("@")[0] %> says:</h5>
         <div style="clear:both;padding:1px;">
@@ -301,6 +301,7 @@
             </li>
         </ul>
     </div>
+  <% end %>
 <% end %>
 </div>
 <div style="width:95%">
