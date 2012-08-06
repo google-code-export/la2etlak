@@ -84,9 +84,7 @@ class TwitterAccount < ActiveRecord::Base
     story = Story.new
     story.instance_variables
     story.title = tweet['user']['name'] + ': '  + tweet['text'][0..50]
-    if (tweet['text'].length > 50)
-      story.title = story.title + '..'
-    end 
+    story.title = tweet['text']
     story.content = tweet['text']
     story.category = 'twitter'
     story.media_link = tweet.attrs["user"]["profile_image_url"]
