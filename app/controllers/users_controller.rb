@@ -19,8 +19,6 @@ class UsersController < ApplicationController
     render :layout => "mobile_template"
   end
 
-
-
 =begin
 	Description: This method saves the information of the new user to the database.
 	If the user had no contraints for being saved, a Verification
@@ -211,6 +209,26 @@ def top
     @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
     render :layout => "mobile_template"
  end 
+
+  
+def interest_feed
+  interest = params[:interest]
+  @user = current_user
+  @friends = @user.friends
+  @stories = @user.int_feed(interest)
+    # YAHIA END
+    if (@stories == [])  
+        flash[:has_no_stories] = "This feed is empty, <a href=\"/mob/toggle\"><h7 style=  \"color:#FF0000;\">Click here to add some                     interests. </h7> </a> $yellow"
+    end
+    # Author : Mina Adel
+  @stories=@stories.paginate(:per_page => 10, :page=> params[:page])
+  render :layout => "mobile_template"
+  
+end
+
+
+
+
 
 =begin
   def feed

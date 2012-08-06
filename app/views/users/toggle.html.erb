@@ -71,7 +71,7 @@ class: "btn btn-warning"%></span> </td>
 {:controller => 'users', :action => 'block_interest_from_toggle', :id => (interest.id)} , 
 class: "btn btn-warning"%></span></td>
 		<td><span><%= link_to "Feed", 
-	{:controller => "users", :action => "feed", :interest => interest.name}, 
+	{:controller => "users", :action => "interest_feed", :interest => interest}, 
 	class: "btn btn-info" %></span></td>
 	<%end%>	
 		

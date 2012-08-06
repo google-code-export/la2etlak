@@ -1268,6 +1268,15 @@ end
     return sorted.sort_by(&:rank).reverse
   end
 
+  def int_feed(int)
+    user = self
+    interest = Interest.find(int)
+    stories = interest.stories
+    stories.delete_if{|x| x.hidden}
+    stories.delete_if{|x| self.blocked_interests}
+    return stories
+  end
+
 =begin
   Description: This story generates the mainfeed of the user using the Loksha System,
              it takes the stories of the feed of the user and the stories shared by

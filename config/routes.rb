@@ -50,6 +50,7 @@ NokiaRuby::Application.routes.draw do
   match "mob/hot_feed" => "users#hot"
   match "mob/social_feed" => "users#social"
   match "mob/top_feed" => "users#top"
+  match "mob/interest_feed" => "users#interest_feed"
 # $$$$$$$$$$$$$$  OMAR $$$$$$$$$$$$$$$$$$$$$$$ 
 
 

@@ -3,7 +3,7 @@
 
       <div class="actions" style="margin:5%; clear:both">
         <div>
-          <%= link_to image_tag('facebook-connect-button.png', :size => "140x40"), 
+          <%= link_to image_tag('facebook.png', :size => "50x50") + "Facebook",
          url_for({:controller => 'facebook_account', :action => 'authenticate_facebook_init'}),
            :class => 'quick', 
            :remote => true%>
@@ -23,7 +23,7 @@
           Author: Yahia -->
       <div class="actions" style="margin:5%; clear:both">
         <div>
-          <%= link_to image_tag('connect-twitter-button.png', :size => "150x50"), 
+          <%= link_to image_tag('twitter.png', :size => "50x50") + "Twitter",
           url_for({:controller => 'twitter_accounts', :action => 'generate_request_token'}),
           :class => 'quick', 
           :remote => true%>
