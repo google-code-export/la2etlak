@@ -34,7 +34,7 @@
 							<% if nf.image == nil%>
 				     		<%=  link_to (image_tag "logo.jpeg"  , :style => "float:left; margin-right:20px; width=150x; height:150px;"), {:action => 'show', :controller => 'users' , :id => nf.id } %>
 				     		<% else %>
-				            <%= link_to image_tag(@interest.image), :action => 'show', :controller => 'users' , :id =>  nf.id  %>
+				            <%= link_to image_tag(nf.image), :action => 'show', :controller => 'users' , :id =>  nf.id  %>
 				            <% end %>
 							<div class"control-panel">
 								<% if !(nf.deactivated) %>

@@ -22,9 +22,9 @@ on deleting an exsiting interest the page is refreshed and button color is chang
    	<table style="float:left">
 					<tr>
 						<% if current_user.check_group(t) == true %>
-						<td><span><%= link_to "#{t}", {:controller => 'users', :action => 'toggle_group',:name => t } ,class: "pull-left greenbadge" %></span></td>
+						<td><span><%= link_to "#{t}".capitalize, {:controller => 'users', :action => 'toggle_group',:name => t } ,class: "pull-left greenbadge" %></span></td>
 						<%else%>
-						<td><span><%= link_to "#{t}", {:controller => 'users', :action => 'toggle_group',:name => t } ,class: "pull-left redbadge" %></span></td>
+						<td><span><%= link_to "#{t}".capitalize, {:controller => 'users', :action => 'toggle_group',:name => t } ,class: "pull-left redbadge" %></span></td>
 						<%end%>
 					</tr>
 				</table><br>

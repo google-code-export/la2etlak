@@ -3,10 +3,10 @@
 
 
 <ul class="nav nav-pills">
-  <li class="<%= 'active' if params[:action] == "get_main_feed" %>"><a href="<%= url_for :controller => "users", :action => "feed" %>">Main Feed</a></li>
-  <li class="<%= 'active' if params[:action] == "get_hot_stories" %>"><a href="<%= url_for :controller => "users", :action => "hot" %>">Hot Stories</a></li>
-  <li class="<%= 'active' if params[:action] == "get_top_rated" %>"><a href="<%= url_for :controller => "users", :action => "top" %>">Top Rated</a></li>
-  <li class="<%= 'active' if params[:action] == "get_social_feed" %>"><a href="<%= url_for :controller => "users", :action => "social" %>">Social feed</a></li>
+  <li class="<%= 'active' if params[:action] == "feed" %>"><a href="<%= url_for :controller => "users", :action => "feed" %>">Main</a></li>
+  <li class="<%= 'active' if params[:action] == "hot" %>"><a href="<%= url_for :controller => "users", :action => "hot" %>">Hot</a></li>
+  <li class="<%= 'active' if params[:action] == "top" %>"><a href="<%= url_for :controller => "users", :action => "top" %>">Top</a></li>
+  <li class="<%= 'active' if params[:action] == "social" %>"><a href="<%= url_for :controller => "users", :action => "social" %>">Social</a></li>
 </ul>
 
 <h2>Feeds</h2>
