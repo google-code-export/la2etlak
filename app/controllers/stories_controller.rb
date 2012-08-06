@@ -25,6 +25,7 @@ Author : Omar
 =end
 
   def get_story_feed
+   user = current_user
    @ser = params[:serStor]
    @story = Marshal::load(@ser)
    if @story.category == "Facebook"
@@ -304,5 +305,9 @@ def toggle_hiding
     end
     redirect_to '/stories/'+params[:id]
   end
+
+
+
+
 
 end

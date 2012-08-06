@@ -517,13 +517,11 @@ end
   end
 
   def self.get_categories
- @list = Interest.select(:group_name).map(&:group_name).uniq
-
-
-
+ list = Interest.select(:group_name).map(&:group_name)
+ @final = list.map{|i| i.downcase}.uniq
 
   #@list = temp.uniq{|x| x.group_name}
-  return @list
+  return @final
 
 end  
 end

@@ -9,6 +9,14 @@ require 'chronic'
     #Author: Gasser
     #Increment the $loksha before each fetch for the feeds in the system
     $loksha = $loksha + 1
+    Story.all.each do |story|
+      new_rank = story.rank * (0.8)
+      if new_rank < 0
+        new_rank = 0
+      end
+      story.rank = new_rank
+      story.save
+    end
   	puts '%%%%%%%%%%%%%%% FETCHING NEW RSS '+ "#{$loksha}" +'%%%%%%%%%%%%%%%%%%'
     Interest.all.each do |interest|
       if interest.deleted.nil?

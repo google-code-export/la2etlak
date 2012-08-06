@@ -53,7 +53,7 @@
    
                                   <% if (Interest.get_categories[u]!= nil  && Interest.get_categories[u].downcase!= "general" && Interest.get_categories[u].downcase!= "") %> 
                                  
-			                      <%= link_to  Interest.get_categories[u].downcase,{:controller => "interests" ,:action => "categorize" ,:id => @interest.id ,:category =>  Interest.get_categories[u].downcase}%>
+			                      <%= link_to  Interest.get_categories[u].capitalize,{:controller => "interests" ,:action => "categorize" ,:id => @interest.id ,:category =>  Interest.get_categories[u].downcase}%>
 			                      <li class="divider"></li>
 			                       <% end %>
 			                     
@@ -62,7 +62,7 @@
 			                     
 			                       <% end %>
 
-			                      <%= link_to  "general",{:controller => "interests" ,:action => "categorize" ,:id => @interest.id ,:category =>  "general"}%>
+			                      <%= link_to  "General",{:controller => "interests" ,:action => "categorize" ,:id => @interest.id ,:category =>  "general"}%>
 			                    
 
 
@@ -176,7 +176,7 @@
         general
 
 		<%else%>	
-          <%= @interest.group_name.downcase %>
+          <%= @interest.group_name.capitalize %>
           <%end%>
           
 		</div>	

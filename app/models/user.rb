@@ -1030,7 +1030,7 @@ Author:Kareem
     # output : list of stories of connected social accounts
     # Author : Essam Hafez
 =end
-   def get_social_feed()
+   def get_social_feed
     Rack::Timeout.timeout = 7
     puts 'GETTING THE SOCIAL FEED'
     puts "Started at #{Time.now}"
