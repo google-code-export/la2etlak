@@ -1,16 +1,37 @@
 <html>
-<div align="left">
-<%= form_tag("search", :method => "get") do %>
-    <%= text_field_tag(:query, "#{@query}", :style => "height:40px;width:73%",
-                       :placeholder => 'Search') %>
-    <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;width:20%;padding-left:5px;",) %>
-<% end %>
-</div>
-</br></br>
 
-<% if @query == '' or @query.nil? or @query == ' ' or (@users.empty? and @stories.empty?) %>
-    <h3> Please enter a valid search query. </h3>
+<% if @query == '' or @query.nil? or @query == ' ' %>
+    <h4> Please enter a valid search query. </h4>
+    <br>
+    <div align="left">
+      <%= form_tag("search", :method => "get") do %>
+        <%= text_field_tag(:query, "#{@query}", :style => "height:40px;width:73%",
+                       :placeholder => 'Search') %>
+        <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;width:20%;padding-left:5px;",) %>
+      <% end %>
+    </div>
+<% elsif (@users.empty? and @stories.empty? and @interests.empty?) %>
+  <div align="left">
+    <%= form_tag("search", :method => "get") do %>
+      <%= text_field_tag(:query, "#{@query}", :style => "height:40px;width:73%",
+                       :placeholder => 'Search') %>
+      <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;width:20%;padding-left:5px;",) %>
+    <% end %>
+  </div>
+  <table style="width:100%;">
+    <tr>
+      <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+        <font size = "3"><b align ="left">No results available. Please enter another query.</b></font></td>
+    </tr>
+  </table>
 <% else %>
+  <div align="left">
+    <%= form_tag("search", :method => "get") do %>
+      <%= text_field_tag(:query, "#{@query}", :style => "height:40px;width:73%",
+                       :placeholder => 'Search') %>
+      <%= submit_tag('Search', :class => 'btn pull-right', :style => "height:40px;width:20%;padding-left:5px;",) %>
+    <% end %>
+  </div>
   <% if @users.length > 0 %>
     <ul class="nav nav-list">
       <table style="width:100%;">
@@ -28,7 +49,7 @@
           <img src= "<%= member.image %>" style ="width:30px;height:30px;"/>
         <% end %>
         <b>&nbsp; <%= if member.name.nil?  then member.email.split('@').first else "#{member.name}  (#{member.email})"  end %> </b></li>
-          <div align="right">
+        <div align="right">
         <%= if member.friends.include? @user or member.blocked? @user
           link_to 'Remove friendship',{:controller => 'friendships',
             :action => 'remove', 
@@ -61,85 +82,172 @@
         </div>
       <% end %> 
     </ul>
+  <% else %>
+    <ul class="nav nav-list">
+      <table style="width:100%;">
+        <tr>
+          <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+            <font size = "3"><b align ="left">Users Search Results</b></font></td>
+        </tr>
+      </table>
+      <br>
+      <table style="width:100%;">
+        <font size = "2"><b align ="left">No results.</b></font>
+      </table>
+    </ul>
   <%end%>
 </br></br>
           
-    			<% if @stories != nil && @stories.length > 0 %>
-          <ul class="nav nav-list">
-              <table style="width:100%;">
-                <tr>
-                  <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
-                  <font size = "4"><b align ="left">Stories Search Results</b></font></td>
-                </tr></table>
-            </ul>
-            
-           <% @stories.each do |f| %>
+<% if @stories != nil && @stories.length > 0 %>
+  <ul class="nav nav-list">
+    <table style="width:100%;">
+      <tr>
+        <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+          <font size = "4"><b align ="left">Stories Search Results</b></font></td>
+      </tr>
+    </table>
+  </ul>          
+  <% @stories.each do |f| %>
     <% if f.is_a?(Story) %>
       <%if f.interest.deleted.nil?%>
-      <div id=<%=f.title%> class="well" style="border-right:5px solid #f89406;">
-        <span  class="pull-right bluebadge" style="float-right"><%=f.interest.name%> </span>
-        <br>
-      <% if f.title.nil? %>
-        <h3><%= link_to("Interest Feed, No Title", {:controller => 'stories', :action => 'get', :id => f.id} )%></h3>
-          <%if f.media_link!=""%>
-          <%= link_to image_tag(f.media_link),  {:controller => 'stories' , :action => 'get' , :id => f.id }%>
-          <%end%>
-        <table style="float:right">
-          <tr>
-            <td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
-            <td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
-          </tr>
-        </table><br>
-      <table>
-        <span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
-      </table>
-        <% else %>
-        <h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h4>
-          <%if f.media_link!=""%>
-          <%= link_to image_tag(f.media_link),  {:controller => 'stories' , :action => 'get' , :id => f.id }%>          
-          <%end%>
-                
-                <table>
-          <% people = f.sharers %>
-          <% shares = Array.new %>
-          <% count = 0 %>
-          <% people.each do |person| %>
-            <%if @friends.include?(person) %>
-              <% shares << person %>
-              <%count = count +1%>
+        <div id=<%=f.title%> class="well" style="border-right:5px solid #f89406;">
+          <span  class="pull-right bluebadge" style="float-right"><%=f.interest.name%> </span>
+          <br>
+          <% if f.title.nil? %>
+            <h3><%= link_to("Interest Feed, No Title", {:controller => 'stories', :action => 'get', :id => f.id} )%></h3>
+            <%if f.media_link!=""%>
+              <%= link_to image_tag(f.media_link),  {:controller => 'stories' , :action => 'get' , :id => f.id }%>
             <%end%>
-          <%end%> 
-          <% unless shares.empty? %>
-            <% user_name = shares.first.name  ||  shares.first.email.split('@')[0] %> 
-            <% if count>1 %>  
-            <td><h4><%=  user_name + " and "+(count-1).to_s + " other".pluralize(count-1) +" shared this"%></h4></td>
-            <%else%>
-            <td><h4><%=  user_name + " shared this"%></h4></td>
+            <table style="float:right">
+              <tr>
+                <td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
+                <td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
+              </tr>
+            </table><br>
+            <table>
+              <span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
+            </table>
+          <% else %>
+            <h4><%= link_to(f.title, {:controller => 'stories', :action => 'get', :id => f.id} )%></h4>
+            <%if f.media_link!=""%>
+              <%= link_to image_tag(f.media_link),  {:controller => 'stories' , :action => 'get' , :id => f.id }%>          
             <%end%>
-          <%end%>
-        </table>
-
-        <table style="float:right">
-          <tr>
-            <td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
-            <td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
-          </tr>
-          </table><br>
-      <table>
-        <span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
-      </table>    
-        <% end %>
+            <table>
+              <% people = f.sharers %>
+              <% shares = Array.new %>
+              <% count = 0 %>
+              <% people.each do |person| %>
+                <%if @friends.include?(person) %>
+                  <% shares << person %>
+                  <%count = count +1%>
+                <%end%>
+              <% end %>
+              <% unless shares.empty? %>
+                <% user_name = shares.first.name  ||  shares.first.email.split('@')[0] %> 
+                <% if count>1 %>  
+                  <td><h4><%=  user_name + " and "+(count-1).to_s + " other".pluralize(count-1) +" shared this"%></h4></td>
+                <%else%>
+                  <td><h4><%=  user_name + " shared this"%></h4></td>
+                <%end%>
+              <%end%>
+            </table>
+            <table style="float:right">
+              <tr>
+                <td><span class="pull-right greenbadge">Ups(<%=f.liked.length%>)</span></td>
+                <td><span class="pull-right redbadge">Downs(<%=f.disliked.length%>) </span></td>
+              </tr>
+            </table><br>
+            <table>
+              <span class="pull-right"><%= "Added "%><%= time_ago_in_words(f.created_at)%><%= " ago."%></span>
+            </table>    
+          <% end %>
         </div>
-        <%end%>
-      <% end %>
-    </div>
+      <%end%>
     <% end %>
+  <% end %>
+<% else %>
+  <ul class="nav nav-list">
+    <table style="width:100%;">
+      <tr>
+        <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+          <font size = "3"><b align ="left">Stories Search Results</b></font></td>
+      </tr>
+    </table>
+    <br>
+    <table style="width:100%;">
+      <font size = "2"><b align ="left">No results.</b></font>
+    </table>
+  </ul>
+<% end %>
 
-					<% end %>
-          <% if @stories != nil && @stories.length > 0 %>
-          <div class="apple_pagination">
+<% if @stories != nil && @stories.length > 0 %>
+  <div class="apple_pagination">
     <%= will_paginate @stories, :container => false %>
   </div>
-  <% end %>
-<%end%>
+<% end %>
+</br></br>
+
+<% if @interests != nil and @interests.length > 0 %>
+  <ul class="nav nav-list">
+    <table style="width:100%;">
+      <tr>
+        <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+          <font size = "3"><b align ="left">Interests Search Results</b></font></td>
+      </tr>
+    </table>
+  </ul>
+  <% @interests.each do |interest| %>
+    <div class="welllo">
+      <table>     
+        <%if (current_user.added_interests.include? interest) && (current_user.blocked_interests.include? interest) %>           
+          <span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "yellowbadge" %></span><br>
+        <%else%>
+          <% if @user.added_interests.include? interest %>
+            <span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "greenbadge" %></span><br> 
+          <%else%>  
+            <span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "redbadge" %></span><br>
+          <%end%>
+        <%end%>
+      </table><br>
+      <table>
+        <%if current_user.added_interests.include? interest%>      
+          <td><span><%= link_to 'Delete', 
+          {:controller => 'users', :action => 'int_toggle',:id => interest.id }, 
+          class: "btn btn-danger" %></span></td>
+        <%else%>
+          <td><span><%= link_to 'Add', 
+          {:controller => 'users', :action => 'int_toggle', :id => interest.id }, 
+          class: "btn btn-success"%></span></td>
+        <%end%>
+        <%if current_user.blocked_interests.include? interest %>   
+          <td><span><%= link_to 'Unblock', 
+          {:controller => 'users', :action => 'unblock_interest_from_toggle', :id => (interest.id)} , 
+          class: "btn btn-warning"%></span> </td>
+        <%else%>
+          <td><span><%= link_to 'Block', 
+          {:controller => 'users', :action => 'block_interest_from_toggle', :id => (interest.id)} , 
+          class: "btn btn-warning"%></span></td>
+          <td><span><%= link_to "Feed", 
+          {:controller => "users", :action => "feed", :interest => interest.name}, 
+          class: "btn btn-info" %></span></td>
+        <%end%> 
+      </table>
+    </div>
+  <%end%>
+<% else %>
+  <ul class="nav nav-list">
+    <table style="width:100%;">
+      <tr>
+        <td align="left"><%= image_tag('search.png' , :style =>"width:20px;height:20px;")  %>
+          <font size = "3"><b align ="left">Interests Search Results</b></font></td>
+      </tr>
+    </table>
+    <br>
+    <table style="width:100%;">
+      <font size = "2"><b align ="left">No results.</b></font>
+    </table>
+  </ul>
+<% end %>
+
+<% end %>
 </html>
