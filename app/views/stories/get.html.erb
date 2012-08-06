@@ -152,10 +152,10 @@
 		  <% if @dislikes.length > 0 %>
 		  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 		  <%=link_to(@a, {:controller => "stories", :action => "disliked_mobile_show", :id => (@story.id)})%>
-		  <%end%>
       <%else%>
-      <%="#{@dislikes.length}"+"user".pluralize(@likes.length)+ " dislike this."%>
+      <%="#{@dislikes.length}"+" user".pluralize(@likes.length)+ " dislike this."%>
 		  <%end%>
+      <%end%>
 		  
 <!-- if user liked this story before remove like button and only adds dislike button -->
 <!-- checks for number of likes and dislikes per story -->
@@ -175,6 +175,10 @@
 	  <% if @dislikes.length > 0 %>
 		  <% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
 		  <%=link_to(@a , {:controller => 'stories', :action => 'disliked_mobile_show', :id => (@story.id)})%>
+    <%else%>
+
+      <%= "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
+
   	<%end%>
  	
   <%end%>
@@ -197,10 +201,10 @@
 	<% if @dislikes.length > 1 %>
 		<% @a = "#{@dislikes.length}"+" user".pluralize(@dislikes.length)+ " dislike this." %>
   	  	<%=link_to(@a , {:controller => 'stories', :action => 'disliked_mobile_show', :id => (@story.id)})%>
-  	 <%end%>
      <%else%>
       <% if @dislikes.length ==1 %>
       <%="You Dislike this."%>
+    <%end%>
     <%end%>
 
 
@@ -255,7 +259,7 @@
 <div id="all-comments" style="width:95%;">
     <% comments = Comment.find_all_by_story_id(@story.id) %>
     <% comments.each do |comment| %>
-
+  <% if !(comment.deleted) %>  
     <div class="story-comment-box-mobile well-large" style="float:left;clear:both;width:90%;margin:0.5%;">
         <h5 style="padding-top:1px;padding-left:1%;">    <%= comment.user.name || comment.user.email.split("@")[0] %> says:</h5>
         <div style="clear:both;padding:1px;">
@@ -297,6 +301,7 @@
             </li>
         </ul>
     </div>
+  <% end %>
 <% end %>
 </div>
 <div style="width:95%">
