@@ -1210,8 +1210,8 @@ Author: Kareem
       elsif self.facebook_account != nil
          image = "http://graph.facebook.com/#{self.facebook_account.facebook_id}/picture"
       else
-         image = "pp.png"  
-       end
+         image = "pp.png"
+      end
       return image    
   end
 
