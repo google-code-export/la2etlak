@@ -180,7 +180,7 @@
   </ul>
 <% end %>
 
-<% if @stories != nil && @stories.length > 0 %>
+<% if @stories != nil && @stories.length > 10 %>
   <div class="apple_pagination">
     <%= will_paginate @stories, :container => false %>
   </div>
@@ -197,7 +197,7 @@
     </table>
   </ul>
   <% @interests.each do |interest| %>
-    <div class="welllo">
+    <div align="center" class="welllo">
       <table>     
         <%if (current_user.added_interests.include? interest) && (current_user.blocked_interests.include? interest) %>           
           <span><%= link_to interest.name.upcase, {:controller => 'interests', :action => 'mob',:id => interest.id } ,class: "yellowbadge" %></span><br>
@@ -250,4 +250,5 @@
 <% end %>
 
 <% end %>
+<br>
 </html>
