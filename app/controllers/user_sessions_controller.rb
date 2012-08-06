@@ -70,7 +70,15 @@ class UserSessionsController < ApplicationController
    			redirect_to :action => 'new', :layout =>"mobile_template"
 			else
 				UserLogIn.create!(:user_id => @user.id)
-    		redirect_to "/mob/main_feed"
+			if !@user.added_interests.nil? && @user.added_interests.length == 0  
+			    if ( !(@user.facebook_account.nil?) || !(@user.twitter_account.nil?) || !(@user.tumblr_account.nil?) || !(@user.flickr_account.nil?) )	
+					redirect_to "/mob/social_feed"
+    	        else
+    		       redirect_to "/mob/main_feed"
+    	        end
+        	else
+        	  redirect_to "/mob/main_feed"
+       		end
 			end
   	else
   		 flash[:notice] = @user_session.errors.full_messages[0].to_s+"$red"

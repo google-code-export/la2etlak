@@ -75,10 +75,11 @@
 			<% end %>
 		</div>
 		<% end %>
-	
+	<% if  !@stories.nil? && @stories.length > 10 %>
 	<div class="apple_pagination">
 		<%= will_paginate @stories, :container => false %>
 	</div>
+	<% end %>
 <% else %>
 	<!--if nil, an error message of sorts appears -->
 	<div id="Emptiness_Alert" class="story-component-box-mobile">
