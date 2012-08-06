@@ -156,11 +156,13 @@ var $j = jQuery.noConflict();
 										<li class="nav-header">Status</li>
 										<li><span class="redbadge">Blocked</span></li>
 										<% end %>
-										<li class="nav-header">Date :</li>
-										<li><h3><%= @interest.created_at.to_date %></h3></li>
+									
 										<li class="nav-header">Description :</li>
 										<li><h3><%=
 										if @interest.description !="" then @interest.description  else "No Description" end%></h3></li>
+										<li class="nav-header">Category :</li>
+										<li><h3><%=
+										if @interest.group_name !="" then @interest.group_name.capitalize else "No Category" end%></h3></li>
 										<%= link_to "view Statistics", 
 													{:controller => 'statistics', :action => 'interests',:id => @interest.id }, 
 													class: "btn btn-primary"  %>

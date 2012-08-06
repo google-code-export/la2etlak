@@ -27,21 +27,35 @@
 				<br>
 				<div class="well">
 					<ul class="nav nav-list" >
-						<li class="divider"></li>
+						
 					</ul>
       			<h3 class="interest-page-text">Description:</h3>
 					<div class="interest-page-well">
 
-						<% if @interest.description.nil? %>
+						<% if @interest.description.nil? || @interest.description == "" %>
 						No Description
 						<%else%>
          				<%= @interest.description %>
          				<%end%>
 					</div>
+
+				</div>
+					<br>
+				<div class="well">
+					<ul class="nav nav-list" >
+					
+					</ul>
+      			<h3 class="interest-page-text">Category:</h3>
+					<div class="interest-page-well">
+
+         				<%= @interest.group_name.capitalize %>
+         			
+					</div>
+					
 				</div>
 				<div class="well">
 					<ul class="nav nav-list" >
-						<li class="divider"></li>
+					
 					</ul>
 					<h3 class="interest-page-text">Sources :</h3>
 					<div class="interest-page-well ">
